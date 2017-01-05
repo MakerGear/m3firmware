@@ -978,6 +978,11 @@ inline void get_serial_commands() {
     }
   #endif
 
+  //make sure the MS pins on the external driver are set
+  digitalWrite(45,HIGH);
+  digitalWrite(44,HIGH);
+  digitalWrite(31,HIGH);
+  
   /**
    * Loop while serial characters are incoming and the queue is not full
    */

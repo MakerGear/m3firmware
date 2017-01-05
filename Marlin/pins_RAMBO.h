@@ -115,13 +115,14 @@
 #define E0_MS2_PIN         66
 #define E1_MS1_PIN         63
 #define E1_MS2_PIN         64
-#define E2_MS1_PIN 		   31
-#define E2_MS2_PIN         45
+#define E2_MS1_PIN 		   31	//ms1 pin for second X axis
+#define E2_MS2_PIN         45   //ms2 pin for second X axis
 
 
+//step, dir, enable pins for second x axis
 #define E2_STEP_PIN         32
-#define E2_DIR_PIN          22
-#define E2_ENABLE_PIN       23
+#define E2_DIR_PIN          44
+#define E2_ENABLE_PIN       22
 
 
 

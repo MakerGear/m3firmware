@@ -41,6 +41,10 @@
   #define K2 (1.0-K1)
 #endif
 
+#ifdef K1_BED // Defined in Configuration.h in the PID settings
+   #define K2_BED (1.0-K1_BED)
+#endif
+
 #if ENABLED(TEMP_SENSOR_1_AS_REDUNDANT)
   static void* heater_ttbl_map[2] = {(void*)HEATER_0_TEMPTABLE, (void*)HEATER_1_TEMPTABLE };
   static uint8_t heater_ttbllen_map[2] = { HEATER_0_TEMPTABLE_LEN, HEATER_1_TEMPTABLE_LEN };
@@ -618,7 +622,7 @@ float Temperature::get_pid_output(int e) {
       temp_iState_bed += pid_error_bed;
       iTerm_bed = bedKi * temp_iState_bed;
 
-      dTerm_bed = K2 * bedKd * (current_temperature_bed - temp_dState_bed) + K1 * dTerm_bed;
+      dTerm_bed = K2_BED * bedKd * (current_temperature_bed - temp_dState_bed) + K1_BED * dTerm_bed;
       temp_dState_bed = current_temperature_bed;
 
       pid_output = pTerm_bed + iTerm_bed - dTerm_bed;
@@ -629,6 +633,9 @@ float Temperature::get_pid_output(int e) {
       else if (pid_output < 0) {
         if (pid_error_bed < 0) temp_iState_bed -= pid_error_bed; // conditional un-integration
         pid_output = 0;
+      }
+      if (pid_error_bed > PID_BED_FUNCTIONAL_RANGE) {  //conditional unintegration SCOTT
+        pid_output = MAX_BED_POWER;
       }
     #else
       pid_output = constrain(target_temperature_bed, 0, MAX_BED_POWER);
@@ -1943,6 +1950,6 @@ void Temperature::isr() {
       if (!endstop_monitor_count) endstop_monitor();  // report changes in endstop status
     }
   #endif
-  
+
   SBI(TIMSK0, OCIE0B); //re-enable Temperature ISR
 }

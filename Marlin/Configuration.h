@@ -301,14 +301,19 @@
   //#define  DEFAULT_Ki 1.08
   //#define  DEFAULT_Kd 114
 
-  // MakerGear
-  //#define  DEFAULT_Kp 7.0
-  //#define  DEFAULT_Ki 0.1
-  //#define  DEFAULT_Kd 12
+  // MakerGear v5 215C cooling option 1, no extrusion, fans off
+  //#define  DEFAULT_Kp 16.37
+  //#define  DEFAULT_Ki 1.08
+  //#define  DEFAULT_Kd 61.95
 
-   #define  DEFAULT_Kp 25.89
-   #define  DEFAULT_Ki 1.94
-   #define  DEFAULT_Kd 86.53
+  //MakerGear v5 215C cooling option 1, no extrusion, fans on
+  #define  DEFAULT_Kp 16.97
+  #define  DEFAULT_Ki 1.16
+  #define  DEFAULT_Kd 62.14
+
+  //#define  DEFAULT_Kp 25.89
+  //#define  DEFAULT_Ki 1.94
+  //#define  DEFAULT_Kd 86.53
 
   // Mendel Parts V9 on 12V
   //#define  DEFAULT_Kp 63.0

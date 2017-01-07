@@ -634,7 +634,7 @@ float Temperature::get_pid_output(int e) {
         if (pid_error_bed < 0) temp_iState_bed -= pid_error_bed; // conditional un-integration
         pid_output = 0;
       }
-      if (pid_error_bed > PID_BED_FUNCTIONAL_RANGE) {  //conditional unintegration SCOTT
+      if (pid_error_bed > PID_BED_FUNCTIONAL_RANGE) {  //conditional unintegration to being bed up quick
         pid_output = MAX_BED_POWER;
       }
     #else

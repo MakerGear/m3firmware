@@ -249,7 +249,7 @@
 // Dual X Steppers
 // Uncomment this option to drive two X axis motors.
 // The next unused E driver will be assigned to the second X stepper.
-//#define X_DUAL_STEPPER_DRIVERS  //WTF? - SCOTT
+//#define X_DUAL_STEPPER_DRIVERS
 #if ENABLED(X_DUAL_STEPPER_DRIVERS)
   // Set true if the two X motors need to rotate in opposite directions
   #define INVERT_X2_VS_X_DIR false
@@ -298,7 +298,7 @@
   // Configuration for second X-carriage
   // Note: the first x-carriage is defined as the x-carriage which homes to the minimum endstop;
   // the second x-carriage always homes to the maximum endstop.
-  #define X2_MIN_POS 110     // set minimum to ensure second x-carriage doesn't hit the parked first X-carriage
+  #define X2_MIN_POS 90     // set minimum to ensure second x-carriage doesn't hit the parked first X-carriage
   #define X2_MAX_POS 240    // set maximum to the distance between toolheads when both heads are homed
   #define X2_HOME_DIR 1     // the second X-carriage always homes to the maximum endstop position
   #define X2_HOME_POS X2_MAX_POS // default home position is the maximum carriage position

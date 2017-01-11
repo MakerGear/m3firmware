@@ -94,7 +94,7 @@
  * Thermal Protection parameters for the bed are just as above for hotends.
  */
 #if ENABLED(THERMAL_PROTECTION_BED)
-  #define THERMAL_PROTECTION_BED_PERIOD 20    // Seconds
+  #define THERMAL_PROTECTION_BED_PERIOD 120    // Seconds
   #define THERMAL_PROTECTION_BED_HYSTERESIS 2 // Degrees Celsius
 
   /**
@@ -317,7 +317,7 @@
   //                           once. (2nd extruder x offset and temp offset are set using: M605 S2 [Xnnn] [Rmmm])
 
   // This is the default power-up mode which can be later using M605.
-  #define DEFAULT_DUAL_X_CARRIAGE_MODE DXC_AUTO_PARK_MODE  // DXC_FULL_CONTROL_MODE , DXC_AUTO_PARK_MODEDXC_AUTO_PARK_MODE , DXC_DUPLICATION_MODE, 
+  #define DEFAULT_DUAL_X_CARRIAGE_MODE DXC_AUTO_PARK_MODE  // DXC_FULL_CONTROL_MODE , DXC_AUTO_PARK_MODEDXC_AUTO_PARK_MODE , DXC_DUPLICATION_MODE,
 
   // Default settings in "Auto-park Mode"
   #define TOOLCHANGE_PARK_ZLIFT   0.2      // the distance to raise Z axis when parking an extruder
@@ -546,10 +546,10 @@
 // Hooke's law says:    force = k * distance
 // Bernoulli's principle says:  v ^ 2 / 2 + g . h + pressure / density = constant
 // so: v ^ 2 is proportional to number of steps we advance the extruder
-//#define ADVANCE
+//#define ADVANCE  //SCOTT Enabling causes some sort of problem with a combination of heating and Z move resulting in "random" heating errors and disconnect
 
 #if ENABLED(ADVANCE)
-  #define EXTRUDER_ADVANCE_K .0
+  #define EXTRUDER_ADVANCE_K .02
   #define D_FILAMENT 1.75
 #endif
 
@@ -567,10 +567,10 @@
  * Stiff filament (PLA)        | K=47*L/10 | K=139*L/10 |
  * Softer filament (ABS, nGen) | K=88*L/10 | K=260*L/10 |
  */
-//#define LIN_ADVANCE
+#define LIN_ADVANCE
 
 #if ENABLED(LIN_ADVANCE)
-  #define LIN_ADVANCE_K 75
+  #define LIN_ADVANCE_K 45
 #endif
 
 // @section leveling

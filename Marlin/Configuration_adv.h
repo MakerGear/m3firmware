@@ -345,7 +345,7 @@
 #define AXIS_RELATIVE_MODES {false, false, false, false}
 
 // Allow duplication mode with a basic dual-nozzle extruder
-//#define DUAL_NOZZLE_DUPLICATION_MODE
+//#define DUAL_NOZZLE_DUPLICATION_MODE // SCOTT is this really that poorly documented? sanitycheck: DUAL_NOZZLE_DUPLICATION_MODE is incompatible with DUAL_X_CARRIAGEDUAL_NOZZLE_DUPLICATION_MODE is incompatible with DUAL_X_CARRIAGE
 
 // By default pololu step drivers require an active high signal. However, some high power drivers require an active low signal as step.
 #define INVERT_X_STEP_PIN false
@@ -394,7 +394,7 @@
 #define MICROSTEP_MODES {16,16,16,16,16} // [1,2,4,8,16]
 
 // Motor Current setting (Only functional when motor driver current ref pins are connected to a digital trimpot on supported boards)
-#define DIGIPOT_MOTOR_CURRENT {100,100,130,90,90} // Values 0-255 (RAMBO 135 = ~0.75A, 185 = ~1A) //need to make some changes here. Extruders don't need so much - SCOTT
+#define DIGIPOT_MOTOR_CURRENT {100,100,200,95,95} // Values 0-255 (RAMBO 135 = ~0.75A, 185 = ~1A) //need to make some changes here. Extruders don't need so much, Z needs a little more and can handle a lot more (1.5A rated) - SCOTT
 
 // Motor Current controlled via PWM (Overridable on supported boards with PWM-driven motor driver current)
 //#define PWM_MOTOR_CURRENT {1300, 1300, 1250} // Values in milliamps

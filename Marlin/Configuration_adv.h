@@ -394,7 +394,7 @@
 #define MICROSTEP_MODES {16,16,16,16,16} // [1,2,4,8,16]
 
 // Motor Current setting (Only functional when motor driver current ref pins are connected to a digital trimpot on supported boards)
-#define DIGIPOT_MOTOR_CURRENT {100,100,200,95,95} // Values 0-255 (RAMBO 135 = ~0.75A, 185 = ~1A) //need to make some changes here. Extruders don't need so much, Z needs a little more and can handle a lot more (1.5A rated) - SCOTT
+#define DIGIPOT_MOTOR_CURRENT {100,100,200,105,105} // 9595 Values 0-255 (RAMBO 135 = ~0.75A, 185 = ~1A) //need to make some changes here. Extruders don't need so much, Z needs a little more and can handle a lot more (1.5A rated) - SCOTT
 
 // Motor Current controlled via PWM (Overridable on supported boards with PWM-driven motor driver current)
 //#define PWM_MOTOR_CURRENT {1300, 1300, 1250} // Values in milliamps
@@ -1091,7 +1091,7 @@
 /**
  * Auto-report temperatures with M155 S<seconds>
  */
-//#define AUTO_REPORT_TEMPERATURES
+#define AUTO_REPORT_TEMPERATURES
 
 /**
  * Include capabilities in M115 output

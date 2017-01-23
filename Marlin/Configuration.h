@@ -488,7 +488,8 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3]]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {80.1,80.1,1007.7,88.1}  // default steps per unit for Ultimaker
+//#define DEFAULT_AXIS_STEPS_PER_UNIT   {80.1,80.1,1007.7,88.1,88.1}  // default steps per unit for Ultimaker
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {160.2,160.2,1007.7,88.1,176.2}  // default steps per unit for testing M2.1sg
 
 /**
  * Default Max Feed Rate (mm/s)

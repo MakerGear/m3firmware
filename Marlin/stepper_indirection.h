@@ -168,7 +168,12 @@
     #define X2_ENABLE_WRITE(STATE) do{if(STATE) stepperX2.Step_Clock(stepperX2.getStatus() & STATUS_HIZ); else stepperX2.softFree();}while(0)
     #define X2_ENABLE_READ (stepperX2.getStatus() & STATUS_HIZ)
     #define X2_DIR_INIT NOOP
-    #define X2_DIR_WRITE(STATE) stepperX2.Step_Clock(STATE)
+//    #define X2_DIR_WRITE(STATE) stepperX2.Step_Clock(STATE) // enabling X2 mirror per esenapaj / Marlin
+    #if DEFAULT_DUAL_X_CARRIAGE_MODE == DXC_MIRROR_MODE
+      #define X2_DIR_WRITE(STATE) stepperX2.Step_Clock(!STATE)
+    #else
+      #define X2_DIR_WRITE(STATE) stepperX2.Step_Clock(STATE)
+    #endif
     #define X2_DIR_READ (stepperX2.getStatus() & STATUS_DIR)
   #else
     #if ENABLED(HAVE_TMCDRIVER) && ENABLED(X2_IS_TMC)
@@ -185,7 +190,13 @@
       #define X2_ENABLE_READ READ(X2_ENABLE_PIN)
     #endif
     #define X2_DIR_INIT SET_OUTPUT(X2_DIR_PIN)
-    #define X2_DIR_WRITE(STATE) WRITE(X2_DIR_PIN,STATE)
+//    #define X2_DIR_WRITE(STATE) WRITE(X2_DIR_PIN,STATE) // enabling X2 mirror per esenapaj / Marlin
+    #if DEFAULT_DUAL_X_CARRIAGE_MODE == DXC_MIRROR_MODE
+      #define X2_DIR_WRITE(STATE) WRITE(X2_DIR_PIN,!STATE)
+    #else
+      #define X2_DIR_WRITE(STATE) WRITE(X2_DIR_PIN,STATE)
+    #endif
+
     #define X2_DIR_READ READ(X2_DIR_PIN)
   #endif
   #define X2_STEP_INIT SET_OUTPUT(X2_STEP_PIN)

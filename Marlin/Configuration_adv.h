@@ -315,7 +315,8 @@
   //    Mode 2: Duplication mode. The firmware will transparently make the second x-carriage and extruder copy all
   //                           actions of the first x-carriage. This allows the printer to print 2 arbitrary items at
   //                           once. (2nd extruder x offset and temp offset are set using: M605 S2 [Xnnn] [Rmmm])
-
+  //    Mode 3 (DXC_MIRROR_MODE)      : Mirroring mode. The firmware will transparently make the second x-carriage and extruder copy all
+  //                                    actions of the first x-carriage, but it is mirrored. - esenapaj/Marlin https://github.com/esenapaj/Marlin/commit/2ce12b4f3edfc40841be1ee34512139f323a5745
   // This is the default power-up mode which can be later using M605.
   #define DEFAULT_DUAL_X_CARRIAGE_MODE DXC_AUTO_PARK_MODE  // DXC_FULL_CONTROL_MODE , DXC_AUTO_PARK_MODEDXC_AUTO_PARK_MODE , DXC_DUPLICATION_MODE,
 

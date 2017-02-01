@@ -222,7 +222,7 @@
 #define E2_AUTO_FAN_PIN -1
 #define E3_AUTO_FAN_PIN -1
 #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
-#define EXTRUDER_AUTO_FAN_SPEED   230  //SCOTT was 255, hoping for a little quiet since we don't need much air flow
+#define EXTRUDER_AUTO_FAN_SPEED   220  //SCOTT was 255, hoping for a little quiet since we don't need much air flow
 
 // Define a pin to turn case light on/off
 //#define CASE_LIGHT_PIN 4

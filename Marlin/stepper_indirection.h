@@ -192,9 +192,9 @@
     #define X2_DIR_INIT SET_OUTPUT(X2_DIR_PIN)
 //    #define X2_DIR_WRITE(STATE) WRITE(X2_DIR_PIN,STATE) // enabling X2 mirror per esenapaj / Marlin
     #if DEFAULT_DUAL_X_CARRIAGE_MODE == DXC_MIRROR_MODE
-      #define X2_DIR_WRITE(STATE) WRITE(X2_DIR_PIN,!STATE)
-    #else
       #define X2_DIR_WRITE(STATE) WRITE(X2_DIR_PIN,STATE)
+    #else
+      #define X2_DIR_WRITE(STATE) WRITE(X2_DIR_PIN,!STATE)
     #endif
 
     #define X2_DIR_READ READ(X2_DIR_PIN)

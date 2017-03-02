@@ -222,7 +222,7 @@
 #define E2_AUTO_FAN_PIN -1
 #define E3_AUTO_FAN_PIN -1
 #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
-#define EXTRUDER_AUTO_FAN_SPEED   220  //SCOTT was 255, hoping for a little quiet since we don't need much air flow
+#define EXTRUDER_AUTO_FAN_SPEED   230  //SCOTT was 255, hoping for a little quiet since we don't need much air flow
 
 // Define a pin to turn case light on/off
 //#define CASE_LIGHT_PIN 4
@@ -293,7 +293,7 @@
 // A dual x-carriage design has the advantage that the inactive extruder can be parked which
 // prevents hot-end ooze contaminating the print. It also reduces the weight of each x-carriage
 // allowing faster printing speeds. Connect your X2 stepper to the first unused E plug.
-#define DUAL_X_CARRIAGE
+//#define DUAL_X_CARRIAGE
 #if ENABLED(DUAL_X_CARRIAGE)
   // Configuration for second X-carriage
   // Note: the first x-carriage is defined as the x-carriage which homes to the minimum endstop;
@@ -315,8 +315,7 @@
   //    Mode 2: Duplication mode. The firmware will transparently make the second x-carriage and extruder copy all
   //                           actions of the first x-carriage. This allows the printer to print 2 arbitrary items at
   //                           once. (2nd extruder x offset and temp offset are set using: M605 S2 [Xnnn] [Rmmm])
-  //    Mode 3 (DXC_MIRROR_MODE)      : Mirroring mode. The firmware will transparently make the second x-carriage and extruder copy all
-  //                                    actions of the first x-carriage, but it is mirrored. - esenapaj/Marlin https://github.com/esenapaj/Marlin/commit/2ce12b4f3edfc40841be1ee34512139f323a5745
+
   // This is the default power-up mode which can be later using M605.
   #define DEFAULT_DUAL_X_CARRIAGE_MODE DXC_AUTO_PARK_MODE  // DXC_FULL_CONTROL_MODE , DXC_AUTO_PARK_MODEDXC_AUTO_PARK_MODE , DXC_DUPLICATION_MODE,
 
@@ -346,7 +345,7 @@
 #define AXIS_RELATIVE_MODES {false, false, false, false}
 
 // Allow duplication mode with a basic dual-nozzle extruder
-//#define DUAL_NOZZLE_DUPLICATION_MODE // SCOTT is this really that poorly documented? sanitycheck: DUAL_NOZZLE_DUPLICATION_MODE is incompatible with DUAL_X_CARRIAGEDUAL_NOZZLE_DUPLICATION_MODE is incompatible with DUAL_X_CARRIAGE
+//#define DUAL_NOZZLE_DUPLICATION_MODE
 
 // By default pololu step drivers require an active high signal. However, some high power drivers require an active low signal as step.
 #define INVERT_X_STEP_PIN false
@@ -395,9 +394,7 @@
 #define MICROSTEP_MODES {16,16,16,16,16} // [1,2,4,8,16]
 
 // Motor Current setting (Only functional when motor driver current ref pins are connected to a digital trimpot on supported boards)
-//#define DIGIPOT_MOTOR_CURRENT {100,100,200,105,105} // 9595 Values 0-255 (RAMBO 135 = ~0.75A, 185 = ~1A) //need to make some changes here. Extruders don't need so much, Z needs a little more and can handle a lot more (1.5A rated) - SCOTT
-#define DIGIPOT_MOTOR_CURRENT {200,200,200,105,200} // 9595 Values 0-255 (RAMBO 135 = ~0.75A, 185 = ~1A) for testing MS17HA2P4150
-
+#define DIGIPOT_MOTOR_CURRENT {100,100,190,95,95} // Values 0-255 (RAMBO 135 = ~0.75A, 185 = ~1A) //need to make some changes here. Extruders don't need so much - SCOTT
 
 // Motor Current controlled via PWM (Overridable on supported boards with PWM-driven motor driver current)
 //#define PWM_MOTOR_CURRENT {1300, 1300, 1250} // Values in milliamps
@@ -649,7 +646,7 @@
 // enter the serial receive buffer, so they cannot be blocked.
 // Currently handles M108, M112, M410
 // Does not work on boards using AT90USB (USBCON) processors!
-#define EMERGENCY_PARSER
+//#define EMERGENCY_PARSER
 
 // Bad Serial-connections can miss a received command by sending an 'ok'
 // Therefore some clients abort after 30 seconds in a timeout.
@@ -1094,7 +1091,7 @@
 /**
  * Auto-report temperatures with M155 S<seconds>
  */
-#define AUTO_REPORT_TEMPERATURES
+//#define AUTO_REPORT_TEMPERATURES
 
 /**
  * Include capabilities in M115 output

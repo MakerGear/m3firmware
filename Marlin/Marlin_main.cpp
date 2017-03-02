@@ -978,7 +978,7 @@ inline void get_serial_commands() {
     }
   #endif
 
-
+  
   /**
    * Loop while serial characters are incoming and the queue is not full
    */
@@ -1361,7 +1361,7 @@ void update_software_endstops(AxisEnum axis) {
         soft_endstop_min[X_AXIS] = X2_MIN_POS + offs;
         soft_endstop_max[X_AXIS] = dual_max_x + offs;
       }
-      else if (dual_x_carriage_mode == DXC_DUPLICATION_MODE || dual_x_carriage_mode == DXC_MIRROR_MODE || dual_x_carriage_mode == DXC_MIRROR_MODE) {
+      else if (dual_x_carriage_mode == DXC_DUPLICATION_MODE) {
         // In Duplication Mode, T0 can move as far left as X_MIN_POS
         // but not so far to the right that T1 would move past the end
         soft_endstop_min[X_AXIS] = base_min_pos(X_AXIS) + offs;
@@ -1442,7 +1442,7 @@ static void set_axis_is_at_home(AxisEnum axis) {
   update_software_endstops(axis);
 
   #if ENABLED(DUAL_X_CARRIAGE)
-    if (axis == X_AXIS && (active_extruder == 1 || dual_x_carriage_mode == DXC_DUPLICATION_MODE || dual_x_carriage_mode == DXC_MIRROR_MODE)) {
+    if (axis == X_AXIS && (active_extruder == 1 || dual_x_carriage_mode == DXC_DUPLICATION_MODE)) {
       current_position[X_AXIS] = x_home_pos(active_extruder);
       return;
     }
@@ -5227,7 +5227,7 @@ inline void gcode_M104() {
   if (code_seen('S')) {
     thermalManager.setTargetHotend(code_value_temp_abs(), target_extruder);
     #if ENABLED(DUAL_X_CARRIAGE)
-      if ((dual_x_carriage_mode == DXC_DUPLICATION_MODE || dual_x_carriage_mode == DXC_MIRROR_MODE) && target_extruder == 0)
+      if (dual_x_carriage_mode == DXC_DUPLICATION_MODE && target_extruder == 0)
         thermalManager.setTargetHotend(code_value_temp_abs() == 0.0 ? 0.0 : code_value_temp_abs() + duplicate_extruder_temp_offset, 1);
     #endif
 
@@ -5247,7 +5247,7 @@ inline void gcode_M104() {
 
     if (code_value_temp_abs() > thermalManager.degHotend(target_extruder)) LCD_MESSAGEPGM(MSG_HEATING);
   }
-
+  
   #if ENABLED(AUTOTEMP)
     planner.autotemp_M104_M109();
   #endif
@@ -5421,7 +5421,7 @@ inline void gcode_M109() {
   if (no_wait_for_cooling || code_seen('R')) {
     thermalManager.setTargetHotend(code_value_temp_abs(), target_extruder);
     #if ENABLED(DUAL_X_CARRIAGE)
-      if ((dual_x_carriage_mode == DXC_DUPLICATION_MODE || dual_x_carriage_mode == DXC_MIRROR_MODE) && target_extruder == 0)
+      if (dual_x_carriage_mode == DXC_DUPLICATION_MODE && target_extruder == 0)
         thermalManager.setTargetHotend(code_value_temp_abs() == 0.0 ? 0.0 : code_value_temp_abs() + duplicate_extruder_temp_offset, 1);
     #endif
 
@@ -7343,7 +7343,6 @@ inline void gcode_M503() {
       case DXC_AUTO_PARK_MODE:
         break;
       case DXC_DUPLICATION_MODE:
-      case DXC_MIRROR_MODE:
         if (code_seen('X')) duplicate_extruder_x_offset = max(code_value_axis_units(X_AXIS), X2_MIN_POS - x_home_pos(0));
         if (code_seen('R')) duplicate_extruder_temp_offset = code_value_temp_diff();
         SERIAL_ECHO_START;
@@ -7642,7 +7641,6 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
                 case DXC_FULL_CONTROL_MODE: SERIAL_ECHOLNPGM("DXC_FULL_CONTROL_MODE"); break;
                 case DXC_AUTO_PARK_MODE: SERIAL_ECHOLNPGM("DXC_AUTO_PARK_MODE"); break;
                 case DXC_DUPLICATION_MODE: SERIAL_ECHOLNPGM("DXC_DUPLICATION_MODE"); break;
-                case DXC_MIRROR_MODE: SERIAL_ECHOLNPGM("DXC_MIRROR_MODE"); break;
               }
             }
           #endif
@@ -7711,7 +7709,6 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
               delayed_move_time = 0;
               break;
             case DXC_DUPLICATION_MODE:
-            case DXC_MIRROR_MODE:
               // If the new extruder is the left one, set it "parked"
               // This triggers the second extruder to move into the duplication position
               active_extruder_parked = (active_extruder == 0);
@@ -9433,7 +9430,6 @@ void set_current_from_steppers_for_axis(const AxisEnum axis) {
           active_extruder_parked = false;
           break;
         case DXC_DUPLICATION_MODE:
-        case DXC_MIRROR_MODE:
           if (active_extruder == 0) {
             // move duplicate extruder into correct duplication position.
             planner.set_position_mm(

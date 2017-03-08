@@ -570,7 +570,7 @@
 #define LIN_ADVANCE
 
 #if ENABLED(LIN_ADVANCE)
-  #define LIN_ADVANCE_K 45
+  #define LIN_ADVANCE_K 55
 #endif
 
 // @section leveling

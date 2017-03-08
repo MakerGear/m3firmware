@@ -10218,17 +10218,17 @@ void setup() {
   MCUSR = 0;
 
 
-  pinMode(E2_MS1_PIN, OUTPUT);
-  pinMode(E2_MS2_PIN, OUTPUT);
-  pinMode(E2_STEP_PIN, OUTPUT);
-  pinMode(E2_DIR_PIN, OUTPUT);
-  pinMode(E2_ENABLE_PIN, OUTPUT);
-  pinMode(31, OUTPUT);//xref
+  // pinMode(E2_MS1_PIN, OUTPUT);
+  // pinMode(E2_MS2_PIN, OUTPUT);
+  // pinMode(E2_STEP_PIN, OUTPUT);
+  // pinMode(E2_DIR_PIN, OUTPUT);
+  // pinMode(E2_ENABLE_PIN, OUTPUT);
+  // pinMode(31, OUTPUT);//xref
   
-  digitalWrite(E2_MS1_PIN,HIGH);
-  digitalWrite(E2_MS2_PIN,HIGH);
-  digitalWrite(E2_ENABLE_PIN,HIGH);
-  digitalWrite(31,HIGH);
+  // digitalWrite(E2_MS1_PIN,HIGH);
+  // digitalWrite(E2_MS2_PIN,HIGH);
+  // digitalWrite(E2_ENABLE_PIN,HIGH);
+  // digitalWrite(31,HIGH);
 
 
 

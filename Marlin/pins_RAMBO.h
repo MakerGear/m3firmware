@@ -103,7 +103,6 @@
 #define E2_STEP_PIN         31  //second x axis Step
 #define E2_DIR_PIN          23  //second x axis dir
 #define E2_ENABLE_PIN       22  //second x axis enable
-#define E2_CURRENT_PIN      45  //second x axis enable
 
 // Microstepping pins - Mapping not from fastio.h (?)
 #define X_MS1_PIN          40
@@ -124,6 +123,8 @@
 
 #define DIGIPOTSS_PIN      38
 #define DIGIPOT_CHANNELS {4,5,3,0,1} // X Y Z E0 E1 digipot channels to stepper driver mapping
+
+#define PWM_SECOND_X_CARRIAGE_PIN 45
 
 //
 // Temperature Sensors

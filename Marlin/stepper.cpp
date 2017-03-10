@@ -1275,20 +1275,20 @@ void Stepper::report_positions() {
       TCCR5B = (TCCR5B & ~(_BV(CS50) | _BV(CS51) | _BV(CS52))) | _BV(CS50);
     #endif
 
-    #if ENABLED(DUAL_X_CARRIAGE)
-      #if PIN_EXISTS(PWM_SECOND_X_CARRIAGE_PIN)
-        float xMotor2Current = digipot_motor_current[0] / 185; //get x motor current , divide by 185 to get the actual current
-        float voltageRequired = xMotorCurrent * (1.6); //voltage required = current * sense resistor * 8, sense resitor for rambo shield is .2
-              voltageRequired = 2 * voltageRequired; //voltage required is 2x becuase of voltage divider
-        float xMotor2PWM = (voltageRequired / 5) * 255; //get actual pwm value to send to pin
+    // #if ENABLED(DUAL_X_CARRIAGE)
+    //   #if PIN_EXISTS(PWM_SECOND_X_CARRIAGE_PIN)
+    //     float xMotor2Current = digipot_motor_current[0] / 185; //get x motor current , divide by 185 to get the actual current
+    //     float voltageRequired = xMotorCurrent * (1.6); //voltage required = current * sense resistor * 8, sense resitor for rambo shield is .2
+    //           voltageRequired = 2 * voltageRequired; //voltage required is 2x becuase of voltage divider
+    //     float xMotor2PWM = (voltageRequired / 5) * 255; //get actual pwm value to send to pin
 
-        SET_OUTPUT(PWM_SECOND_X_CARRIAGE_PIN);
-        analogWrite(PWM_SECOND_X_CARRIAGE_PIN, xMotor2PWM)
+    //     SET_OUTPUT(PWM_SECOND_X_CARRIAGE_PIN);
+    //     analogWrite(PWM_SECOND_X_CARRIAGE_PIN, xMotor2PWM)
 
-       //Set timer5 to 31khz so the PWM of the motor power is as constant as possible. (removes a buzzing noise)
-       TCCR5B = (TCCR5B & ~(_BV(CS50) | _BV(CS51) | _BV(CS52))) | _BV(CS50);
-       #endif
-    #endif 
+    //    //Set timer5 to 31khz so the PWM of the motor power is as constant as possible. (removes a buzzing noise)
+    //    TCCR5B = (TCCR5B & ~(_BV(CS50) | _BV(CS51) | _BV(CS52))) | _BV(CS50);
+    //    #endif
+    // #endif 
 
 
 

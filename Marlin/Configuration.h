@@ -488,8 +488,8 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3]]]
  */
-//#define DEFAULT_AXIS_STEPS_PER_UNIT   {88.88,88.88,1007.7,471.50}  // default steps per unit for Makergear M2plus
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {88.88,88.88,1007.7,88.1}  // default steps per unit for Makergear M2plus
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {88.88,88.88,1007.7,471.50}  // default steps per unit for Makergear M2plus
+//#define DEFAULT_AXIS_STEPS_PER_UNIT   {88.88,88.88,1007.7,88.1}  // default steps per unit for Makergear M2plus
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -1109,7 +1109,7 @@
 // SD Card support is disabled by default. If your controller has an SD slot,
 // you must uncomment the following option or it won't work.
 //
-#define SDSUPPORT
+//#define SDSUPPORT
 
 //
 // SD CARD: SPI SPEED

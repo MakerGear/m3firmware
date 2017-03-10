@@ -133,7 +133,12 @@ class Buzzer {
             ::tone(BEEPER_PIN, this->state.tone.frequency, this->state.tone.duration);
             CRITICAL_SECTION_END;
           #else
-            this->on();
+            //this->on();
+
+            CRITICAL_SECTION_START;
+            ::tone(BEEPER_PIN, this->state.tone.frequency, this->state.tone.duration);
+            CRITICAL_SECTION_END;
+            
           #endif
         }
       }

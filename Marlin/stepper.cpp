@@ -1242,6 +1242,8 @@ void Stepper::report_positions() {
     SPI.transfer(address); //  send in the address and value via SPI:
     SPI.transfer(value);
     WRITE(DIGIPOTSS_PIN, HIGH); // take the SS pin high to de-select the chip:
+
+
     //delay(10);
   }
 
@@ -1258,10 +1260,16 @@ void Stepper::report_positions() {
         //digitalPotWrite(digipot_ch[i], digipot_motor_current[i]);
         digipot_current(i, digipot_motor_current[i]);
       }
+      SET_OUTPUT(E2_CURRENT_PIN);
+
+      analogWrite(E2_CURRENT_PIN, SECOND_X_PWM);//extra x motor is not on a digipot
+      TCCR5B = (TCCR5B & ~(_BV(CS50) | _BV(CS51) | _BV(CS52))) | _BV(CS50);
+
     #elif HAS_MOTOR_CURRENT_PWM
       #if PIN_EXISTS(MOTOR_CURRENT_PWM_XY)
         SET_OUTPUT(MOTOR_CURRENT_PWM_XY_PIN);
         digipot_current(0, motor_current_setting[0]);
+
       #endif
       #if PIN_EXISTS(MOTOR_CURRENT_PWM_Z)
         SET_OUTPUT(MOTOR_CURRENT_PWM_Z_PIN);
@@ -1326,6 +1334,12 @@ void Stepper::report_positions() {
   void Stepper::microstep_init() {
     SET_OUTPUT(X_MS1_PIN);
     SET_OUTPUT(X_MS2_PIN);
+    #if CONF_CARRIAGE == TWO_X_CARRIAGE
+      SET_OUTPUT(E2_MS1_PIN);
+      SET_OUTPUT(E2_MS2_PIN);
+    #endif
+
+
     #if HAS_MICROSTEPS_Y
       SET_OUTPUT(Y_MS1_PIN);
       SET_OUTPUT(Y_MS2_PIN);
@@ -1349,7 +1363,14 @@ void Stepper::report_positions() {
 
   void Stepper::microstep_ms(uint8_t driver, int8_t ms1, int8_t ms2) {
     if (ms1 >= 0) switch (driver) {
-      case 0: digitalWrite(X_MS1_PIN, ms1); break;
+      case 0: digitalWrite(X_MS1_PIN, ms1); 
+
+          #if CONF_CARRIAGE == TWO_X_CARRIAGE
+            digitalWrite(E2_MS1_PIN, ms1); 
+          #endif
+
+
+      break;
       #if HAS_MICROSTEPS_Y
         case 1: digitalWrite(Y_MS1_PIN, ms1); break;
       #endif
@@ -1364,7 +1385,13 @@ void Stepper::report_positions() {
       #endif
     }
     if (ms2 >= 0) switch (driver) {
-      case 0: digitalWrite(X_MS2_PIN, ms2); break;
+      case 0: digitalWrite(X_MS2_PIN, ms2); 
+
+          #if CONF_CARRIAGE == TWO_X_CARRIAGE
+            digitalWrite(E2_MS2_PIN, ms2); 
+          #endif
+
+      break;
       #if HAS_MICROSTEPS_Y
         case 1: digitalWrite(Y_MS2_PIN, ms2); break;
       #endif

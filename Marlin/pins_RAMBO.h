@@ -100,10 +100,6 @@
 #define E1_DIR_PIN         42
 #define E1_ENABLE_PIN      25
 
-#define E2_STEP_PIN         31  //second x axis Step
-#define E2_DIR_PIN          23  //second x axis dir
-#define E2_ENABLE_PIN       22  //second x axis enable
-#define E2_CURRENT_PIN      45  //second x axis enable
 
 // Microstepping pins - Mapping not from fastio.h (?)
 #define X_MS1_PIN          40
@@ -116,8 +112,55 @@
 #define E0_MS2_PIN         66
 #define E1_MS1_PIN         63
 #define E1_MS2_PIN         64
-#define E2_MS1_PIN 		     32	 //ms1 pin for second X axis
-#define E2_MS2_PIN         44   //ms2 pin for second X axis
+
+
+
+
+
+#if CONF_SHIELD == RAMBO_SHIELD_11
+  
+  #define E2_STEP_PIN         32  //second x axis Step
+  #define E2_DIR_PIN          44  //second x axis dir
+  #define E2_ENABLE_PIN       22  //second x axis enable
+  #define E2_MS1_PIN         23  //ms1 pin for second X axis
+  #define E2_MS2_PIN         31   //ms2 pin for second X axis
+  #define E2_MS3_PIN         45   //ms2 pin for second X axis
+
+
+#endif
+
+#if CONF_SHIELD == RAMBO_SHIELD_12
+  
+  #define E2_STEP_PIN         45  //second x axis Step
+  #define E2_DIR_PIN          23  //second x axis dir
+  #define E2_ENABLE_PIN       22  //second x axis enable
+  #define E2_CURRENT_PIN      31  //second x axis enable
+  #define E2_MS1_PIN         23  //ms1 pin for second X axis
+  #define E2_MS2_PIN         44   //ms2 pin for second X axis
+
+#endif
+
+#if CONF_SHIELD == RAMBO_SHIELD_13
+  
+  #define E2_STEP_PIN         31  //second x axis Step
+  #define E2_DIR_PIN          23  //second x axis dir
+  #define E2_ENABLE_PIN       22  //second x axis enable
+  #define E2_CURRENT_PIN      45  //second x axis enable
+  #define E2_MS1_PIN         32  //ms1 pin for second X axis
+  #define E2_MS2_PIN         44   //ms2 pin for second X axis
+
+#endif
+#if CONF_SHIELD == RAMBO_SHIELD_14
+  
+  #define E2_STEP_PIN         31  //second x axis Step
+  #define E2_DIR_PIN          23  //second x axis dir
+  #define E2_ENABLE_PIN       22  //second x axis enable
+  #define E2_CURRENT_PIN      45  //second x axis enable
+  #define E2_MS1_PIN         32  //ms1 pin for second X axis
+  #define E2_MS2_PIN         44   //ms2 pin for second X axis
+
+#endif
+
 
 
 
@@ -125,7 +168,7 @@
 #define DIGIPOTSS_PIN      38
 #define DIGIPOT_CHANNELS {4,5,3,0,1} // X Y Z E0 E1 digipot channels to stepper driver mapping
 
-#define PWM_SECOND_X_CARRIAGE_PIN 45
+
 
 //
 // Temperature Sensors

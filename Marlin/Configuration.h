@@ -20,6 +20,7 @@
  *
  */
 
+
 /**
  * Configuration.h
  *
@@ -138,7 +139,15 @@
 
 // This defines the number of extruders
 // :[1,2,3,4]
-#define EXTRUDERS 2
+#if CONF_CARRIAGE == ONE_X_CARRIAGE
+  #define EXTRUDERS 1
+#endif
+
+#if CONF_CARRIAGE == TWO_X_CARRIAGE
+  #define EXTRUDERS 2
+#endif
+
+
 
 // For Cyclops or any "multi-extruder" that shares a single nozzle.
 //#define SINGLENOZZLE
@@ -436,7 +445,13 @@
 #define USE_XMIN_PLUG
 #define USE_YMIN_PLUG
 //#define USE_ZMIN_PLUG
-#define USE_XMAX_PLUG
+
+//define xmax if we're using dual carriage
+#if CONF_CARRIAGE == TWO_X_CARRIAGE
+
+  #define USE_XMAX_PLUG
+#endif
+
 //#define USE_YMAX_PLUG
 #define USE_ZMAX_PLUG
 
@@ -455,13 +470,13 @@
 #endif
 
 // Mechanical endstop with COM to ground and NC to Signal uses "false" here (most common setup).
-#define X_MIN_ENDSTOP_INVERTING false // set to true to invert the logic of the endstop.
-#define Y_MIN_ENDSTOP_INVERTING false // set to true to invert the logic of the endstop.
-#define Z_MIN_ENDSTOP_INVERTING false // set to true to invert the logic of the endstop.
-#define X_MAX_ENDSTOP_INVERTING false // set to true to invert the logic of the endstop.
-#define Y_MAX_ENDSTOP_INVERTING false // set to true to invert the logic of the endstop.
-#define Z_MAX_ENDSTOP_INVERTING false // set to true to invert the logic of the endstop.
-#define Z_MIN_PROBE_ENDSTOP_INVERTING false // set to true to invert the logic of the endstop.
+#define X_MIN_ENDSTOP_INVERTING CONF_ENDSTOPS // set to true to invert the logic of the endstop.
+#define Y_MIN_ENDSTOP_INVERTING CONF_ENDSTOPS // set to true to invert the logic of the endstop.
+#define Z_MIN_ENDSTOP_INVERTING CONF_ENDSTOPS // set to true to invert the logic of the endstop.
+#define X_MAX_ENDSTOP_INVERTING CONF_ENDSTOPS // set to true to invert the logic of the endstop.
+#define Y_MAX_ENDSTOP_INVERTING CONF_ENDSTOPS // set to true to invert the logic of the endstop.
+#define Z_MAX_ENDSTOP_INVERTING CONF_ENDSTOPS // set to true to invert the logic of the endstop.
+#define Z_MIN_PROBE_ENDSTOP_INVERTING CONF_ENDSTOPS // set to true to invert the logic of the endstop.
 
 // Enable this feature if all enabled endstop pins are interrupt-capable.
 // This will remove the need to poll the interrupt pins, saving many CPU cycles.
@@ -488,7 +503,7 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3]]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {88.88,88.88,1007.7,471.50}  // default steps per unit for Makergear M2plus
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {CONF_X_PULLEY,CONF_Y_PULLEY,1007.7,CONF_FILAMENT_MOTOR}  // default steps per unit for Makergear M2plus
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   {88.88,88.88,1007.7,88.1}  // default steps per unit for Makergear M2plus
 
 /**
@@ -690,14 +705,14 @@
 // @section machine
 
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
-#define INVERT_X_DIR false
-#define INVERT_Y_DIR true
-#define INVERT_Z_DIR true
+#define INVERT_X_DIR CONF_X_DIRECTION
+#define INVERT_Y_DIR CONF_Y_DIRECTION
+#define INVERT_Z_DIR CONF_Z_DIRECTION
 
 // @section extruder
 
 // For direct drive extruder v9 set to true, for geared extruder set to false.
-#define INVERT_E0_DIR true
+#define INVERT_E0_DIR CONF_EXTRUDER0_DIRECTION
 #define INVERT_E1_DIR true
 #define INVERT_E2_DIR true
 #define INVERT_E3_DIR true

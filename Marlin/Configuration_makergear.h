@@ -1,9 +1,9 @@
 /* MakerGear defines*/
-#define OLD_X_PULLEY 80.1
-#define NEW_X_PULLEY 88.8
+#define OLD_X_PULLEY 88.8 
+#define NEW_X_PULLEY 80.1
 
-#define OLD_Y_PULLEY 80.1
-#define NEW_Y_PULLEY 88.8
+#define OLD_Y_PULLEY 88.8
+#define NEW_Y_PULLEY 80.1
 
 #define RAMBO_SHIELD_11 11
 #define RAMBO_SHIELD_12 12

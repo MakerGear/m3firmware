@@ -1,6 +1,7 @@
 /* MakerGear defines*/
 
-#define MAKERGEAR_MODEL "M3 Single"
+#define MAKERGEAR_MODEL "M3 Demeter"
+#define MAKERGEAR_AUTHOR "MG |Scott, Josh, Kyle"
 
 #define M2_X_PULLEY 88.8 
 #define M3_X_PULLEY 80.1

@@ -10187,6 +10187,12 @@ void stop() {
  */
 void setup() {
 
+  //when eeprom is killing your rambo
+  #if AUTO_REWRITE_EEPROM == true
+    Config_ResetDefault();  
+    Config_StoreSettings();
+  #endif
+
   #ifdef DISABLE_JTAG
     // Disable JTAG on AT90USB chips to free up pins for IO
     MCUCR = 0x80;
@@ -10339,6 +10345,7 @@ void setup() {
     
     BUZZ(200, 659);
     BUZZ(200, 698);
+
 }
 
 /**

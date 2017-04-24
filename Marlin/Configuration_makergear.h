@@ -40,6 +40,8 @@
 
 #define SECOND_X_PWM 90
 
+#define AUTO_REWRITE_EEPROM	false
+
 #define CONF_X_PULLEY  			M3_X_PULLEY
 #define CONF_Y_PULLEY  			M3_Y_PULLEY
 #define CONF_SHIELD    			RAMBO_SHIELD_13

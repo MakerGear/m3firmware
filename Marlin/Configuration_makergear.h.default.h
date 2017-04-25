@@ -9,6 +9,17 @@
 #define M2_Y_PULLEY 88.8
 #define M3_Y_PULLEY 80.1
 
+
+#define M2_X_MAX 205
+#define M3_X_MAX 220
+
+#define M2_Y_MAX 255
+#define M3_Y_MAX 253
+
+#define M2_Z_MAX 200
+#define M3_Z_MAX 210
+
+
 #define RAMBO_SHIELD_11 11
 #define RAMBO_SHIELD_12 12
 #define RAMBO_SHIELD_13 13
@@ -40,6 +51,8 @@
 
 #define SECOND_X_PWM 90
 
+#define AUTO_REWRITE_EEPROM	false
+
 #define CONF_X_PULLEY  			M3_X_PULLEY
 #define CONF_Y_PULLEY  			M3_Y_PULLEY
 #define CONF_SHIELD    			RAMBO_SHIELD_13
@@ -49,5 +62,6 @@
 #define CONF_X_DIRECTION  		M3_X_DIRECTION
 #define CONF_Y_DIRECTION  		M3_Y_DIRECTION
 #define CONF_Z_DIRECTION  		M3_Z_DIRECTION
-#define CONF_EXTRUDER0_DIRECTION  M3_PRINTED_FILAMENT_DRIVE_DIRECTION
-
+#define CONF_X_MAX M3_X_MAX
+#define CONF_Y_MAX M3_Y_MAX
+#define CONF_Z_MAX M3_Z_MAX

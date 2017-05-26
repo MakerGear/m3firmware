@@ -10,12 +10,18 @@
 #define M3_Y_PULLEY 80.1
 
 
+#define M2_X_MIN 0
+#define M3_X_MIN -4
+#define M2_Y_MIN 0
+#define M3_Y_MIN 0
+#define M2_Z_MIN -1
+#define M3_Z_MIN -1
+
+
 #define M2_X_MAX 205
 #define M3_X_MAX 220
-
 #define M2_Y_MAX 255
 #define M3_Y_MAX 253
-
 #define M2_Z_MAX 200
 #define M3_Z_MAX 210
 
@@ -66,4 +72,7 @@
 #define CONF_X_MAX M3_X_MAX
 #define CONF_Y_MAX M3_Y_MAX
 #define CONF_Z_MAX M3_Z_MAX
+#define CONF_X_MIN M3_X_MIN
+#define CONF_Y_MIN M3_Y_MIN
+#define CONF_Z_MIN M3_Z_MIN
 

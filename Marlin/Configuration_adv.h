@@ -123,8 +123,8 @@
   #define AUTOTEMP_OLDWEIGHT 0.98
 #endif
 
-//Show Temperature ADC value
-//The M105 command return, besides traditional information, the ADC value read from temperature sensors.
+// Show Temperature ADC value
+// Enable for M105 to include ADC values read from temperature sensors.
 //#define SHOW_TEMP_ADC_VALUES
 
 /**
@@ -220,12 +220,16 @@
 #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
 #define EXTRUDER_AUTO_FAN_SPEED   230  //SCOTT was 255, hoping for a little quiet since we don't need much air flow
 
-// Define a pin to turn case light on/off
-//#define CASE_LIGHT_PIN 4
-#if PIN_EXISTS(CASE_LIGHT)
-  #define INVERT_CASE_LIGHT false   // Set to true if HIGH is the OFF state (active low)
-  //#define CASE_LIGHT_DEFAULT_ON   // Uncomment to set default state to on
-  //#define MENU_ITEM_CASE_LIGHT    // Uncomment to have a Case Light On / Off entry in main menu
+/**
+ * M355 Case Light on-off / brightness
+ */
+//#define CASE_LIGHT_ENABLE
+#if ENABLED(CASE_LIGHT_ENABLE)
+  //#define CASE_LIGHT_PIN 4                  // Override the default pin if needed
+  #define INVERT_CASE_LIGHT false             // Set true if Case Light is ON when pin is LOW
+  #define CASE_LIGHT_DEFAULT_ON true          // Set default power-up state on
+  #define CASE_LIGHT_DEFAULT_BRIGHTNESS 105   // Set default power-up brightness (0-255, requires PWM pin)
+  //#define MENU_ITEM_CASE_LIGHT              // Add a Case Light option to the LCD main menu
 #endif
 
 //===========================================================================
@@ -290,19 +294,17 @@
 // prevents hot-end ooze contaminating the print. It also reduces the weight of each x-carriage
 // allowing faster printing speeds. Connect your X2 stepper to the first unused E plug.
 //#define DUAL_X_CARRIAGE
-
 #if CONF_CARRIAGE == TWO_X_CARRIAGE
   #define DUAL_X_CARRIAGE
 #endif
-
 
 
 #if ENABLED(DUAL_X_CARRIAGE)
   // Configuration for second X-carriage
   // Note: the first x-carriage is defined as the x-carriage which homes to the minimum endstop;
   // the second x-carriage always homes to the maximum endstop.
-  #define X2_MIN_POS 110     // set minimum to ensure second x-carriage doesn't hit the parked first X-carriage
-  #define X2_MAX_POS 240    // set maximum to the distance between toolheads when both heads are homed
+  #define X2_MIN_POS 39.24     // set minimum to ensure second x-carriage doesn't hit the parked first X-carriage
+  #define X2_MAX_POS 254    // set maximum to the distance between toolheads when both heads are homed
   #define X2_HOME_DIR 1     // the second X-carriage always homes to the maximum endstop position
   #define X2_HOME_POS X2_MAX_POS // default home position is the maximum carriage position
       // However: In this mode the HOTEND_OFFSET_X value for the second extruder provides a software
@@ -372,6 +374,8 @@
 #define DEFAULT_MINIMUMFEEDRATE       0.0     // minimum feedrate
 #define DEFAULT_MINTRAVELFEEDRATE     0.0
 
+//#define HOME_AFTER_DEACTIVATE  // Require rehoming after steppers are deactivated
+
 // @section lcd
 
 #if ENABLED(ULTIPANEL)
@@ -420,16 +424,16 @@
  *    M908 - BQ_ZUM_MEGA_3D, RAMBO, PRINTRBOARD_REVF, RIGIDBOARD_V2 & SCOOVO_X9H
  *    M909, M910 & LCD - only PRINTRBOARD_REVF & RIGIDBOARD_V2
  */
-//#define PWM_MOTOR_CURRENT {1300, 1300, 1250} // Values in milliamps
+//#define PWM_MOTOR_CURRENT { 1300, 1300, 1250 }          // Values in milliamps
 #define DIGIPOT_MOTOR_CURRENT {100,100,190,95,95} // Values 0-255 (RAMBO 135 = ~0.75A, 185 = ~1A)
-//#define DAC_MOTOR_CURRENT_DEFAULT { 70, 80, 90, 80 } // Default drive percent - X, Y, Z, E axis
+//#define DAC_MOTOR_CURRENT_DEFAULT { 70, 80, 90, 80 }    // Default drive percent - X, Y, Z, E axis
 
 // Uncomment to enable an I2C based DIGIPOT like on the Azteeg X3 Pro
 //#define DIGIPOT_I2C
-//#define DIGIPOT_MCP4018
+//#define DIGIPOT_MCP4018          // Requires library from https://github.com/stawel/SlowSoftI2CMaster
 #define DIGIPOT_I2C_NUM_CHANNELS 8 // 5DPRINT: 4     AZTEEG_X3_PRO: 8
 // Actual motor currents in Amps, need as many here as DIGIPOT_I2C_NUM_CHANNELS
-#define DIGIPOT_I2C_MOTOR_CURRENTS {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0}  //  AZTEEG_X3_PRO
+#define DIGIPOT_I2C_MOTOR_CURRENTS { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 }  //  AZTEEG_X3_PRO
 
 //===========================================================================
 //=============================Additional Features===========================
@@ -446,6 +450,9 @@
 
 // Include a page of printer information in the LCD Main Menu
 //#define LCD_INFO_MENU
+
+// Scroll a longer status message into view
+//#define STATUS_MESSAGE_SCROLLING
 
 // On the Info Screen, display XY with one decimal place when possible
 //#define LCD_DECIMAL_SMALL_XY
@@ -523,7 +530,7 @@
   #endif
 
   // This allows hosts to request long names for files and folders with M33
-  #define LONG_FILENAME_HOST_SUPPORT
+  //#define LONG_FILENAME_HOST_SUPPORT
 
   // This option allows you to abort SD printing when any endstop is triggered.
   // This feature must be enabled with "M540 S1" or from the LCD menu.
@@ -608,7 +615,6 @@
 // so: v ^ 2 is proportional to number of steps we advance the extruder
 //#define ADVANCE  //SCOTT Enabling causes some sort of problem with a combination of heating and Z move resulting in "random" heating errors and disconnect
 
-
 #if ENABLED(ADVANCE)
   #define EXTRUDER_ADVANCE_K .02
   #define D_FILAMENT 1.75
@@ -647,7 +653,7 @@
    *
    * Set to 0 to auto-detect the ratio based on given Gcode G1 print moves.
    *
-   * Slic3r (including Prusa Slic3r) produces Gcode compatible with the automatic mode.
+   * Slic3r (including Průša Slic3r) produces Gcode compatible with the automatic mode.
    * Cura (as of this writing) may produce Gcode incompatible with the automatic mode.
    */
   #define LIN_ADVANCE_E_D_RATIO 0 // The calculated ratio (or 0) according to the formula W * H / ((D / 2) ^ 2 * PI)
@@ -677,10 +683,16 @@
 
 // @section extras
 
-// Arc interpretation settings:
-#define ARC_SUPPORT  // Disabling this saves ~2738 bytes
-#define MM_PER_ARC_SEGMENT 1
-#define N_ARC_CORRECTION 25
+//
+// G2/G3 Arc Support
+//
+#define ARC_SUPPORT               // Disable this feature to save ~3226 bytes
+#if ENABLED(ARC_SUPPORT)
+  #define MM_PER_ARC_SEGMENT  1   // Length of each arc segment
+  #define N_ARC_CORRECTION   25   // Number of intertpolated segments between corrections
+  //#define ARC_P_CIRCLES         // Enable the 'P' parameter to specify complete circles
+  //#define CNC_WORKSPACE_PLANES  // Allow G2/G3 to operate in XY, ZX, or YZ planes
+#endif
 
 // Support for G5 with XYZE destination and IJPQ offsets. Requires ~2666 bytes.
 //#define BEZIER_CURVE_SUPPORT
@@ -769,22 +781,23 @@
 #endif
 
 /**
- * Filament Change
- * Experimental filament change support.
+ * Advanced Pause
+ * Experimental feature for filament change support and for parking the nozzle when paused.
  * Adds the GCode M600 for initiating filament change.
+ * If PARK_HEAD_ON_PAUSE enabled, adds the GCode M125 to pause printing and park the nozzle.
  *
  * Requires an LCD display.
  * This feature is required for the default FILAMENT_RUNOUT_SCRIPT.
  */
-//#define FILAMENT_CHANGE_FEATURE
-#if ENABLED(FILAMENT_CHANGE_FEATURE)
-  #define FILAMENT_CHANGE_X_POS 3             // X position of hotend
-  #define FILAMENT_CHANGE_Y_POS 3             // Y position of hotend
-  #define FILAMENT_CHANGE_Z_ADD 10            // Z addition of hotend (lift)
-  #define FILAMENT_CHANGE_XY_FEEDRATE 100     // X and Y axes feedrate in mm/s (also used for delta printers Z axis)
-  #define FILAMENT_CHANGE_Z_FEEDRATE 5        // Z axis feedrate in mm/s (not used for delta printers)
-  #define FILAMENT_CHANGE_RETRACT_FEEDRATE 60 // Initial retract feedrate in mm/s
-  #define FILAMENT_CHANGE_RETRACT_LENGTH 2    // Initial retract in mm
+//#define ADVANCED_PAUSE_FEATURE
+#if ENABLED(ADVANCED_PAUSE_FEATURE)
+  #define PAUSE_PARK_X_POS 3                  // X position of hotend
+  #define PAUSE_PARK_Y_POS 3                  // Y position of hotend
+  #define PAUSE_PARK_Z_ADD 10                 // Z addition of hotend (lift)
+  #define PAUSE_PARK_XY_FEEDRATE 100          // X and Y axes feedrate in mm/s (also used for delta printers Z axis)
+  #define PAUSE_PARK_Z_FEEDRATE 5             // Z axis feedrate in mm/s (not used for delta printers)
+  #define PAUSE_PARK_RETRACT_FEEDRATE 60      // Initial retract feedrate in mm/s
+  #define PAUSE_PARK_RETRACT_LENGTH 2         // Initial retract in mm
                                               // It is a short retract used immediately after print interrupt before move to filament exchange position
   #define FILAMENT_CHANGE_UNLOAD_FEEDRATE 10  // Unload filament feedrate in mm/s - filament unloading can be fast
   #define FILAMENT_CHANGE_UNLOAD_LENGTH 100   // Unload filament length from hotend in mm
@@ -795,16 +808,17 @@
   #define FILAMENT_CHANGE_LOAD_LENGTH 0       // Load filament length over hotend in mm
                                               // Longer length for bowden printers to fast load filament into whole bowden tube over the hotend,
                                               // Short or zero length for printers without bowden where loading is not used
-  #define FILAMENT_CHANGE_EXTRUDE_FEEDRATE 3  // Extrude filament feedrate in mm/s - must be slower than load feedrate
-  #define FILAMENT_CHANGE_EXTRUDE_LENGTH 50   // Extrude filament length in mm after filament is loaded over the hotend,
+  #define ADVANCED_PAUSE_EXTRUDE_FEEDRATE 3   // Extrude filament feedrate in mm/s - must be slower than load feedrate
+  #define ADVANCED_PAUSE_EXTRUDE_LENGTH 50    // Extrude filament length in mm after filament is loaded over the hotend,
                                               // 0 to disable for manual extrusion
                                               // Filament can be extruded repeatedly from the filament exchange menu to fill the hotend,
                                               // or until outcoming filament color is not clear for filament color change
-  #define FILAMENT_CHANGE_NOZZLE_TIMEOUT 45   // Turn off nozzle if user doesn't change filament within this time limit in seconds
+  #define PAUSE_PARK_NOZZLE_TIMEOUT 45        // Turn off nozzle if user doesn't change filament within this time limit in seconds
   #define FILAMENT_CHANGE_NUMBER_OF_ALERT_BEEPS 5 // Number of alert beeps before printer goes quiet
-  #define FILAMENT_CHANGE_NO_STEPPER_TIMEOUT  // Enable to have stepper motors hold position during filament change
+  #define PAUSE_PARK_NO_STEPPER_TIMEOUT       // Enable to have stepper motors hold position during filament change
                                               // even if it takes longer than DEFAULT_STEPPER_DEACTIVE_TIME.
   //#define PARK_HEAD_ON_PAUSE                // Go to filament change position on pause, return to print position on resume
+  //#define HOME_BEFORE_FILAMENT_CHANGE       // Ensure homing has been completed prior to parking for filament change
 #endif
 
 // @section tmc
@@ -1025,7 +1039,7 @@
    */
   #define  TMC2130_ADV() {  }
 
-#endif // ENABLED(HAVE_TMC2130)
+#endif // HAVE_TMC2130
 
 // @section L6470
 
@@ -1140,6 +1154,55 @@
 //#define EXPERIMENTAL_I2CBUS
 #define I2C_SLAVE_ADDRESS  0 // Set a value from 8 to 127 to act as a slave
 
+// @section extras
+
+/**
+ * Spindle & Laser control
+ *
+ * Add the M3, M4, and M5 commands to turn the spindle/laser on and off, and
+ * to set spindle speed, spindle direction, and laser power.
+ *
+ * SuperPid is a router/spindle speed controller used in the CNC milling community.
+ * Marlin can be used to turn the spindle on and off. It can also be used to set
+ * the spindle speed from 5,000 to 30,000 RPM.
+ *
+ * You'll need to select a pin for the ON/OFF function and optionally choose a 0-5V
+ * hardware PWM pin for the speed control and a pin for the rotation direction.
+ *
+ * See http://marlinfw.org/docs/configuration/laser_spindle.html for more config details.
+ */
+//#define SPINDLE_LASER_ENABLE
+#if ENABLED(SPINDLE_LASER_ENABLE)
+
+  #define SPINDLE_LASER_ENABLE_INVERT   false  // set to "true" if the on/off function is reversed
+  #define SPINDLE_LASER_PWM             true   // set to true if your controller supports setting the speed/power
+  #define SPINDLE_LASER_PWM_INVERT      true   // set to "true" if the speed/power goes up when you want it to go slower
+  #define SPINDLE_LASER_POWERUP_DELAY   5000   // delay in milliseconds to allow the spindle/laser to come up to speed/power
+  #define SPINDLE_LASER_POWERDOWN_DELAY 5000   // delay in milliseconds to allow the spindle to stop
+  #define SPINDLE_DIR_CHANGE            true   // set to true if your spindle controller supports changing spindle direction
+  #define SPINDLE_INVERT_DIR            false
+  #define SPINDLE_STOP_ON_DIR_CHANGE    true   // set to true if Marlin should stop the spindle before changing rotation direction
+
+  /**
+   *  The M3 & M4 commands use the following equation to convert PWM duty cycle to speed/power
+   *
+   *  SPEED/POWER = PWM duty cycle * SPEED_POWER_SLOPE + SPEED_POWER_INTERCEPT
+   *    where PWM duty cycle varies from 0 to 255
+   *
+   *  set the following for your controller (ALL MUST BE SET)
+   */
+
+  #define SPEED_POWER_SLOPE    118.4
+  #define SPEED_POWER_INTERCEPT  0
+  #define SPEED_POWER_MIN     5000
+  #define SPEED_POWER_MAX    30000    // SuperPID router controller 0 - 30,000 RPM
+
+  //#define SPEED_POWER_SLOPE      0.3922
+  //#define SPEED_POWER_INTERCEPT  0
+  //#define SPEED_POWER_MIN       10
+  //#define SPEED_POWER_MAX      100      // 0-100%
+#endif
+
 /**
  * M43 - display pin status, watch pins for changes, watch endstops & toggle LED, Z servo probe test, toggle pins
  */
@@ -1148,12 +1211,12 @@
 /**
  * Auto-report temperatures with M155 S<seconds>
  */
-//#define AUTO_REPORT_TEMPERATURES
+#define AUTO_REPORT_TEMPERATURES
 
 /**
  * Include capabilities in M115 output
  */
-//#define EXTENDED_CAPABILITIES_REPORT
+#define EXTENDED_CAPABILITIES_REPORT
 
 /**
  * Volumetric extrusion default state
@@ -1172,5 +1235,133 @@
  *  - G92 will revert to its behavior from Marlin 1.0.
  */
 //#define NO_WORKSPACE_OFFSETS
+
+/**
+ * Set the number of proportional font spaces required to fill up a typical character space.
+ * This can help to better align the output of commands like `G29 O` Mesh Output.
+ *
+ * For clients that use a fixed-width font (like OctoPrint), leave this set to 1.0.
+ * Otherwise, adjust according to your client and font.
+ */
+#define PROPORTIONAL_FONT_RATIO 1.0
+
+/**
+ * Spend 28 bytes of SRAM to optimize the GCode parser
+ */
+#define FASTER_GCODE_PARSER
+
+/**
+ * User-defined menu items that execute custom GCode
+ */
+//#define CUSTOM_USER_MENUS
+#if ENABLED(CUSTOM_USER_MENUS)
+  #define USER_SCRIPT_DONE "M117 User Script Done"
+
+  #define USER_DESC_1 "Home & UBL Info"
+  #define USER_GCODE_1 "G28\nG29 W"
+
+  #define USER_DESC_2 "Preheat for PLA"
+  #define USER_GCODE_2 "M140 S" STRINGIFY(PREHEAT_1_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_1_TEMP_HOTEND)
+
+  #define USER_DESC_3 "Preheat for ABS"
+  #define USER_GCODE_3 "M140 S" STRINGIFY(PREHEAT_2_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_2_TEMP_HOTEND)
+
+  #define USER_DESC_4 "Heat Bed/Home/Level"
+  #define USER_GCODE_4 "M140 S" STRINGIFY(PREHEAT_2_TEMP_BED) "\nG28\nG29"
+
+  #define USER_DESC_5 "Home & Info"
+  #define USER_GCODE_5 "G28\nM503"
+#endif
+
+/**
+ * Specify an action command to send to the host when the printer is killed.
+ * Will be sent in the form '//action:ACTION_ON_KILL', e.g. '//action:poweroff'.
+ * The host must be configured to handle the action command.
+ */
+//#define ACTION_ON_KILL "poweroff"
+
+//===========================================================================
+//====================== I2C Position Encoder Settings ======================
+//===========================================================================
+
+/**
+ *  I2C position encoders for closed loop control.
+ *  Developed by Chris Barr at Aus3D.
+ *
+ *  Wiki: http://wiki.aus3d.com.au/Magnetic_Encoder
+ *  Github: https://github.com/Aus3D/MagneticEncoder
+ *
+ *  Supplier: http://aus3d.com.au/magnetic-encoder-module
+ *  Alternative Supplier: http://reliabuild3d.com/
+ *
+ *  Reilabuild encoders have been modified to improve reliability.
+ */
+
+//#define I2C_POSITION_ENCODERS
+#if ENABLED(I2C_POSITION_ENCODERS)
+
+  #define I2CPE_ENCODER_CNT         1                       // The number of encoders installed; max of 5
+                                                            // encoders supported currently.
+
+  #define I2CPE_ENC_1_ADDR          I2CPE_PRESET_ADDR_X     // I2C address of the encoder. 30-200.
+  #define I2CPE_ENC_1_AXIS          X_AXIS                  // Axis the encoder module is installed on.  <X|Y|Z|E>_AXIS.
+  #define I2CPE_ENC_1_TYPE          I2CPE_ENC_TYPE_LINEAR   // Type of encoder:  I2CPE_ENC_TYPE_LINEAR -or-
+                                                            // I2CPE_ENC_TYPE_ROTARY.
+  #define I2CPE_ENC_1_TICKS_UNIT    2048                    // 1024 for magnetic strips with 2mm poles; 2048 for
+                                                            // 1mm poles. For linear encoders this is ticks / mm,
+                                                            // for rotary encoders this is ticks / revolution.
+  //#define I2CPE_ENC_1_TICKS_REV     (16 * 200)            // Only needed for rotary encoders; number of stepper
+                                                            // steps per full revolution (motor steps/rev * microstepping)
+  //#define I2CPE_ENC_1_INVERT                              // Invert the direction of axis travel.
+  #define I2CPE_ENC_1_EC_METHOD     I2CPE_ECM_NONE          // Type of error error correction.
+  #define I2CPE_ENC_1_EC_THRESH     0.10                    // Threshold size for error (in mm) above which the
+                                                            // printer will attempt to correct the error; errors
+                                                            // smaller than this are ignored to minimize effects of
+                                                            // measurement noise / latency (filter).
+
+  #define I2CPE_ENC_2_ADDR          I2CPE_PRESET_ADDR_Y     // Same as above, but for encoder 2.
+  #define I2CPE_ENC_2_AXIS          Y_AXIS
+  #define I2CPE_ENC_2_TYPE          I2CPE_ENC_TYPE_LINEAR
+  #define I2CPE_ENC_2_TICKS_UNIT    2048
+  //#define I2CPE_ENC_2_TICKS_REV   (16 * 200)
+  //#define I2CPE_ENC_2_INVERT
+  #define I2CPE_ENC_2_EC_METHOD     I2CPE_ECM_NONE
+  #define I2CPE_ENC_2_EC_THRESH     0.10
+
+  #define I2CPE_ENC_3_ADDR          I2CPE_PRESET_ADDR_Z     // Encoder 3.  Add additional configuration options
+  #define I2CPE_ENC_3_AXIS          Z_AXIS                  // as above, or use defaults below.
+
+  #define I2CPE_ENC_4_ADDR          I2CPE_PRESET_ADDR_E     // Encoder 4.
+  #define I2CPE_ENC_4_AXIS          E_AXIS
+
+  #define I2CPE_ENC_5_ADDR          34                      // Encoder 5.
+  #define I2CPE_ENC_5_AXIS          E_AXIS
+
+  // Default settings for encoders which are enabled, but without settings configured above.
+  #define I2CPE_DEF_TYPE            I2CPE_ENC_TYPE_LINEAR
+  #define I2CPE_DEF_ENC_TICKS_UNIT  2048
+  #define I2CPE_DEF_TICKS_REV       (16 * 200)
+  #define I2CPE_DEF_EC_METHOD       I2CPE_ECM_NONE
+  #define I2CPE_DEF_EC_THRESH       0.1
+
+  //#define I2CPE_ERR_THRESH_ABORT  100.0                   // Threshold size for error (in mm) error on any given
+                                                            // axis after which the printer will abort. Comment out to
+                                                            // disable abort behaviour.
+
+  #define I2CPE_TIME_TRUSTED        10000                   // After an encoder fault, there must be no further fault
+                                                            // for this amount of time (in ms) before the encoder
+                                                            // is trusted again.
+
+  /**
+   * Position is checked every time a new command is executed from the buffer but during long moves,
+   * this setting determines the minimum update time between checks. A value of 100 works well with
+   * error rolling average when attempting to correct only for skips and not for vibration.
+   */
+  #define I2CPE_MIN_UPD_TIME_MS     100                     // Minimum time in miliseconds between encoder checks.
+
+  // Use a rolling average to identify persistant errors that indicate skips, as opposed to vibration and noise.
+  #define I2CPE_ERR_ROLLING_AVERAGE
+
+#endif // I2C_POSITION_ENCODERS
 
 #endif // CONFIGURATION_ADV_H

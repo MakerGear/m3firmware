@@ -801,7 +801,7 @@
 // For direct drive extruder v9 set to true, for geared extruder set to false.
 #define INVERT_E0_DIR CONF_EXTRUDER0_DIRECTION
 #define INVERT_E1_DIR CONF_EXTRUDER1_DIRECTION
-#define INVERT_E2_DIR true
+#define INVERT_E2_DIR false // direction for second x motor
 #define INVERT_E3_DIR true
 #define INVERT_E4_DIR false
 

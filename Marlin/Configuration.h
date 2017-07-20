@@ -201,8 +201,8 @@
 // For the other hotends it is their distance from the extruder 0 hotend.
 //#define HOTEND_OFFSET_X {0.0, 20.00} // (in mm) for each extruder, offset of the hotend on the X axis
 //#define HOTEND_OFFSET_Y {0.0, 5.00}  // (in mm) for each extruder, offset of the hotend on the Y axis
-#define HOTEND_OFFSET_X {0.0, 262.1} // (in mm) for each extruder, offset of the hotend on the X axis
-#define HOTEND_OFFSET_Y {0.0, 0.20}  // (in mm) for each extruder, offset of the hotend on the Y axis
+#define HOTEND_OFFSET_X {0.0, CONF_X2_MAX} // (in mm) for each extruder, offset of the hotend on the X axis
+#define HOTEND_OFFSET_Y {0.0, 0.00}  // (in mm) for each extruder, offset of the hotend on the Y axis
 
 // @section machine
 
@@ -359,9 +359,15 @@
   // #define  DEFAULT_Kd 114
 
  //MakerGear v5 215C cooling option 1, no extrusion, fans on
-  #define  DEFAULT_Kp 16.83
-  #define  DEFAULT_Ki 1.10
-  #define  DEFAULT_Kd 64.51
+  // #define  DEFAULT_Kp 16.83
+  // #define  DEFAULT_Ki 1.10
+  // #define  DEFAULT_Kd 64.51
+
+
+
+  #define  DEFAULT_Kp CONF_HOTEND_KP
+  #define  DEFAULT_Ki CONF_HOTEND_KI
+  #define  DEFAULT_Kd CONF_HOTEND_KD
 
   // MakerGear
   //#define  DEFAULT_Kp 7.0
@@ -425,9 +431,9 @@
   // #define  DEFAULT_bedKd 305.4
 
    // Default for MakerGear M2 24v
-   #define  DEFAULT_bedKp 159.7
-   #define  DEFAULT_bedKi 5.59
-   #define  DEFAULT_bedKd 1141.48
+   #define  DEFAULT_bedKp CONF_HBP_KP
+   #define  DEFAULT_bedKi CONF_HBP_KI
+   #define  DEFAULT_bedKd CONF_HBP_KD
 
 
 
@@ -565,7 +571,7 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {CONF_X_PULLEY,CONF_Y_PULLEY,1007.7,CONF_FILAMENT_MOTOR}  // default steps per unit for Makergear M2plus
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {CONF_X_PULLEY,CONF_Y_PULLEY,CONF_Z_PULLEY,CONF_FILAMENT_MOTOR}  // default steps per unit for Makergear M2plus
 
 /**
  * Default Max Feed Rate (mm/s)

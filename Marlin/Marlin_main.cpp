@@ -12068,17 +12068,27 @@ void prepare_move_to_destination() {
 
   #endif
 
-  if (
-    #if UBL_DELTA // Also works for CARTESIAN (smaller segments follow mesh more closely)
-      ubl.prepare_segmented_line_to(destination, feedrate_mm_s)
-    #elif IS_KINEMATIC
-      prepare_kinematic_move_to(destination)
-    #elif ENABLED(DUAL_X_CARRIAGE)
-      prepare_move_to_destination_dualx()
-    #else
-      prepare_move_to_destination_cartesian()
-    #endif
-  ) return;
+  // if (
+  //   #if UBL_DELTA // Also works for CARTESIAN (smaller segments follow mesh more closely)
+  //     ubl.prepare_segmented_line_to(destination, feedrate_mm_s)
+  //   #elif IS_KINEMATIC
+  //     prepare_kinematic_move_to(destination)
+  //   #elif ENABLED(DUAL_X_CARRIAGE)
+  //     prepare_move_to_destination_dualx()
+  //   #else
+  //     prepare_move_to_destination_cartesian()
+  //   #endif
+  // ) return;
+
+  #if IS_KINEMATIC
+    if (prepare_kinematic_move_to(destination)) return;
+  #else
+    #if ENABLED(DUAL_X_CARRIAGE)
+      if (prepare_move_to_destination_dualx()) return;
+
+    if (prepare_move_to_destination_cartesian()) return;
+  #endif
+
 
   set_current_to_destination();
 }

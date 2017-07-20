@@ -12085,6 +12085,7 @@ void prepare_move_to_destination() {
   #else
     #if ENABLED(DUAL_X_CARRIAGE)
       if (prepare_move_to_destination_dualx()) return;
+    #endif
 
     if (prepare_move_to_destination_cartesian()) return;
   #endif

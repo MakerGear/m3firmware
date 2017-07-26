@@ -105,7 +105,7 @@
 #define CONF_X_MAX 				M3_DUAL_X_MAX
 #define CONF_Y_MAX 				M3_Y_MAX
 #define CONF_Z_MAX 				M3_Z_MAX
-#define CONF_X_MIN 				M3_X_MIN
+#define CONF_X_MIN 				M3_DUAL_X_MIN
 #define CONF_Y_MIN 				M3_Y_MIN
 #define CONF_Z_MIN 				M3_Z_MIN
 

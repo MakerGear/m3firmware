@@ -235,6 +235,6 @@ Edit directives below on a per machine basis using the options from above
 // DXC_FULL_CONTROL_MODE OR DXC_AUTO_PARK_MODE
 #define CONF_DEFAULT_DUAL_X_CARRIAGE_MODE DXC_FULL_CONTROL_MODE 
 
-//#define LIN_ADVANCE
+#define LIN_ADVANCE
 //#define SDSUPPORT
 

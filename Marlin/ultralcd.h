@@ -70,7 +70,7 @@
     void lcd_bootscreen();
   #endif
 
-  #define LCD_UPDATE_INTERVAL 200
+  #define LCD_UPDATE_INTERVAL 100
 
   #if ENABLED(ULTIPANEL)
 

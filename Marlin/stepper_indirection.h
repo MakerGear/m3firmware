@@ -166,7 +166,7 @@
     #define X2_ENABLE_WRITE(STATE) do{if(STATE) stepperX2.Step_Clock(stepperX2.getStatus() & STATUS_HIZ); else stepperX2.softFree();}while(0)
     #define X2_ENABLE_READ (stepperX2.getStatus() & STATUS_HIZ)
     #define X2_DIR_INIT NOOP
-    #define X2_DIR_WRITE(STATE) stepperX2.Step_Clock(STATE)
+    #define X2_DIR_WRITE(STATE) stepperX2.Step_Clock(!STATE)
     #define X2_DIR_READ (stepperX2.getStatus() & STATUS_DIR)
   #else
     #if ENABLED(HAVE_TMCDRIVER) && ENABLED(X2_IS_TMC)

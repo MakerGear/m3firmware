@@ -13295,6 +13295,8 @@ void idle(
     buzzer.tick();
   #endif
 
+  buzzer.tick();
+
   #if ENABLED(I2C_POSITION_ENCODERS)
     if (planner.blocks_queued() &&
         ( (blockBufferIndexRef != planner.block_buffer_head) ||
@@ -13385,6 +13387,16 @@ void stop() {
  *    • status LEDs
  */
 void setup() {
+
+
+
+   //when eeprom is killing your rambo
+  #if AUTO_REWRITE_EEPROM == true
+    Config_ResetDefault();  
+    Config_StoreSettings();
+  #endif
+
+
 
   #if ENABLED(MAX7219_DEBUG)
     Max7219_init();
@@ -13619,6 +13631,10 @@ void setup() {
     delay(1000);
     WRITE(LCD_PINS_RS, HIGH);
   #endif
+    
+  //startup sound for rambo
+  BUZZ(200, 659);
+  BUZZ(200, 698);
 }
 
 /**

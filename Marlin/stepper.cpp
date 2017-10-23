@@ -1422,6 +1422,13 @@ void Stepper::report_positions() {
       const uint8_t digipot_ch[] = DIGIPOT_CHANNELS;
       digitalPotWrite(digipot_ch[driver], current);
 
+
+      SET_OUTPUT(E2_CURRENT_PIN);
+      analogWrite(E2_CURRENT_PIN, SECOND_X_PWM);//extra x motor is not on a digipot
+      TCCR5B = (TCCR5B & ~(_BV(CS50) | _BV(CS51) | _BV(CS52))) | _BV(CS50); //set PWM frequency to reduce buzzing
+
+
+
     #elif HAS_MOTOR_CURRENT_PWM
 
       if (WITHIN(driver, 0, 2))
@@ -1487,6 +1494,12 @@ void Stepper::report_positions() {
   void Stepper::microstep_init() {
     SET_OUTPUT(X_MS1_PIN);
     SET_OUTPUT(X_MS2_PIN);
+
+    #if CONF_CARRIAGE == TWO_X_CARRIAGE
+      SET_OUTPUT(E2_MS1_PIN);
+      SET_OUTPUT(E2_MS2_PIN);
+    #endif
+
     #if HAS_Y_MICROSTEPS
       SET_OUTPUT(Y_MS1_PIN);
       SET_OUTPUT(Y_MS2_PIN);
@@ -1522,7 +1535,14 @@ void Stepper::report_positions() {
 
   void Stepper::microstep_ms(const uint8_t driver, const int8_t ms1, const int8_t ms2) {
     if (ms1 >= 0) switch (driver) {
-      case 0: WRITE(X_MS1_PIN, ms1); break;
+      case 0: WRITE(X_MS1_PIN, ms1); 
+
+          #if CONF_CARRIAGE == TWO_X_CARRIAGE
+            WRITE(E2_MS1_PIN, ms1); 
+          #endif
+
+
+      break;
       #if HAS_Y_MICROSTEPS
         case 1: WRITE(Y_MS1_PIN, ms1); break;
       #endif
@@ -1546,7 +1566,15 @@ void Stepper::report_positions() {
       #endif
     }
     if (ms2 >= 0) switch (driver) {
-      case 0: WRITE(X_MS2_PIN, ms2); break;
+
+      case 0: WRITE(X_MS2_PIN, ms2); 
+        #if CONF_CARRIAGE == TWO_X_CARRIAGE
+          WRITE(E2_MS2_PIN, ms2); 
+        #endif
+      break;
+
+
+
       #if HAS_Y_MICROSTEPS
         case 1: WRITE(Y_MS2_PIN, ms2); break;
       #endif

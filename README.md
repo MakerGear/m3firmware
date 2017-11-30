@@ -29,3 +29,12 @@ to
 
 
 *Configuration_makergear.h*
+
+
+## Building and Uploading
+
+This firmware has been tested with the commandline version of PlatformIO
+
+http://platformio.org/
+
+It has not been tested with the latest version of the Arduino IDE, though there are no changes that should cause any conflicts. 

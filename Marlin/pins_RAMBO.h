@@ -52,9 +52,9 @@
 // Servos
 //
 #define SERVO0_PIN         22 // Motor header MX1
-#define SERVO1_PIN         23 // Motor header MX2
+#define SERVO1_PIN         4 // Motor header MX2
 #define SERVO2_PIN         24 // Motor header MX3
-#define SERVO3_PIN          5 // PWM header pin 5
+#define SERVO3_PIN         -1 // PWM header pin 5 //was set to 5, which I think was wrong anyway... - Josh, 11/21/2017
 
 //
 // Z Probe (when not Z_MIN_PIN)
@@ -70,7 +70,7 @@
 #define X_MAX_PIN          24
 #define Y_MIN_PIN          11
 #define Y_MAX_PIN          23
-#define Z_MIN_PIN          10
+#define Z_MIN_PIN           5 //was 10, set to 5 to try to use the PG5 pin on PWM header for BLTouch.  11/21/2017 Josh.
 #define Z_MAX_PIN          30
 
 //

@@ -520,7 +520,7 @@
 // extra connectors. Leave undefined any used for non-endstop and non-probe purposes.
 #define USE_XMIN_PLUG
 #define USE_YMIN_PLUG
-//#define USE_ZMIN_PLUG
+#define USE_ZMIN_PLUG //uncommented by Josh for BLTouch testing - 10/24/1017
 
 //define xmax if we're using dual carriage
 #if CONF_CARRIAGE == TWO_X_CARRIAGE
@@ -690,13 +690,13 @@
 /**
  * Z Servo Probe, such as an endstop switch on a rotating arm.
  */
-//#define Z_ENDSTOP_SERVO_NR 0   // Defaults to SERVO 0 connector.
-//#define Z_SERVO_ANGLES {70,0}  // Z Servo Deploy and Stow angles
+#define Z_ENDSTOP_SERVO_NR 1   // Defaults to SERVO 0 connector.
+#define Z_SERVO_ANGLES {10,90}  // Z Servo Deploy and Stow angles
 
 /**
  * The BLTouch probe uses a Hall effect sensor and emulates a servo.
  */
-//#define BLTOUCH
+#define BLTOUCH //uncommented by Josh for BLTouch testing - 10/24/1017
 #if ENABLED(BLTOUCH)
   //#define BLTOUCH_DELAY 375   // (ms) Enable and increase if needed
 #endif
@@ -742,18 +742,18 @@
  *      O-- FRONT --+
  *    (0,0)
  */
-#define X_PROBE_OFFSET_FROM_EXTRUDER 10  // X offset: -left  +right  [of the nozzle]
-#define Y_PROBE_OFFSET_FROM_EXTRUDER 10  // Y offset: -front +behind [the nozzle]
-#define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
+#define X_PROBE_OFFSET_FROM_EXTRUDER 21  // X offset: -left  +right  [of the nozzle] //was 0 for my version mounted in the fan, setting to 21 for David's version mounted in the cut slow
+#define Y_PROBE_OFFSET_FROM_EXTRUDER 0  // Y offset: -front +behind [the nozzle] //was -38 for my version mounted in the fan, setting to 0 for David's version mounted in the cut slot
+#define Z_PROBE_OFFSET_FROM_EXTRUDER -.2   // Z offset: -below +above  [the nozzle]
 
 // X and Y axis travel speed (mm/m) between probes
-#define XY_PROBE_SPEED 8000
+#define XY_PROBE_SPEED 4000
 
 // Speed for the first approach when double-probing (with PROBE_DOUBLE_TOUCH)
 #define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
 
 // Speed for the "accurate" probe of each point
-#define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 2)
+#define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 4)
 
 // Use double touch for probing
 //#define PROBE_DOUBLE_TOUCH
@@ -780,7 +780,7 @@
 #define Z_PROBE_OFFSET_RANGE_MAX 20
 
 // Enable the M48 repeatability test to test probe accuracy
-//#define Z_MIN_PROBE_REPEATABILITY_TEST
+#define Z_MIN_PROBE_REPEATABILITY_TEST //uncommented by Josh for BLTouch testing - 10/24/1017
 
 // For Inverting Stepper Enable Pins (Active Low) use 0, Non Inverting (Active High) use 1
 // :{ 0:'Low', 1:'High' }
@@ -838,7 +838,7 @@
 
 // The size of the print bed
 #define X_BED_SIZE 200
-#define Y_BED_SIZE 200
+#define Y_BED_SIZE 250 //changed to 250 by Josh for BLTouch testing - 10/24/1017
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
 #define X_MIN_POS CONF_X_MIN
@@ -914,7 +914,7 @@
  */
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
-//#define AUTO_BED_LEVELING_BILINEAR
+#define AUTO_BED_LEVELING_BILINEAR //uncommented by Josh for BLTouch testing - 10/24/1017
 //#define AUTO_BED_LEVELING_UBL
 //#define MESH_BED_LEVELING
 
@@ -923,7 +923,7 @@
  * Turn on with the command 'M111 S32'.
  * NOTE: Requires a lot of PROGMEM!
  */
-//#define DEBUG_LEVELING_FEATURE
+#define DEBUG_LEVELING_FEATURE //uncommented by Josh for BLTouch testing - 10/24/1017
 
 #if ENABLED(MESH_BED_LEVELING) || ENABLED(AUTO_BED_LEVELING_BILINEAR) || ENABLED(AUTO_BED_LEVELING_UBL)
   // Gradually reduce leveling correction until a set height is reached,
@@ -940,9 +940,9 @@
 
   // Set the boundaries for probing (where the probe can reach).
   #define LEFT_PROBE_BED_POSITION 15
-  #define RIGHT_PROBE_BED_POSITION 170
+  #define RIGHT_PROBE_BED_POSITION 190
   #define FRONT_PROBE_BED_POSITION 20
-  #define BACK_PROBE_BED_POSITION 170
+  #define BACK_PROBE_BED_POSITION 200
 
   // The Z probe minimum outer margin (to validate G29 parameters).
   #define MIN_PROBE_EDGE 10
@@ -954,7 +954,7 @@
 
     // Beyond the probed grid, continue the implied tilt?
     // Default is to maintain the height of the nearest edge.
-    //#define EXTRAPOLATE_BEYOND_GRID
+    #define EXTRAPOLATE_BEYOND_GRID
 
     //
     // Experimental Subdivision of the grid by Catmull-Rom method.
@@ -1713,12 +1713,12 @@
 // leaving it undefined or defining as 0 will disable the servo subsystem
 // If unsure, leave commented / disabled
 //
-//#define NUM_SERVOS 3 // Servo index starts with 0 for M280 command
+#define NUM_SERVOS 3 // Servo index starts with 0 for M280 command //uncommented by Josh for BLTouch testing - 10/24/1017
 
 // Delay (in milliseconds) before the next move will start, to give the servo time to reach its target angle.
 // 300ms is a good value but you can try less delay.
 // If the servo can't reach the requested position, increase it.
-#define SERVO_DELAY { 300 }
+#define SERVO_DELAY { 300, 300, 300 } //added two more entries - by Josh for BLTouch testing - 10/24/1017
 
 // Servo deactivation
 //

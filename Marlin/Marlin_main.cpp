@@ -625,7 +625,9 @@ static uint8_t target_extruder;
 #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
   int bilinear_grid_spacing[2], bilinear_start[2];
   float bilinear_grid_factor[2],
-        z_values[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y];
+        z_values[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y],
+        y_values[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y],
+        x_values[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y];
 #endif
 
 #if IS_SCARA
@@ -2629,65 +2631,188 @@ static void clean_up_after_endstop_or_probe_move() {
    *
    *   buildroot/shared/scripts/MarlinMesh.scad
    */
+
   //#define SCAD_MESH_OUTPUT
+  #define PYTHON_MESH_OUTPUT
+
+
 
   /**
    * Print calibration results for plotting or manual frame adjustment.
    */
-  static void print_2d_array(const uint8_t sx, const uint8_t sy, const uint8_t precision, float (*fn)(const uint8_t, const uint8_t)) {
-    #ifndef SCAD_MESH_OUTPUT
-      for (uint8_t x = 0; x < sx; x++) {
-        for (uint8_t i = 0; i < precision + 2 + (x < 10 ? 1 : 0); i++)
+  static void print_2d_array(const uint8_t sx, const uint8_t sy,const uint8_t precision, const float x_values[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y], const float y_values[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y], float (*fn)(const uint8_t, const uint8_t)) {
+  
+    #ifdef PYTHON_MESH_OUTPUT
+
+
+
+      SERIAL_PROTOCOLPGM(" = [["); // open 2D array
+
+      for (uint8_t y = 0; y < sy; y++) {
+        for (uint8_t x = 0; x < sx; x++) {
           SERIAL_PROTOCOLCHAR(' ');
-        SERIAL_PROTOCOL((int)x);
-      }
-      SERIAL_EOL();
-    #endif
-    #ifdef SCAD_MESH_OUTPUT
-      SERIAL_PROTOCOLLNPGM("measured_z = ["); // open 2D array
-    #endif
-    for (uint8_t y = 0; y < sy; y++) {
-      #ifdef SCAD_MESH_OUTPUT
-        SERIAL_PROTOCOLPGM(" [");           // open sub-array
-      #else
-        if (y < 10) SERIAL_PROTOCOLCHAR(' ');
-        SERIAL_PROTOCOL((int)y);
-      #endif
-      for (uint8_t x = 0; x < sx; x++) {
-        SERIAL_PROTOCOLCHAR(' ');
-        const float offset = fn(x, y);
-        if (!isnan(offset)) {
-          if (offset >= 0) SERIAL_PROTOCOLCHAR('+');
-          SERIAL_PROTOCOL_F(offset, precision);
-        }
-        else {
-          #ifdef SCAD_MESH_OUTPUT
+          if (!isnan(x_values[x][y])) {
+          SERIAL_PROTOCOL_F(x_values[x][y], precision);
+          }
+
+          else {
             for (uint8_t i = 3; i < precision + 3; i++)
               SERIAL_PROTOCOLCHAR(' ');
-            SERIAL_PROTOCOLPGM("NAN");
-          #else
-            for (uint8_t i = 0; i < precision + 3; i++)
-              SERIAL_PROTOCOLCHAR(i ? '=' : ' ');
+              SERIAL_PROTOCOLPGM("NAN");
+          }
+          if (x < sx - 1) SERIAL_PROTOCOLCHAR(',');
+        }
+        if (y < sy - 1) SERIAL_PROTOCOLCHARNEOPNEOP      }
+
+
+
+      SERIAL_PROTOCOLPGM("]  ,["); // open 2D array
+
+      for (uint8_t y = 0; y < sy; y++) {
+        for (uint8_t x = 0; x < sx; x++) {
+          SERIAL_PROTOCOLCHAR(' ');
+          if (!isnan(y_values[x][y])) {
+          SERIAL_PROTOCOL_F(y_values[x][y], precision);
+          }
+
+          else {
+            for (uint8_t i = 3; i < precision + 3; i++)
+              SERIAL_PROTOCOLCHAR(' ');
+              SERIAL_PROTOCOLPGM("NAN");
+          }
+          if (x < sx - 1) SERIAL_PROTOCOLCHAR(',');
+        }
+        if (y < sy - 1) SERIAL_PROTOCOLCHAR(',');
+      }
+
+
+      SERIAL_PROTOCOLPGM("]  ,["); // open 2D array
+
+      for (uint8_t y = 0; y < sy; y++) {
+        for (uint8_t x = 0; x < sx; x++) {
+          SERIAL_PROTOCOLCHAR(' ');
+          const float offset = fn(x, y);
+          if (!isnan(offset)) {
+          SERIAL_PROTOCOL_F(offset, precision);
+          }
+
+          else {
+            for (uint8_t i = 3; i < precision + 3; i++)
+              SERIAL_PROTOCOLCHAR(' ');
+              SERIAL_PROTOCOLPGM("NAN");
+          }
+          if (x < sx - 1) SERIAL_PROTOCOLCHAR(',');
+        }
+        if (y < sy - 1) SERIAL_PROTOCOLCHAR(',');
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      SERIAL_PROTOCOLPGM("]];");                       // close 2D array
+      
+
+
+        SERIAL_EOL();
+
+
+
+          //   SERIAL_PROTOCOL_F(x_values[x][y], precision);
+
+
+          //             SERIAL_PROTOCOLPGM(" ,");           // open sub-array
+
+          //   SERIAL_PROTOCOL_F(y_values[x][y], precision);
+
+          // SERIAL_PROTOCOLPGM(" ,");           // open sub-array
+
+          //   if (offset >= 0) SERIAL_PROTOCOLCHAR('+');
+          //   SERIAL_PROTOCOL_F(offset, precision);
+
+
+
+
+
+
+    #else
+        #ifndef SCAD_MESH_OUTPUT
+        for (uint8_t x = 0; x < sx; x++) {
+          for (uint8_t i = 0; i < precision + 2 + (x < 10 ? 1 : 0); i++)
+            SERIAL_PROTOCOLCHAR(' ');
+          SERIAL_PROTOCOL((int)x);
+        }
+        SERIAL_EOL();
+      #endif
+      #ifdef SCAD_MESH_OUTPUT
+        SERIAL_PROTOCOLLNPGM("measured_z = ["); // open 2D array
+      #endif
+      for (uint8_t y = 0; y < sy; y++) {
+        #ifdef SCAD_MESH_OUTPUT
+          SERIAL_PROTOCOLPGM(" [");           // open sub-array
+        #else
+          if (y < 10) SERIAL_PROTOCOLCHAR(' ');
+          SERIAL_PROTOCOL((int)y);
+        #endif
+        for (uint8_t x = 0; x < sx; x++) {
+          SERIAL_PROTOCOLCHAR(' ');
+          const float offset = fn(x, y);
+
+          if (!isnan(offset)) {
+            if (offset >= 0) SERIAL_PROTOCOLCHAR('+');
+            SERIAL_PROTOCOL_F(offset, precision);
+          }
+          else {
+            #ifdef SCAD_MESH_OUTPUT
+              for (uint8_t i = 3; i < precision + 3; i++)
+                SERIAL_PROTOCOLCHAR(' ');
+              SERIAL_PROTOCOLPGM("NAN");
+            #else
+              for (uint8_t i = 0; i < precision + 3; i++)
+                SERIAL_PROTOCOLCHAR(i ? '=' : ' ');
+            #endif
+          }
+          #ifdef SCAD_MESH_OUTPUT
+            if (x < sx - 1) SERIAL_PROTOCOLCHAR(',');
           #endif
         }
         #ifdef SCAD_MESH_OUTPUT
-          if (x < sx - 1) SERIAL_PROTOCOLCHAR(',');
+          SERIAL_PROTOCOLCHAR(' ');
+          SERIAL_PROTOCOLCHAR(']');                     // close sub-array
+          if (y < sy - 1) SERIAL_PROTOCOLCHAR(',');
         #endif
+        SERIAL_EOL();
       }
       #ifdef SCAD_MESH_OUTPUT
-        SERIAL_PROTOCOLCHAR(' ');
-        SERIAL_PROTOCOLCHAR(']');                     // close sub-array
-        if (y < sy - 1) SERIAL_PROTOCOLCHAR(',');
+        SERIAL_PROTOCOLPGM("];");                       // close 2D array
       #endif
       SERIAL_EOL();
-    }
-    #ifdef SCAD_MESH_OUTPUT
-      SERIAL_PROTOCOLPGM("];");                       // close 2D array
-    #endif
-    SERIAL_EOL();
+    
+
+
+   #endif
+
+
   }
 
-#endif
+
+
+
+
+
+
+  
+
+#endif //end print_2d_array
 
 #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
 
@@ -2792,9 +2917,20 @@ static void clean_up_after_endstop_or_probe_move() {
 
   static void print_bilinear_leveling_grid() {
     SERIAL_ECHOLNPGM("Bilinear Leveling Grid:");
-    print_2d_array(GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y, 3,
+    print_2d_array(GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y, 3, x_values, y_values, 
       [](const uint8_t ix, const uint8_t iy) { return z_values[ix][iy]; }
     );
+
+
+
+
+
+
+
+
+
+
+
   }
 
   #if ENABLED(ABL_BILINEAR_SUBDIVISION)
@@ -4998,6 +5134,7 @@ void home_all_axes() { gcode_G28(true); }
 
             measured_z = faux ? 0.001 * random(-100, 101) : probe_pt(xProbe, yProbe, stow_probe_after_each, verbose_level);
 
+
             if (isnan(measured_z)) {
               planner.abl_enabled = abl_should_enable;
               break;
@@ -5016,6 +5153,8 @@ void home_all_axes() { gcode_G28(true); }
             #elif ENABLED(AUTO_BED_LEVELING_BILINEAR)
 
               z_values[xCount][yCount] = measured_z + zoffset;
+              y_values[xCount][yCount] = yProbe;
+              x_values[xCount][yCount] = xProbe;
 
             #endif
 
@@ -5034,6 +5173,10 @@ void home_all_axes() { gcode_G28(true); }
           xProbe = LOGICAL_X_POSITION(points[i].x);
           yProbe = LOGICAL_Y_POSITION(points[i].y);
           measured_z = faux ? 0.001 * random(-100, 101) : probe_pt(xProbe, yProbe, stow_probe_after_each, verbose_level);
+
+
+
+
           if (isnan(measured_z)) {
             planner.abl_enabled = abl_should_enable;
             break;

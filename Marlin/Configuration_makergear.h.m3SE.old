@@ -4,8 +4,8 @@
  Options
 *********************/
 
-#define MAKERGEAR_MODEL "M3 Single Extruder"
-#define MAKERGEAR_AUTHOR "MG |Scott, Josh, Kyle, David"
+#define MAKERGEAR_MODEL "M3 Single Extruder V1.1"
+#define MAKERGEAR_AUTHOR "MG |Josh, Kyle, David, Sam"
 
 #define M2_X_PULLEY_STEPS 88.8 
 #define M3_X_PULLEY_STEPS 80.1

@@ -2662,10 +2662,9 @@ static void clean_up_after_endstop_or_probe_move() {
           }
           if (x < sx - 1) SERIAL_PROTOCOLCHAR(',');
         }
-        if (y < sy - 1) SERIAL_PROTOCOLCHARNEOPNEOP      }
-
-
-
+        if (y < sy - 1) SERIAL_PROTOCOLCHAR(',');
+      }
+      
       SERIAL_PROTOCOLPGM("]  ,["); // open 2D array
 
       for (uint8_t y = 0; y < sy; y++) {

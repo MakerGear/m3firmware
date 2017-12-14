@@ -2664,7 +2664,7 @@ static void clean_up_after_endstop_or_probe_move() {
         }
         if (y < sy - 1) SERIAL_PROTOCOLCHAR(',');
       }
-      
+
       SERIAL_PROTOCOLPGM("]  ,["); // open 2D array
 
       for (uint8_t y = 0; y < sy; y++) {
@@ -3535,6 +3535,9 @@ inline void gcode_G0_G1(
     bool fast_move=false
   #endif
 ) {
+
+
+
   #if ENABLED(NO_MOTION_BEFORE_HOMING)
     if (axis_unhomed_error()) return;
   #endif
@@ -4071,219 +4074,6 @@ inline void gcode_G4() {
   constexpr bool g29_in_progress = false;
 #endif
 
-/**
- * G28: Home all axes according to settings
- *
- * Parameters
- *
- *  None  Home to all axes with no parameters.
- *        With QUICK_HOME enabled XY will home together, then Z.
- *
- * Cartesian parameters
- *
- *  X   Home to the X endstop
- *  Y   Home to the Y endstop
- *  Z   Home to the Z endstop
- *
- */
-inline void gcode_G28(const bool always_home_all) {
-
-  #if ENABLED(DEBUG_LEVELING_FEATURE)
-    if (DEBUGGING(LEVELING)) {
-      SERIAL_ECHOLNPGM(">>> gcode_G28");
-      log_machine_info();
-    }
-  #endif
-
-  // Wait for planner moves to finish!
-  stepper.synchronize();
-
-  // Cancel the active G29 session
-  #if ENABLED(PROBE_MANUALLY)
-    g29_in_progress = false;
-  #endif
-
-  // Disable the leveling matrix before homing
-  #if HAS_LEVELING
-    #if ENABLED(AUTO_BED_LEVELING_UBL)
-      const bool ubl_state_at_entry = leveling_is_active();
-    #endif
-    set_bed_leveling_enabled(false);
-  #endif
-
-  #if ENABLED(CNC_WORKSPACE_PLANES)
-    workspace_plane = PLANE_XY;
-  #endif
-
-  // Always home with tool 0 active
-  #if HOTENDS > 1
-    const uint8_t old_tool_index = active_extruder;
-    tool_change(0, 0, true);
-  #endif
-
-  #if ENABLED(DUAL_X_CARRIAGE) || ENABLED(DUAL_NOZZLE_DUPLICATION_MODE)
-    extruder_duplication_enabled = false;
-  #endif
-
-  setup_for_endstop_or_probe_move();
-  #if ENABLED(DEBUG_LEVELING_FEATURE)
-    if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPGM("> endstops.enable(true)");
-  #endif
-  endstops.enable(true); // Enable endstops for next homing move
-
-  #if ENABLED(DELTA)
-
-    home_delta();
-    UNUSED(always_home_all);
-
-  #else // NOT DELTA
-
-    const bool homeX = always_home_all || parser.seen('X'),
-               homeY = always_home_all || parser.seen('Y'),
-               homeZ = always_home_all || parser.seen('Z'),
-               home_all = (!homeX && !homeY && !homeZ) || (homeX && homeY && homeZ);
-
-    set_destination_to_current();
-
-    #if Z_HOME_DIR > 0  // If homing away from BED do Z first
-
-      if (home_all || homeZ) {
-        HOMEAXIS(Z);
-        #if ENABLED(DEBUG_LEVELING_FEATURE)
-          if (DEBUGGING(LEVELING)) DEBUG_POS("> HOMEAXIS(Z)", current_position);
-        #endif
-      }
-
-    #else
-
-      if (home_all || homeX || homeY) {
-        // Raise Z before homing any other axes and z is not already high enough (never lower z)
-        destination[Z_AXIS] = LOGICAL_Z_POSITION(Z_HOMING_HEIGHT);
-        if (destination[Z_AXIS] > current_position[Z_AXIS]) {
-
-          #if ENABLED(DEBUG_LEVELING_FEATURE)
-            if (DEBUGGING(LEVELING))
-              SERIAL_ECHOLNPAIR("Raise Z (before homing) to ", destination[Z_AXIS]);
-          #endif
-
-          do_blocking_move_to_z(destination[Z_AXIS]);
-        }
-      }
-
-    #endif
-
-    #if ENABLED(QUICK_HOME)
-
-      if (home_all || (homeX && homeY)) quick_home_xy();
-
-    #endif
-
-    #if ENABLED(HOME_Y_BEFORE_X)
-
-      // Home Y
-      if (home_all || homeY) {
-        HOMEAXIS(Y);
-        #if ENABLED(DEBUG_LEVELING_FEATURE)
-          if (DEBUGGING(LEVELING)) DEBUG_POS("> homeY", current_position);
-        #endif
-      }
-
-    #endif
-
-    // Home X
-    if (home_all || homeX) {
-
-      #if ENABLED(DUAL_X_CARRIAGE)
-
-        // Always home the 2nd (right) extruder first
-        active_extruder = 1;
-        HOMEAXIS(X);
-
-        // Remember this extruder's position for later tool change
-        inactive_extruder_x_pos = RAW_X_POSITION(current_position[X_AXIS]);
-
-        // Home the 1st (left) extruder
-        active_extruder = 0;
-        HOMEAXIS(X);
-
-        // Consider the active extruder to be parked
-        COPY(raised_parked_position, current_position);
-        delayed_move_time = 0;
-        active_extruder_parked = true;
-
-      #else
-
-        HOMEAXIS(X);
-
-      #endif
-
-      #if ENABLED(DEBUG_LEVELING_FEATURE)
-        if (DEBUGGING(LEVELING)) DEBUG_POS("> homeX", current_position);
-      #endif
-    }
-
-    #if DISABLED(HOME_Y_BEFORE_X)
-      // Home Y
-      if (home_all || homeY) {
-        HOMEAXIS(Y);
-        #if ENABLED(DEBUG_LEVELING_FEATURE)
-          if (DEBUGGING(LEVELING)) DEBUG_POS("> homeY", current_position);
-        #endif
-      }
-    #endif
-
-    // Home Z last if homing towards the bed
-    #if Z_HOME_DIR < 0
-      if (home_all || homeZ) {
-        #if ENABLED(Z_SAFE_HOMING)
-          home_z_safely();
-        #else
-          HOMEAXIS(Z);
-        #endif
-        #if ENABLED(DEBUG_LEVELING_FEATURE)
-          if (DEBUGGING(LEVELING)) DEBUG_POS("> (home_all || homeZ) > final", current_position);
-        #endif
-      } // home_all || homeZ
-    #endif // Z_HOME_DIR < 0
-
-    SYNC_PLAN_POSITION_KINEMATIC();
-
-  #endif // !DELTA (gcode_G28)
-
-  endstops.not_homing();
-
-  #if ENABLED(DELTA) && ENABLED(DELTA_HOME_TO_SAFE_ZONE)
-    // move to a height where we can use the full xy-area
-    do_blocking_move_to_z(delta_clip_start_height);
-  #endif
-
-  #if ENABLED(AUTO_BED_LEVELING_UBL)
-    set_bed_leveling_enabled(ubl_state_at_entry);
-  #endif
-
-  clean_up_after_endstop_or_probe_move();
-
-  // Restore the active tool after homing
-  #if HOTENDS > 1
-    tool_change(old_tool_index, 0,
-      #if ENABLED(PARKING_EXTRUDER)
-        false // fetch the previous toolhead
-      #else
-        true
-      #endif
-    );
-  #endif
-
-  lcd_refresh();
-
-  report_current_position();
-
-  #if ENABLED(DEBUG_LEVELING_FEATURE)
-    if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPGM("<<< gcode_G28");
-  #endif
-} // G28
-
-void home_all_axes() { gcode_G28(true); }
 
 #if HAS_PROBING_PROCEDURE
 
@@ -5441,6 +5231,262 @@ void home_all_axes() { gcode_G28(true); }
   }
 
 #endif // HAS_ABL && !AUTO_BED_LEVELING_UBL
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * G28: Home all axes according to settings
+ *
+ * Parameters
+ *
+ *  None  Home to all axes with no parameters.
+ *        With QUICK_HOME enabled XY will home together, then Z.
+ *
+ * Cartesian parameters
+ *
+ *  X   Home to the X endstop
+ *  Y   Home to the Y endstop
+ *  Z   Home to the Z endstop
+ *
+ */
+inline void gcode_G28(const bool always_home_all) {
+
+  #if ENABLED(DEBUG_LEVELING_FEATURE)
+    if (DEBUGGING(LEVELING)) {
+      SERIAL_ECHOLNPGM(">>> gcode_G28");
+      log_machine_info();
+    }
+  #endif
+
+  // Wait for planner moves to finish!
+  stepper.synchronize();
+
+  // Cancel the active G29 session
+  #if ENABLED(PROBE_MANUALLY)
+    g29_in_progress = false;
+  #endif
+
+  // Disable the leveling matrix before homing
+  #if HAS_LEVELING
+    #if ENABLED(AUTO_BED_LEVELING_UBL)
+      const bool ubl_state_at_entry = leveling_is_active();
+    #endif
+    set_bed_leveling_enabled(false);
+  #endif
+
+  #if ENABLED(CNC_WORKSPACE_PLANES)
+    workspace_plane = PLANE_XY;
+  #endif
+
+  // Always home with tool 0 active
+  #if HOTENDS > 1
+    const uint8_t old_tool_index = active_extruder;
+    tool_change(0, 0, true);
+  #endif
+
+  #if ENABLED(DUAL_X_CARRIAGE) || ENABLED(DUAL_NOZZLE_DUPLICATION_MODE)
+    extruder_duplication_enabled = false;
+  #endif
+
+  setup_for_endstop_or_probe_move();
+  #if ENABLED(DEBUG_LEVELING_FEATURE)
+    if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPGM("> endstops.enable(true)");
+  #endif
+  endstops.enable(true); // Enable endstops for next homing move
+
+  #if ENABLED(DELTA)
+
+    home_delta();
+    UNUSED(always_home_all);
+
+  #else // NOT DELTA
+
+    const bool homeX = always_home_all || parser.seen('X'),
+               homeY = always_home_all || parser.seen('Y'),
+               homeZ = always_home_all || parser.seen('Z'),
+               home_all = (!homeX && !homeY && !homeZ) || (homeX && homeY && homeZ);
+
+    set_destination_to_current();
+
+    #if Z_HOME_DIR > 0  // If homing away from BED do Z first
+
+      if (home_all || homeZ) {
+        HOMEAXIS(Z);
+        #if ENABLED(DEBUG_LEVELING_FEATURE)
+          if (DEBUGGING(LEVELING)) DEBUG_POS("> HOMEAXIS(Z)", current_position);
+        #endif
+      }
+
+    #else
+
+      if (home_all || homeX || homeY) {
+        // Raise Z before homing any other axes and z is not already high enough (never lower z)
+        destination[Z_AXIS] = LOGICAL_Z_POSITION(Z_HOMING_HEIGHT);
+        if (destination[Z_AXIS] > current_position[Z_AXIS]) {
+
+          #if ENABLED(DEBUG_LEVELING_FEATURE)
+            if (DEBUGGING(LEVELING))
+              SERIAL_ECHOLNPAIR("Raise Z (before homing) to ", destination[Z_AXIS]);
+          #endif
+
+          do_blocking_move_to_z(destination[Z_AXIS]);
+        }
+      }
+
+    #endif
+
+    #if ENABLED(QUICK_HOME)
+
+      if (home_all || (homeX && homeY)) quick_home_xy();
+
+    #endif
+
+    #if ENABLED(HOME_Y_BEFORE_X)
+
+      // Home Y
+      if (home_all || homeY) {
+        HOMEAXIS(Y);
+        #if ENABLED(DEBUG_LEVELING_FEATURE)
+          if (DEBUGGING(LEVELING)) DEBUG_POS("> homeY", current_position);
+        #endif
+      }
+
+    #endif
+
+    // Home X
+    if (home_all || homeX) {
+
+      #if ENABLED(DUAL_X_CARRIAGE)
+
+        // Always home the 2nd (right) extruder first
+        active_extruder = 1;
+        HOMEAXIS(X);
+
+        // Remember this extruder's position for later tool change
+        inactive_extruder_x_pos = RAW_X_POSITION(current_position[X_AXIS]);
+
+        // Home the 1st (left) extruder
+        active_extruder = 0;
+        HOMEAXIS(X);
+
+        // Consider the active extruder to be parked
+        COPY(raised_parked_position, current_position);
+        delayed_move_time = 0;
+        active_extruder_parked = true;
+
+      #else
+
+        HOMEAXIS(X);
+
+      #endif
+
+      #if ENABLED(DEBUG_LEVELING_FEATURE)
+        if (DEBUGGING(LEVELING)) DEBUG_POS("> homeX", current_position);
+      #endif
+    }
+
+    #if DISABLED(HOME_Y_BEFORE_X)
+      // Home Y
+      if (home_all || homeY) {
+        HOMEAXIS(Y);
+        #if ENABLED(DEBUG_LEVELING_FEATURE)
+          if (DEBUGGING(LEVELING)) DEBUG_POS("> homeY", current_position);
+        #endif
+      }
+    #endif
+
+    // Home Z last if homing towards the bed
+    #if Z_HOME_DIR < 0
+      if (home_all || homeZ) {
+        #if ENABLED(Z_SAFE_HOMING)
+          home_z_safely();
+        #else
+          HOMEAXIS(Z);
+        #endif
+        #if ENABLED(DEBUG_LEVELING_FEATURE)
+          if (DEBUGGING(LEVELING)) DEBUG_POS("> (home_all || homeZ) > final", current_position);
+        #endif
+      } // home_all || homeZ
+    #endif // Z_HOME_DIR < 0
+
+    SYNC_PLAN_POSITION_KINEMATIC();
+
+  #endif // !DELTA (gcode_G28)
+
+  endstops.not_homing();
+
+  #if ENABLED(DELTA) && ENABLED(DELTA_HOME_TO_SAFE_ZONE)
+    // move to a height where we can use the full xy-area
+    do_blocking_move_to_z(delta_clip_start_height);
+  #endif
+
+  #if ENABLED(AUTO_BED_LEVELING_UBL)
+    set_bed_leveling_enabled(ubl_state_at_entry);
+  #endif
+
+  clean_up_after_endstop_or_probe_move();
+
+  // Restore the active tool after homing
+  #if HOTENDS > 1
+    tool_change(old_tool_index, 0,
+      #if ENABLED(PARKING_EXTRUDER)
+        false // fetch the previous toolhead
+      #else
+        true
+      #endif
+    );
+  #endif
+
+  lcd_refresh();
+
+  report_current_position();
+
+  //MG Edit
+
+
+
+  if (!(homeX || homeY || homeZ)) {
+       gcode_G29();
+  }
+
+  #if ENABLED(DEBUG_LEVELING_FEATURE)
+    if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPGM("<<< gcode_G28");
+  #endif
+} // G28
+
+void home_all_axes() { gcode_G28(true); }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #if HAS_BED_PROBE
 

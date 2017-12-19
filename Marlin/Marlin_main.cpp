@@ -5592,6 +5592,7 @@ inline void gcode_G28(const bool always_home_all) {
     UNUSED(always_home_all);
 
   #else // NOT DELTA
+  SERIAL_ECHOLNPAIR("not delta ", Z_HOMING_HEIGHT);
 
     const bool homeX = always_home_all || parser.seen('X'),
                homeY = always_home_all || parser.seen('Y'),
@@ -5609,13 +5610,43 @@ inline void gcode_G28(const bool always_home_all) {
         #endif
       }
 
+
+      if ( homeX || homeY) {
+        // Raise Z before homing any other axes and z is not already high enough (never lower z)
+
+              SERIAL_ECHOLNPAIR("zzzz ", Z_HOMING_HEIGHT);
+
+              SERIAL_ECHOLNPAIR("yzzzzz", LOGICAL_Z_POSITION(Z_HOMING_HEIGHT));
+
+        destination[Z_AXIS] = LOGICAL_Z_POSITION(Z_HOMING_HEIGHT);
+        if (destination[Z_AXIS] > current_position[Z_AXIS]) {
+
+              SERIAL_ECHOLNPAIR("Raise Z (before homing) to ", destination[Z_AXIS]);
+          #if ENABLED(DEBUG_LEVELING_FEATURE)
+            if (DEBUGGING(LEVELING))
+              SERIAL_ECHOLNPAIR("Raise Z (before homing) to ", destination[Z_AXIS]);
+          #endif
+
+          do_blocking_move_to_z(destination[Z_AXIS]);
+        }
+      }
+
+
+
+
     #else
 
       if (home_all || homeX || homeY) {
         // Raise Z before homing any other axes and z is not already high enough (never lower z)
+
+              SERIAL_ECHOLNPAIR("normal marlinzzzz ", Z_HOMING_HEIGHT);
+
+              SERIAL_ECHOLNPAIR("normal marlin yzzzzz", LOGICAL_Z_POSITION(Z_HOMING_HEIGHT));
+
         destination[Z_AXIS] = LOGICAL_Z_POSITION(Z_HOMING_HEIGHT);
         if (destination[Z_AXIS] > current_position[Z_AXIS]) {
 
+              SERIAL_ECHOLNPAIR("Raise Z (before homing) to ", destination[Z_AXIS]);
           #if ENABLED(DEBUG_LEVELING_FEATURE)
             if (DEBUGGING(LEVELING))
               SERIAL_ECHOLNPAIR("Raise Z (before homing) to ", destination[Z_AXIS]);
@@ -5720,13 +5751,12 @@ inline void gcode_G28(const bool always_home_all) {
 
   // Restore the active tool after homing
   #if HOTENDS > 1
-    tool_change(old_tool_index, 0,
-      #if ENABLED(PARKING_EXTRUDER)
-        false // fetch the previous toolhead
-      #else
-        true
-      #endif
-    );
+    #if ENABLED(PARKING_EXTRUDER)
+      #define NO_FETCH false // fetch the previous toolhead
+    #else
+      #define NO_FETCH true
+    #endif
+    tool_change(old_tool_index, 0, NO_FETCH);
   #endif
 
   lcd_refresh();

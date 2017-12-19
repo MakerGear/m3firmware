@@ -3538,12 +3538,288 @@ inline void gcode_G0_G1(
 
 
 
+
+  // if((current_position[Z_AXIS] < 2 || destination[Z_AXIS] < 2)&& ((current_position[Y_AXIS] < 10) || ( current_position[Y_AXIS] > 240) || ( destination[Y_AXIS] < 10) || ( destination[Y_AXIS] > 240)))
+  // {
+  //   soft_endstop_max[X_AXIS] = 200 - (10 + 30);
+  // }
+  // else
+  // {
+
+  //   soft_endstop_max[X_AXIS] = 200;
+  // }
+
+
+
+  // if((current_position[Z_AXIS] < 2 || destination[Z_AXIS] < 2)&& ((current_position[X_AXIS] < 10) || ( current_position[X_AXIS] > 190) || ( destination[X_AXIS] < 10) || ( destination[X_AXIS] > 190)))
+  // {
+  //   soft_endstop_max[Y_AXIS] = 250 - (10 );
+  // }
+  // else
+  // {
+
+  //   soft_endstop_max[Y_AXIS] = 250;
+  // }
+
+
+  const int bedClipX = 23;
+  const int bedClipY = 11;
+  const int bedClipProbeX = 30;
+
+  // Q4*******************Q3
+  // *                     *
+  // *                     *
+  // *                     *
+  // *                     *
+  // *                     *
+  // *                     *
+  // *                     *
+  // *                     *
+  // *                     *
+  // *                     *
+  // *                     *
+  // *                     *
+  // *                     *
+  // *                     *
+  // Q1*******************Q2
+
+
+  const int Q1_X = 0 + bedClipX;
+  const int Q1_Y = 0 + bedClipY;
+  const int Q2_X = X_BED_SIZE - bedClipX - bedClipProbeX;
+  const int Q2_Y = 0 + bedClipY;
+  const int Q3_X = X_BED_SIZE - bedClipX - bedClipProbeX;
+  const int Q3_Y = Y_BED_SIZE - bedClipY ;
+  const int Q4_X = 0 + bedClipX;
+  const int Q4_Y = Y_BED_SIZE - bedClipY ;
+
+
   #if ENABLED(NO_MOTION_BEFORE_HOMING)
     if (axis_unhomed_error()) return;
   #endif
 
   if (IsRunning()) {
     gcode_get_destination(); // For X Y Z E F
+
+
+
+
+
+SERIAL_PROTOCOL_F(current_position[Z_AXIS], 3);
+SERIAL_EOL();
+SERIAL_PROTOCOL_F(destination[Z_AXIS], 3);
+SERIAL_EOL();
+
+  //z is above bed clips, moving into bed clip area
+  if((current_position[Z_AXIS] > 2) && (destination[Z_AXIS] < 2))
+  {
+    //quad 1
+    if(  (destination[X_AXIS] < Q1_X && destination[Y_AXIS] < Q1_Y) ||  (destination[X_AXIS] > Q2_X && destination[Y_AXIS] < Q2_Y) || (destination[X_AXIS] > Q3_X && destination[Y_AXIS] > Q3_Y) ||  (destination[X_AXIS] < Q4_X && destination[Y_AXIS] > Q4_Y)  )
+    {
+      soft_endstop_min[Z_AXIS] = 5;
+      SERIAL_ECHOLNPAIR("Goal movement would cause bed clip collision: set soft endstop Z Axis to", 5);
+    }
+    else
+    {
+      soft_endstop_min[Z_AXIS] = Z_MIN_POS;
+      SERIAL_ECHOLNPAIR("Goal movement safe, resetting Z minimm endstop  to", Z_MIN_POS);
+    }
+
+  }
+  else
+  {
+      soft_endstop_min[Z_AXIS] = Z_MIN_POS;
+      SERIAL_ECHOLNPAIR("Goal movement safe, resetting Z minimm endstop  to", Z_MIN_POS);
+
+  }
+
+
+
+
+
+//bed is under bed clip area
+  if((current_position[Z_AXIS] < 2) && (destination[Z_AXIS] < 2))
+
+  {
+
+// SERIAL_EOL();
+
+
+    //Q1
+
+    if( (destination[X_AXIS] < Q1_X && destination[Y_AXIS] < Q1_Y))
+    {
+
+// SERIAL_PROTOCOL_F(1, 3);
+
+// SERIAL_EOL();
+
+
+      if(current_position[X_AXIS] > Q1_X && current_position[Y_AXIS] < Q1_Y)
+      {
+
+        soft_endstop_min[X_AXIS] = Q1_X;
+        soft_endstop_min[Y_AXIS] =  Y_MIN_POS;
+
+      }
+      else if(current_position[X_AXIS] > Q1_X && current_position[Y_AXIS] > Q1_Y)
+      {
+        soft_endstop_min[X_AXIS] = Q1_X;
+        soft_endstop_min[Y_AXIS] =  Q1_Y;
+
+      }
+
+      else if(current_position[X_AXIS] < Q1_X && current_position[Y_AXIS] > Q1_Y)
+      {
+        soft_endstop_min[X_AXIS] = X_MAX_POS;
+        soft_endstop_min[Y_AXIS] =  Q1_Y;
+
+      }
+
+
+
+      SERIAL_ECHOLNPAIR("Q1 Collision X min:", soft_endstop_min[X_AXIS]);
+      SERIAL_ECHOLNPAIR("Q1 Collision Y min:", soft_endstop_min[Y_AXIS]);
+
+
+    }
+
+    //Q4
+
+    else if( (destination[X_AXIS] < Q4_X && destination[Y_AXIS] > Q4_Y))
+    {
+
+      if(current_position[X_AXIS] > Q4_X && current_position[Y_AXIS] > Q4_Y)
+      {
+
+        soft_endstop_min[X_AXIS] = Q4_X;
+        soft_endstop_max[Y_AXIS] =  Y_MAX_POS;
+      }
+      else if(current_position[X_AXIS] > Q4_X && current_position[Y_AXIS] < Q4_Y)
+      {
+        soft_endstop_min[X_AXIS] = Q4_X;
+        soft_endstop_max[Y_AXIS] =  Q4_Y;
+
+      }
+
+      else if(current_position[X_AXIS] < Q4_X && current_position[Y_AXIS] < Q4_Y)
+      {
+        soft_endstop_min[X_AXIS] = X_MIN_POS;
+        soft_endstop_max[Y_AXIS] =  Q4_Y;
+
+      }
+      SERIAL_ECHOLNPAIR("Q4 Collision X min:", soft_endstop_min[X_AXIS]);
+      SERIAL_ECHOLNPAIR("Q4 Collision Y max:", soft_endstop_max[Y_AXIS]);
+
+
+
+    }
+
+
+
+
+
+    //Q2
+
+    else if( (destination[X_AXIS] > Q2_X && destination[Y_AXIS] < Q2_Y))
+    {
+
+      if(current_position[X_AXIS] < Q2_X && current_position[Y_AXIS] < Q2_Y)
+      {
+
+        soft_endstop_max[X_AXIS] = Q2_X;
+        soft_endstop_min[Y_AXIS] =  Y_MIN_POS;
+      }
+      else if(current_position[X_AXIS] < Q2_X && current_position[Y_AXIS] > Q2_Y)
+      {
+        soft_endstop_max[X_AXIS] = Q2_X;
+        soft_endstop_min[Y_AXIS] =  Q2_Y;
+
+      }
+
+      else if(current_position[X_AXIS] > Q2_X && current_position[Y_AXIS] > Q2_Y)
+      {
+        soft_endstop_max[X_AXIS] = X_MAX_POS;
+        soft_endstop_min[Y_AXIS] =  Q2_Y;
+
+      }
+      SERIAL_ECHOLNPAIR("Q2 Collision X max:", soft_endstop_max[X_AXIS]);
+      SERIAL_ECHOLNPAIR("Q2 Collision Y min:", soft_endstop_min[Y_AXIS]);
+
+
+    }
+
+    //Q3
+
+    else if( (destination[X_AXIS] > Q3_X && destination[Y_AXIS] > Q3_Y))
+    {
+
+
+      if(current_position[X_AXIS] < Q3_X && current_position[Y_AXIS] > Q3_Y)
+      {
+
+        soft_endstop_max[X_AXIS] = Q3_X;
+        soft_endstop_max[Y_AXIS] =  Y_MAX_POS;
+      }
+      else if(current_position[X_AXIS] < Q3_X && current_position[Y_AXIS] < Q3_Y)
+      {
+        soft_endstop_max[X_AXIS] = Q3_X;
+        soft_endstop_max[Y_AXIS] =  Q3_Y;
+
+      }
+
+      else if(current_position[X_AXIS] > Q3_X && current_position[Y_AXIS] < Q3_Y)
+      {
+        soft_endstop_max[X_AXIS] = X_MAX_POS;
+        soft_endstop_max[Y_AXIS] =  Q3_Y;
+
+      }
+
+      SERIAL_ECHOLNPAIR("Q3 Collision X max:", soft_endstop_max[X_AXIS]);
+      SERIAL_ECHOLNPAIR("Q3 Collision Y max:", soft_endstop_max[Y_AXIS]);
+
+
+    }
+    else
+    {
+
+SERIAL_PROTOCOL_F(5, 3);
+
+SERIAL_EOL();
+        soft_endstop_max[X_AXIS] = X_MAX_POS;
+        soft_endstop_max[Y_AXIS] =  Y_MAX_POS;
+
+        soft_endstop_min[X_AXIS] =  X_MIN_POS;
+        soft_endstop_min[Y_AXIS] =  Y_MIN_POS;
+
+    }
+
+  }
+
+
+  //   //quad 1
+  //   if(  (destination[X_AXIS] < 10 && destination[Y_AXIS] < 10) ||  (destination[X_AXIS] < 10 && destination[Y_AXIS] > 240) ||  (destination[X_AXIS] > 160 && destination[Y_AXIS] < 10) ||  (destination[X_AXIS] > 160 && destination[Y_AXIS] > 240) || )
+  //   {
+  //     soft_endstop_min[Z_AXIS] = 20;
+
+  //   }
+  //   else
+  //   {
+  //     soft_endstop_min[Z_AXIS] = -10;
+
+  //   }
+
+  // }
+  // else
+  // {
+  //     soft_endstop_min[Z_AXIS] = -10;
+
+  // }
+
+
+
+
+
 
     #if ENABLED(FWRETRACT)
       if (MIN_AUTORETRACT <= MAX_AUTORETRACT) {

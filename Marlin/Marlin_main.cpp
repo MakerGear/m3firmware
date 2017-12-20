@@ -4729,8 +4729,23 @@ inline void gcode_G4() {
                         abl_grid_points_y = GRID_MAX_POINTS_Y;
         ABL_VAR bool do_topography_map;
       #else // Bilinear
-        uint8_t constexpr abl_grid_points_x = GRID_MAX_POINTS_X,
-                          abl_grid_points_y = GRID_MAX_POINTS_Y;
+
+          uint8_t  abl_grid_points_x,
+                          abl_grid_points_y ;
+
+        if(parser.seen('P'))
+        {
+            abl_grid_points_x = 2;
+            abl_grid_points_y = 2;
+
+        }
+        else
+        {
+            abl_grid_points_x = GRID_MAX_POINTS_X;
+            abl_grid_points_y = GRID_MAX_POINTS_Y;
+
+        }
+
       #endif
 
       #if ENABLED(AUTO_BED_LEVELING_LINEAR) || ENABLED(PROBE_MANUALLY)
@@ -5155,6 +5170,37 @@ inline void gcode_G4() {
 
     #else // !PROBE_MANUALLY
     {
+
+
+    #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
+
+           
+          //SERIAL_PROTOCOLLNPGM("flush old probe");
+      for (uint8_t i = 0; i < GRID_MAX_POINTS_Y ; i++) {
+        for (uint8_t j = 0; j < GRID_MAX_POINTS_X ; j++) {
+
+
+              z_values[i][j] = 777;
+              y_values[i][j] = 777;
+              x_values[i][j] = 777;
+
+
+        }
+
+      }
+
+
+
+
+      #endif
+
+
+
+ 
+
+
+
+
       const bool stow_probe_after_each = parser.boolval('E');
 
       #if ABL_GRID

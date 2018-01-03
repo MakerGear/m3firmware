@@ -474,8 +474,8 @@ float filament_size[EXTRUDERS], volumetric_multiplier[EXTRUDERS];
 #if HAS_SOFTWARE_ENDSTOPS
   bool soft_endstops_enabled = true;
 #endif
-float soft_endstop_min[XYZ] = { X_MIN_BED, Y_MIN_BED, Z_MIN_POS },
-      soft_endstop_max[XYZ] = { X_MAX_BED, Y_MAX_BED, Z_MAX_POS };
+float soft_endstop_min[XYZ] = { X_MIN_BED, 11, Z_MIN_POS },
+      soft_endstop_max[XYZ] = { X_MAX_BED, 242, Z_MAX_POS };
 
 #if FAN_COUNT > 0
   int16_t fanSpeeds[FAN_COUNT] = { 0 };
@@ -3559,8 +3559,6 @@ inline void gcode_G0_G1(
   // {
 
   //   soft_endstop_max[Y_AXIS] = 250;
-  // }
-
 
   const int bedClipX = 23;
   const int bedClipY = 11;
@@ -3604,6 +3602,8 @@ inline void gcode_G0_G1(
 
 
 
+  // }
+#if CONF_CARRIAGE == ONE_X_CARRIAGE
 
 SERIAL_PROTOCOL_F(current_position[Z_AXIS], 3);
 SERIAL_EOL();
@@ -3642,7 +3642,6 @@ SERIAL_EOL();
 
   {
 
-// SERIAL_EOL();
 
 
     //Q1
@@ -3650,9 +3649,9 @@ SERIAL_EOL();
     if( (destination[X_AXIS] < Q1_X && destination[Y_AXIS] < Q1_Y))
     {
 
-// SERIAL_PROTOCOL_F(1, 3);
+        // SERIAL_PROTOCOL_F(1, 3);
 
-// SERIAL_EOL();
+        // SERIAL_EOL();
 
 
       if(current_position[X_AXIS] > Q1_X && current_position[Y_AXIS] < Q1_Y)
@@ -3783,9 +3782,9 @@ SERIAL_EOL();
     else
     {
 
-SERIAL_PROTOCOL_F(5, 3);
+      SERIAL_PROTOCOL_F(5, 3);
 
-SERIAL_EOL();
+      SERIAL_EOL();
         soft_endstop_max[X_AXIS] = X_MAX_POS;
         soft_endstop_max[Y_AXIS] =  Y_MAX_POS;
 
@@ -3795,6 +3794,11 @@ SERIAL_EOL();
     }
 
   }
+
+
+
+#endif
+
 
 
   //   //quad 1

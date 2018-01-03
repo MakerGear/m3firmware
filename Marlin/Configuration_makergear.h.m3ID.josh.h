@@ -33,7 +33,7 @@
 
 
 #define M2_Y_MAX 255
-#define M3_Y_MAX 253
+#define M3_Y_MAX 242
 
 #define M2_Z_MAX 200
 #define M3_Z_MAX 210

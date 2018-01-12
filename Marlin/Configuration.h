@@ -744,7 +744,8 @@
  */
 #define X_PROBE_OFFSET_FROM_EXTRUDER 21  // X offset: -left  +right  [of the nozzle] //was 0 for my version mounted in the fan, setting to 21 for David's version mounted in the cut slow
 #define Y_PROBE_OFFSET_FROM_EXTRUDER 0  // Y offset: -front +behind [the nozzle] //was -38 for my version mounted in the fan, setting to 0 for David's version mounted in the cut slot
-#define Z_PROBE_OFFSET_FROM_EXTRUDER -.2   // Z offset: -below +above  [the nozzle]
+#define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
+//#define Z_PROBE_OFFSET_FROM_EXTRUDER -.2   // Z offset: -below +above  [the nozzle]
 
 // X and Y axis travel speed (mm/m) between probes
 #define XY_PROBE_SPEED 4000
@@ -825,14 +826,14 @@
 
 //#define NO_MOTION_BEFORE_HOMING  // Inhibit movement until all axes have been homed
 
-#define Z_HOMING_HEIGHT 5  // (in mm) Minimal z height before homing (G28) for Z clearance above the bed, clamps, ...
+#define Z_HOMING_HEIGHT 10  // (in mm) Minimal z height before homing (G28) for Z clearance above the bed, clamps, ...
                              // Be sure you have this distance over your Z_MAX_POS in case.
 
 // Direction of endstops when homing; 1=MAX, -1=MIN
 // :[-1,1]
 #define X_HOME_DIR -1
 #define Y_HOME_DIR -1
-#define Z_HOME_DIR 1
+#define Z_HOME_DIR -1
 
 // @section machine
 
@@ -942,7 +943,8 @@
   #define LEFT_PROBE_BED_POSITION 15
   #define RIGHT_PROBE_BED_POSITION 190
   #define FRONT_PROBE_BED_POSITION 20
-  #define BACK_PROBE_BED_POSITION 200
+  //#define BACK_PROBE_BED_POSITION 200
+  #define BACK_PROBE_BED_POSITION 230
 
   // The Z probe minimum outer margin (to validate G29 parameters).
   #define MIN_PROBE_EDGE 10
@@ -1054,7 +1056,7 @@
 // - Move the Z probe (or nozzle) to a defined XY point before Z Homing when homing all axes (G28).
 // - Prevent Z homing when the Z probe is outside bed area.
 //
-//#define Z_SAFE_HOMING
+#define Z_SAFE_HOMING
 
 #if ENABLED(Z_SAFE_HOMING)
   #define Z_SAFE_HOMING_X_POINT ((X_BED_SIZE) / 2)    // X point for Z homing when homing all axis (G28).

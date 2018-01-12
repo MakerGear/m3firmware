@@ -476,7 +476,7 @@ float filament_size[EXTRUDERS], volumetric_multiplier[EXTRUDERS];
 #endif
 float soft_endstop_min[XYZ] = { X_MIN_BED, 11, Z_MIN_POS },
       soft_endstop_max[XYZ] = { X_MAX_BED, 242, Z_MAX_POS };
-
+//mgkdebug
 #if FAN_COUNT > 0
   int16_t fanSpeeds[FAN_COUNT] = { 0 };
   #if ENABLED(PROBING_FANS_OFF)
@@ -3603,7 +3603,7 @@ inline void gcode_G0_G1(
 
 
   // }
-#if CONF_CARRIAGE == ONE_X_CARRIAGE
+#if CONF_CARRIAGE == 3
 
 SERIAL_PROTOCOL_F(current_position[Z_AXIS], 3);
 SERIAL_EOL();
@@ -3782,9 +3782,9 @@ SERIAL_EOL();
     else
     {
 
-      SERIAL_PROTOCOL_F(5, 3);
+      //SERIAL_PROTOCOL_F(5, 3);
 
-      SERIAL_EOL();
+      //SERIAL_EOL();
         soft_endstop_max[X_AXIS] = X_MAX_POS;
         soft_endstop_max[Y_AXIS] =  Y_MAX_POS;
 
@@ -4738,9 +4738,10 @@ inline void gcode_G4() {
                           abl_grid_points_y ;
 
         if(parser.seen('P'))
-        {
-            abl_grid_points_x = 2;
-            abl_grid_points_y = 2;
+		{
+            //abl_grid_points_x = 2;
+            //abl_grid_points_y = 2;
+			abl_grid_points_x = abl_grid_points_y = parser.value_int(); //added by Josh to actually use the provided points when called with G29 Pn
 
         }
         else
@@ -5554,6 +5555,13 @@ inline void gcode_G4() {
 
     if (planner.abl_enabled)
       SYNC_PLAN_POSITION_KINEMATIC();
+
+
+
+
+     enqueue_and_echo_commands_P(PSTR("T0")); //added by kyle to manually move T0 out of the way.
+     enqueue_and_echo_commands_P(PSTR("G1 X-25 F9000")); //added by kyle to manually move T0 out of the way.
+
   }
 
 #endif // HAS_ABL && !AUTO_BED_LEVELING_UBL
@@ -5642,7 +5650,6 @@ inline void gcode_G28(const bool always_home_all) {
     UNUSED(always_home_all);
 
   #else // NOT DELTA
-  SERIAL_ECHOLNPAIR("not delta ", Z_HOMING_HEIGHT);
 
     const bool homeX = always_home_all || parser.seen('X'),
                homeY = always_home_all || parser.seen('Y'),
@@ -5661,37 +5668,14 @@ inline void gcode_G28(const bool always_home_all) {
       }
 
 
-      if ( homeX || homeY) {
-        // Raise Z before homing any other axes and z is not already high enough (never lower z)
-
-              SERIAL_ECHOLNPAIR("zzzz ", Z_HOMING_HEIGHT);
-
-              SERIAL_ECHOLNPAIR("yzzzzz", LOGICAL_Z_POSITION(Z_HOMING_HEIGHT));
-
-        destination[Z_AXIS] = LOGICAL_Z_POSITION(Z_HOMING_HEIGHT);
-        if (destination[Z_AXIS] > current_position[Z_AXIS]) {
-
-              SERIAL_ECHOLNPAIR("Raise Z (before homing) to ", destination[Z_AXIS]);
-          #if ENABLED(DEBUG_LEVELING_FEATURE)
-            if (DEBUGGING(LEVELING))
-              SERIAL_ECHOLNPAIR("Raise Z (before homing) to ", destination[Z_AXIS]);
-          #endif
-
-          do_blocking_move_to_z(destination[Z_AXIS]);
-        }
-      }
-
-
-
-
     #else
 
       if (home_all || homeX || homeY) {
         // Raise Z before homing any other axes and z is not already high enough (never lower z)
 
-              SERIAL_ECHOLNPAIR("normal marlinzzzz ", Z_HOMING_HEIGHT);
+               SERIAL_ECHOLNPAIR("Home X or Y Z_HOMING_HEIGHT ", Z_HOMING_HEIGHT);
 
-              SERIAL_ECHOLNPAIR("normal marlin yzzzzz", LOGICAL_Z_POSITION(Z_HOMING_HEIGHT));
+              SERIAL_ECHOLNPAIR("LOGICAL_Z_POSITION Z_HOMING_HEIGHT", LOGICAL_Z_POSITION(Z_HOMING_HEIGHT));
 
         destination[Z_AXIS] = LOGICAL_Z_POSITION(Z_HOMING_HEIGHT);
         if (destination[Z_AXIS] > current_position[Z_AXIS]) {
@@ -5818,7 +5802,9 @@ inline void gcode_G28(const bool always_home_all) {
 
 
   if (!(homeX || homeY || homeZ)) {
-       gcode_G29();
+       //gcode_G29();
+     enqueue_and_echo_commands_P(PSTR("T0")); //added by Josh to manually define post-home-G29 points
+     enqueue_and_echo_commands_P(PSTR("G29 P3")); //added by Josh to manually define post-home-G29 points
   }
 
   #if ENABLED(DEBUG_LEVELING_FEATURE)

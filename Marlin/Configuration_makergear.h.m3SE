@@ -18,7 +18,7 @@
 
 #define M2_X_MIN 0
 #define M3_X_MIN -4
-#define M3_DUAL_X_MIN -20.77
+#define M3_DUAL_X_MIN -20
 
 #define M2_Y_MIN 0
 #define M3_Y_MIN 0
@@ -30,14 +30,14 @@
 
 #define M2_X_MAX 205
 #define M3_X_MAX 220
-#define M3_DUAL_X_MAX 205.23 
+#define M3_DUAL_X_MAX 205
 
 
 #define M2_Y_MAX 255
 #define M3_Y_MAX 253
 
 #define M2_Z_MAX 200
-#define M3_Z_MAX 212.1
+#define M3_Z_MAX 210
 
 #define M3_X2_MIN_OLD_COOLING 70
 #define M3_X2_MAX_OLD_COOLING 230

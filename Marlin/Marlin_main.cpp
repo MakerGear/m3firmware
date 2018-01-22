@@ -5559,8 +5559,8 @@ inline void gcode_G4() {
 
 
 
-     enqueue_and_echo_commands_P(PSTR("T0")); //added by kyle to manually move T0 out of the way.
-     enqueue_and_echo_commands_P(PSTR("G1 X-25 F9000")); //added by kyle to manually move T0 out of the way.
+     //enqueue_and_echo_commands_P(PSTR("T0")); //added by kyle to manually move T0 out of the way.
+     //enqueue_and_echo_commands_P(PSTR("G1 X-25 F9000")); //added by kyle to manually move T0 out of the way.
 
   }
 

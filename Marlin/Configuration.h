@@ -124,7 +124,7 @@
 
 // Optional custom name for your RepStrap or other custom machine
 // Displayed in the LCD "Ready" message
-#define CUSTOM_MACHINE_NAME MAKERGEAR_MODEL
+#define CUSTOM_MACHINE_NAME MAKERGEAR_MACHINE_NAME_STRING
 
 // Define this to set a unique identifier for this printer, (Used by some programs to differentiate between machines)
 // You can use an online service to generate a random UUID. (eg http://www.uuidgenerator.net/version4)
@@ -215,7 +215,7 @@
 // Offset of the extruders (uncomment if using more than one and relying on firmware to position when changing).
 // The offset has to be X=0, Y=0 for the extruder 0 hotend (default extruder).
 // For the other hotends it is their distance from the extruder 0 hotend.
-#define HOTEND_OFFSET_X {0.0, CONF_X2_MAX} // (in mm) for each extruder, offset of the hotend on the X axis
+#define HOTEND_OFFSET_X {0.0, CONF_X_T1_MAX} // (in mm) for each extruder, offset of the hotend on the X axis
 #define HOTEND_OFFSET_Y {0.0, 0.00}  // (in mm) for each extruder, offset of the hotend on the Y axis
 
 // @section machine
@@ -839,13 +839,13 @@
 
 // The size of the print bed
 #define X_BED_SIZE 200
-#define Y_BED_SIZE 231 //changed to 250 by Josh for BLTouch testing - 10/24/1017
+#define Y_BED_SIZE 233 //changed to 250 by Josh for BLTouch testing - 10/24/1017
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
-#define X_MIN_POS CONF_X_MIN
+#define X_MIN_POS CONF_X_T0_MIN
 #define Y_MIN_POS CONF_Y_MIN
 #define Z_MIN_POS CONF_Z_MIN
-#define X_MAX_POS CONF_X_MAX
+#define X_MAX_POS CONF_X_T0_MAX
 #define Y_MAX_POS CONF_Y_MAX
 #define Z_MAX_POS CONF_Z_MAX
 

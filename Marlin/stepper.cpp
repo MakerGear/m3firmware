@@ -1424,7 +1424,7 @@ void Stepper::report_positions() {
 
 
       SET_OUTPUT(E2_CURRENT_PIN);
-      analogWrite(E2_CURRENT_PIN, SECOND_X_PWM);//extra x motor is not on a digipot
+      analogWrite(E2_CURRENT_PIN, X_T1_MOTOR_PWM);//extra x motor is not on a digipot
       TCCR5B = (TCCR5B & ~(_BV(CS50) | _BV(CS51) | _BV(CS52))) | _BV(CS50); //set PWM frequency to reduce buzzing
 
 

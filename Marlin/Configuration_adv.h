@@ -316,11 +316,11 @@
   // Configuration for second X-carriage
   // Note: the first x-carriage is defined as the x-carriage which homes to the minimum endstop;
   // the second x-carriage always homes to the maximum endstop.
-  #define X2_MIN_POS CONF_X2_MIN     // set minimum to ensure second x-carriage doesn't hit the parked first X-carriage
-  //#define X2_MAX_POS CONF_X2_MAX - CONF_X_MIN    // set maximum to the distance between toolheads when both heads are homed
-  #define X2_MAX_POS CONF_X2_MAX    // set maximum to the distance between toolheads when both heads are homed
+  #define X2_MIN_POS CONF_X_T1_MIN     // set minimum to ensure second x-carriage doesn't hit the parked first X-carriage
+  //#define X2_MAX_POS CONF_X_T1_MAX - CONF_X_MIN    // set maximum to the distance between toolheads when both heads are homed
+  #define X2_MAX_POS CONF_X_T1_MAX    // set maximum to the distance between toolheads when both heads are homed
   #define X2_HOME_DIR 1     // the second X-carriage always homes to the maximum endstop position
-  #define X2_HOME_POS CONF_X2_MAX // default home position is the maximum carriage position
+  #define X2_HOME_POS CONF_X_T1_MAX // default home position is the maximum carriage position
 
       // However: In this mode the HOTEND_OFFSET_X value for the second extruder provides a software
       // override for X2_HOME_POS. This also allow recalibration of the distance between the two endstops

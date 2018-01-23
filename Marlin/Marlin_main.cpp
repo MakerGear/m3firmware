@@ -474,8 +474,14 @@ float filament_size[EXTRUDERS], volumetric_multiplier[EXTRUDERS];
 #if HAS_SOFTWARE_ENDSTOPS
   bool soft_endstops_enabled = true;
 #endif
-float soft_endstop_min[XYZ] = { X_MIN_BED, 11, Z_MIN_POS },
-      soft_endstop_max[XYZ] = { X_MAX_BED, 242, Z_MAX_POS };
+ float soft_endstop_min[XYZ] = { X_MIN_BED, 0, Z_MIN_POS },
+       soft_endstop_max[XYZ] = { X_MAX_BED, CONF_Y_MAX, Z_MAX_POS };
+
+// float soft_endstop_min[XYZ] = { X_MIN_BED, Y_MIN_BED, Z_MIN_POS },
+// soft_endstop_max[XYZ] = { X_MAX_BED, Y_MAX_BED, Z_MAX_POS };
+
+
+
 //mgkdebug
 #if FAN_COUNT > 0
   int16_t fanSpeeds[FAN_COUNT] = { 0 };
@@ -5677,7 +5683,22 @@ inline void gcode_G28(const bool always_home_all) {
 
               SERIAL_ECHOLNPAIR("LOGICAL_Z_POSITION Z_HOMING_HEIGHT", LOGICAL_Z_POSITION(Z_HOMING_HEIGHT));
 
+             // SERIAL_ECHOLNPAIR("pos", LOGICAL_Z_POSITION(Z_HOMING_HEIGHT));
+
+              SERIAL_ECHOLNPAIR("WORKSPACE_OFFSET(AXIS)", WORKSPACE_OFFSET(Z_AXIS));
+
+              
+
         destination[Z_AXIS] = LOGICAL_Z_POSITION(Z_HOMING_HEIGHT);
+
+
+          #if ENABLED(DEBUG_LEVELING_FEATURE)
+            if (DEBUGGING(LEVELING))
+              SERIAL_ECHOLNPAIR("destination ", destination[Z_AXIS]);
+              SERIAL_ECHOLNPAIR("current_position[Z_AXIS] ", current_position[Z_AXIS]);
+          #endif
+
+
         if (destination[Z_AXIS] > current_position[Z_AXIS]) {
 
               SERIAL_ECHOLNPAIR("Raise Z (before homing) to ", destination[Z_AXIS]);
@@ -5689,6 +5710,9 @@ inline void gcode_G28(const bool always_home_all) {
           do_blocking_move_to_z(destination[Z_AXIS]);
         }
       }
+
+      //delay(10000);
+
 
     #endif
 

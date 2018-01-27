@@ -64,7 +64,7 @@
 #define M3_X_T1_MIN_rev_0_003 48
 #define M3_X_T1_MAX_rev_0_003 254
 
-#define M3_X_T1_MIN_rev_1_003 22
+#define M3_X_T1_MIN_rev_1_003 23
 #define M3_X_T1_MAX_rev_1_003 252
 
 

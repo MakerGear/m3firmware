@@ -742,13 +742,13 @@
  *      O-- FRONT --+
  *    (0,0)
  */
-#define X_PROBE_OFFSET_FROM_EXTRUDER 21  // X offset: -left  +right  [of the nozzle] //was 0 for my version mounted in the fan, setting to 21 for David's version mounted in the cut slow
-#define Y_PROBE_OFFSET_FROM_EXTRUDER 0  // Y offset: -front +behind [the nozzle] //was -38 for my version mounted in the fan, setting to 0 for David's version mounted in the cut slot
-#define Z_PROBE_OFFSET_FROM_EXTRUDER -1   // Z offset: -below +above  [the nozzle]
+#define X_PROBE_OFFSET_FROM_EXTRUDER CONF_X_PROBE_OFFSET_FROM_EXTRUDER  // X offset: -left  +right  [of the nozzle] //was 0 for my version mounted in the fan, setting to 21 for David's version mounted in the cut slow
+#define Y_PROBE_OFFSET_FROM_EXTRUDER CONF_Y_PROBE_OFFSET_FROM_EXTRUDER  // Y offset: -front +behind [the nozzle] //was -38 for my version mounted in the fan, setting to 0 for David's version mounted in the cut slot
+#define Z_PROBE_OFFSET_FROM_EXTRUDER CONF_Z_PROBE_OFFSET_FROM_EXTRUDER   // Z offset: -below +above  [the nozzle]
 //#define Z_PROBE_OFFSET_FROM_EXTRUDER -.2   // Z offset: -below +above  [the nozzle]
 
 // X and Y axis travel speed (mm/m) between probes
-#define XY_PROBE_SPEED 4000
+#define XY_PROBE_SPEED CONF_XY_PROBE_SPEED
 
 // Speed for the first approach when double-probing (with PROBE_DOUBLE_TOUCH)
 #define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
@@ -777,8 +777,8 @@
 #define Z_CLEARANCE_BETWEEN_PROBES  5 // Z Clearance between probe points
 
 // For M851 give a range for adjusting the Z probe offset
-#define Z_PROBE_OFFSET_RANGE_MIN -20
-#define Z_PROBE_OFFSET_RANGE_MAX 20
+#define Z_PROBE_OFFSET_RANGE_MIN -3
+#define Z_PROBE_OFFSET_RANGE_MAX 0
 
 // Enable the M48 repeatability test to test probe accuracy
 #define Z_MIN_PROBE_REPEATABILITY_TEST //uncommented by Josh for BLTouch testing - 10/24/1017
@@ -831,15 +831,15 @@
 
 // Direction of endstops when homing; 1=MAX, -1=MIN
 // :[-1,1]
-#define X_HOME_DIR -1
-#define Y_HOME_DIR -1
-#define Z_HOME_DIR -1
+#define X_HOME_DIR CONF_X_HOME_DIR
+#define Y_HOME_DIR CONF_Y_HOME_DIR
+#define Z_HOME_DIR CONF_Z_HOME_DIR
 
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 200
-#define Y_BED_SIZE 233 //changed to 250 by Josh for BLTouch testing - 10/24/1017
+#define X_BED_SIZE CONF_X_BED_SIZE
+#define Y_BED_SIZE CONF_Y_BED_SIZE 
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
 #define X_MIN_POS CONF_X_T0_MIN
@@ -924,7 +924,7 @@
  * Turn on with the command 'M111 S32'.
  * NOTE: Requires a lot of PROGMEM!
  */
-#define DEBUG_LEVELING_FEATURE //uncommented by Josh for BLTouch testing - 10/24/1017
+//#define DEBUG_LEVELING_FEATURE //uncommented by Josh for BLTouch testing - 10/24/1017
 
 #if ENABLED(MESH_BED_LEVELING) || ENABLED(AUTO_BED_LEVELING_BILINEAR) || ENABLED(AUTO_BED_LEVELING_UBL)
   // Gradually reduce leveling correction until a set height is reached,
@@ -936,15 +936,15 @@
 #if ENABLED(AUTO_BED_LEVELING_LINEAR) || ENABLED(AUTO_BED_LEVELING_BILINEAR)
 
   // Set the number of grid points per dimension.
-  #define GRID_MAX_POINTS_X 3
-  #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
+  #define GRID_MAX_POINTS_X CONF_GRID_MAX_POINTS_X
+  #define GRID_MAX_POINTS_Y CONF_GRID_MAX_POINTS_Y
 
   // Set the boundaries for probing (where the probe can reach).
-  #define LEFT_PROBE_BED_POSITION 18//15
-  #define RIGHT_PROBE_BED_POSITION 190
-  #define FRONT_PROBE_BED_POSITION 20
+  #define LEFT_PROBE_BED_POSITION CONF_LEFT_PROBE_BED_POSITION
+  #define RIGHT_PROBE_BED_POSITION CONF_RIGHT_PROBE_BED_POSITION
+  #define FRONT_PROBE_BED_POSITION CONF_FRONT_PROBE_BED_POSITION
   //#define BACK_PROBE_BED_POSITION 200
-  #define BACK_PROBE_BED_POSITION 225
+  #define BACK_PROBE_BED_POSITION CONF_BACK_PROBE_BED_POSITION
 
   // The Z probe minimum outer margin (to validate G29 parameters).
   #define MIN_PROBE_EDGE 10

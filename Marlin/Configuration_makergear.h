@@ -11,6 +11,14 @@
 // #define MAKERGEAR_MODEL_M3_ID_REV_1_000 //"M3 Dual Extruder Rev 1"
 
 
+//legacy defines
+#ifdef MAKERGEAR_MODEL_M3_SINGLE_X_CARRIAGE
+	#define MAKERGEAR_MODEL_M3_SE_REV_0_004
+#endif
+
+#ifdef MAKERGEAR_MODEL_M3_INDEPENDENT_DUAL
+	#define MAKERGEAR_MODEL_M3_ID_REV_0_005
+#endif
 
 
 /******************

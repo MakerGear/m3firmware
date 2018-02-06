@@ -1,10 +1,11 @@
+
 /* MakerGear defines*/
 	/*	Model Definitions*/
 
 //#define MAKERGEAR_MODEL_M3_ID_REV_1_000 //"M3 Dual Extruder Rev 1"
 // #define MAKERGEAR_MODEL_M2_SE_REV_5_000 //"M2 Single Extruder Rev 5/ RevE"
 // #define MAKERGEAR_MODEL_M3_SE_REV_0_004 //"M3 Single Extruder Rev 0"
- #define MAKERGEAR_MODEL_M3_SE_REV_0_005 //"M3 Single Extruder Rev 0 with Probe"
+// #define MAKERGEAR_MODEL_M3_SE_REV_0_005 //"M3 Single Extruder Rev 0 with Probe"
 // #define MAKERGEAR_MODEL_M3_SE_REV_1_000 //"M3 Single Extruder Rev 1"
 // #define MAKERGEAR_MODEL_M3_ID_REV_0_005 //"M3 Dual Extruder Rev 0"
 // #define MAKERGEAR_MODEL_M3_ID_REV_1_000 //"M3 Dual Extruder Rev 1"

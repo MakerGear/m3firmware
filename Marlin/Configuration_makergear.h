@@ -456,7 +456,7 @@
 	#define CONF_X_T0_MAX 			M3_SE_X_T0_MAX
 	#define CONF_Y_MAX 				M3_SE_rev_0_005_Y_MAX
 	#define CONF_Z_MAX 				M3_Z_MAX
-	#define CONF_X_T0_MIN 			M3_SE_rev_0_005_X_T0_MIN
+	#define CONF_X_T0_MIN 			M3_SE_rev_1_000_X_T0_MIN
 	#define CONF_Y_MIN 				M3_SE_rev_0_005_Y_MIN
 	#define CONF_Z_MIN 				M3_SE_rev_1_000_Z_MIN
 

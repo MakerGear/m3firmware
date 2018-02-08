@@ -2145,6 +2145,8 @@ static void clean_up_after_endstop_or_probe_move() {
         if (TEST_BLTOUCH()) {              // If it still claims to be triggered...
           SERIAL_ERROR_START();
           SERIAL_ERRORLNPGM(MSG_STOP_BLTOUCH);
+
+          SERIAL_ECHOPAIR("error detected bl touch set_bltouch_deployed", deploy);
           stop();                          // punt!
           return true;
         }

@@ -2,22 +2,22 @@
 /* MakerGear defines*/
 	/*	Model Definitions*/
 
-// #define MAKERGEAR_MODEL_M3_ID_REV_1_000 //"M3 Dual Extruder Rev 1"
-// #define MAKERGEAR_MODEL_M2_SE_REV_5_000 //"M2 Single Extruder Rev 5/ RevE"
-// #define MAKERGEAR_MODEL_M3_SE_REV_0_004 //"M3 Single Extruder Rev 0"
-// #define MAKERGEAR_MODEL_M3_SE_REV_0_005 //"M3 Single Extruder Rev 0 with Probe"
-// #define MAKERGEAR_MODEL_M3_SE_REV_1_000 //"M3 Single Extruder Rev 1"
-// #define MAKERGEAR_MODEL_M3_ID_REV_0_005 //"M3 Dual Extruder Rev 0"
-// #define MAKERGEAR_MODEL_M3_ID_REV_1_000 //"M3 Dual Extruder Rev 1"
+// #define MAKERGEAR_MODEL_M3_ID_REV1_000 //"M3 Dual Extruder Rev 1"
+// #define MAKERGEAR_MODEL_M2_SE_REV5_000 //"M2 Single Extruder Rev 5/ RevE"
+// #define MAKERGEAR_MODEL_M3_SE_REV0_004 //"M3 Single Extruder Rev 0"
+// #define MAKERGEAR_MODEL_M3_SE_REV0_005 //"M3 Single Extruder Rev 0 with Probe"
+// #define MAKERGEAR_MODEL_M3_SE_REV1_000 //"M3 Single Extruder Rev 1"
+// #define MAKERGEAR_MODEL_M3_ID_REV0_005 //"M3 Dual Extruder Rev 0"
+// #define MAKERGEAR_MODEL_M3_ID_REV1_000 //"M3 Dual Extruder Rev 1"
 
 
 //legacy defines
 #ifdef MAKERGEAR_MODEL_M3_SINGLE_X_CARRIAGE
-	#define MAKERGEAR_MODEL_M3_SE_REV_0_004
+	#define MAKERGEAR_MODEL_M3_SE_REV0_004
 #endif
 
 #ifdef MAKERGEAR_MODEL_M3_INDEPENDENT_DUAL
-	#define MAKERGEAR_MODEL_M3_ID_REV_0_005
+	#define MAKERGEAR_MODEL_M3_ID_REV0_005
 #endif
 
 
@@ -221,7 +221,7 @@
 
 
 //"M2 Single Extruder Rev 5/ RevE"
-#ifdef MAKERGEAR_MODEL_M2_SE_REV_5_000	
+#ifdef MAKERGEAR_MODEL_M2_SE_REV5_000	
 	#undef MAKERGEAR_ERROR_FLAG
 	#define MAKERGEAR_MACHINE_NAME_STRING "M2 Single Extruder Rev 5/E"
 	
@@ -326,7 +326,7 @@
 #endif 
 
 //"M3 Single Extruder Rev 0"
-#ifdef MAKERGEAR_MODEL_M3_SE_REV_0_004	
+#ifdef MAKERGEAR_MODEL_M3_SE_REV0_004	
 	#undef MAKERGEAR_ERROR_FLAG
 	#define MAKERGEAR_MACHINE_NAME_STRING "M3 Single Extruder Rev 0"
 	
@@ -433,7 +433,7 @@
 
 
 //"M3 Single Extruder Rev 0 with Probe"
-#ifdef MAKERGEAR_MODEL_M3_SE_REV_0_005	
+#ifdef MAKERGEAR_MODEL_M3_SE_REV0_005	
 	#undef MAKERGEAR_ERROR_FLAG
 	#define MAKERGEAR_MACHINE_NAME_STRING "M3 Single Extruder Rev 0 with Probe"
 	
@@ -540,7 +540,7 @@
 
 
 //"M3 Single Extruder Rev 1"
-#ifdef MAKERGEAR_MODEL_M3_SE_REV_1_000	
+#ifdef MAKERGEAR_MODEL_M3_SE_REV1_000	
 	#undef MAKERGEAR_ERROR_FLAG
 	#define MAKERGEAR_MACHINE_NAME_STRING "M3 Single Extruder Rev 1"
 
@@ -755,7 +755,7 @@
 
 
 //"M3 Dual Extruder Rev 1"
-#ifdef MAKERGEAR_MODEL_M3_ID_REV_1_000	
+#ifdef MAKERGEAR_MODEL_M3_ID_REV1_000	
 	#undef MAKERGEAR_ERROR_FLAG
 	#define MAKERGEAR_MACHINE_NAME_STRING "M3 Dual Extruder Rev 1"
 

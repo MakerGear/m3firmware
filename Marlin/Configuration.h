@@ -520,7 +520,11 @@
 // extra connectors. Leave undefined any used for non-endstop and non-probe purposes.
 #define USE_XMIN_PLUG
 #define USE_YMIN_PLUG
-#define USE_ZMIN_PLUG //uncommented by Josh for BLTouch testing - 10/24/1017
+
+#if CONF_HAS_PROBE == true
+  #define USE_ZMIN_PLUG //uncommented by Josh for BLTouch testing - 10/24/1017
+#endif
+
 
 //define xmax if we're using dual carriage
 #if CONF_CARRIAGE == TWO_X_CARRIAGE
@@ -690,13 +694,21 @@
 /**
  * Z Servo Probe, such as an endstop switch on a rotating arm.
  */
-#define Z_ENDSTOP_SERVO_NR 1   // Defaults to SERVO 0 connector.
-#define Z_SERVO_ANGLES {10,90}  // Z Servo Deploy and Stow angles
+#if CONF_HAS_PROBE == true
+  #define Z_ENDSTOP_SERVO_NR 1   // Defaults to SERVO 0 connector.  
+  #define Z_SERVO_ANGLES {10,90}  // Z Servo Deploy and Stow angles
+#endif
+
+
 
 /**
  * The BLTouch probe uses a Hall effect sensor and emulates a servo.
  */
-#define BLTOUCH //uncommented by Josh for BLTouch testing - 10/24/1017
+
+#if CONF_HAS_PROBE == true
+  #define BLTOUCH //uncommented by Josh for BLTouch testing - 10/24/1017
+#endif
+
 #if ENABLED(BLTOUCH)
   //#define BLTOUCH_DELAY 375   // (ms) Enable and increase if needed
 #endif
@@ -781,7 +793,9 @@
 #define Z_PROBE_OFFSET_RANGE_MAX 0
 
 // Enable the M48 repeatability test to test probe accuracy
-#define Z_MIN_PROBE_REPEATABILITY_TEST //uncommented by Josh for BLTouch testing - 10/24/1017
+#if CONF_HAS_PROBE == true
+  #define Z_MIN_PROBE_REPEATABILITY_TEST //uncommented by Josh for BLTouch testing - 10/24/1017
+#endif
 
 // For Inverting Stepper Enable Pins (Active Low) use 0, Non Inverting (Active High) use 1
 // :{ 0:'Low', 1:'High' }
@@ -915,7 +929,14 @@
  */
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
-#define AUTO_BED_LEVELING_BILINEAR //uncommented by Josh for BLTouch testing - 10/24/1017
+
+
+#if CONF_HAS_PROBE == true
+  #define AUTO_BED_LEVELING_BILINEAR //uncommented by Josh for BLTouch testing - 10/24/1017
+#endif
+
+
+
 //#define AUTO_BED_LEVELING_UBL
 //#define MESH_BED_LEVELING
 
@@ -1056,7 +1077,11 @@
 // - Move the Z probe (or nozzle) to a defined XY point before Z Homing when homing all axes (G28).
 // - Prevent Z homing when the Z probe is outside bed area.
 //
-#define Z_SAFE_HOMING
+
+#if CONF_HAS_PROBE == true
+  #define Z_SAFE_HOMING
+#endif
+
 
 #if ENABLED(Z_SAFE_HOMING)
   #define Z_SAFE_HOMING_X_POINT ((X_BED_SIZE) / 2)    // X point for Z homing when homing all axis (G28).

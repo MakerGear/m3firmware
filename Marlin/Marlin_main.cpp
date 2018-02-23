@@ -4325,6 +4325,34 @@ inline void gcode_G4() {
     destination[Z_AXIS] = current_position[Z_AXIS]; // Z is already at the right height
 
     #if HOMING_Z_WITH_PROBE
+
+      // if (axis_homed[Z_AXIS] == true) //if z has not been homed, XY need to be homed first, so we can ignore this movement...might be a btter way of thinking about this.
+      // {
+        
+        tool_change(1, 0, true); //change to T1
+        //do an if tool is less than CONF_X_T1_MAX-10
+
+        //if our T1 position is less than max x position - 10, we'll try to move
+        if(current_position[X_AXIS] < CONF_X_T1_MAX-10)
+        {
+
+          if (position_is_reachable_xy(destination[X_AXIS], destination[Y_AXIS])) 
+          {
+            do_blocking_move_to_xy(CONF_X_T1_MAX-10, destination[Y_AXIS]); //xmax
+          }
+        }
+        
+        tool_change(0, 0, true); //move back to T0 for x/y probe
+
+      //}
+
+
+      /**
+       * update Move the Z probe (or just the nozzle) to the safe homing point
+       */
+      destination[X_AXIS] = LOGICAL_X_POSITION(Z_SAFE_HOMING_X_POINT);
+      destination[Y_AXIS] = LOGICAL_Y_POSITION(Z_SAFE_HOMING_Y_POINT);
+
       destination[X_AXIS] -= X_PROBE_OFFSET_FROM_EXTRUDER;
       destination[Y_AXIS] -= Y_PROBE_OFFSET_FROM_EXTRUDER;
     #endif
@@ -4337,6 +4365,10 @@ inline void gcode_G4() {
 
       // This causes the carriage on Dual X to unpark
       #if ENABLED(DUAL_X_CARRIAGE)
+
+
+
+
         active_extruder_parked = false;
       #endif
 
@@ -5681,13 +5713,10 @@ inline void gcode_G28(const bool always_home_all) {
       if (home_all || homeX || homeY) {
         // Raise Z before homing any other axes and z is not already high enough (never lower z)
 
-               SERIAL_ECHOLNPAIR("Home X or Y Z_HOMING_HEIGHT ", Z_HOMING_HEIGHT);
-
-              SERIAL_ECHOLNPAIR("LOGICAL_Z_POSITION Z_HOMING_HEIGHT", LOGICAL_Z_POSITION(Z_HOMING_HEIGHT));
-
-             // SERIAL_ECHOLNPAIR("pos", LOGICAL_Z_POSITION(Z_HOMING_HEIGHT));
-
-              SERIAL_ECHOLNPAIR("WORKSPACE_OFFSET(AXIS)", WORKSPACE_OFFSET(Z_AXIS));
+             //SERIAL_ECHOLNPAIR("Home X or Y Z_HOMING_HEIGHT ", Z_HOMING_HEIGHT);
+            //SERIAL_ECHOLNPAIR("LOGICAL_Z_POSITION Z_HOMING_HEIGHT", LOGICAL_Z_POSITION(Z_HOMING_HEIGHT));
+            // SERIAL_ECHOLNPAIR("pos", LOGICAL_Z_POSITION(Z_HOMING_HEIGHT));
+            //SERIAL_ECHOLNPAIR("WORKSPACE_OFFSET(AXIS)", WORKSPACE_OFFSET(Z_AXIS));
 
               
 

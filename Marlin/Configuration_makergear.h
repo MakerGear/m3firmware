@@ -1,4 +1,4 @@
-
+#define MAKERGEAR_MODEL_M3_ID_REV_1_000 //"M3 Dual Extruder Rev 1"
 /* MakerGear defines*/
 	/*	Model Definitions*/
 

@@ -375,6 +375,25 @@ uint8_t marlin_debug_flags = DEBUG_NONE;
  */
 float current_position[XYZE] = { 0.0 };
 
+
+
+/**
+ * Cartesian Previous Position Tool 0
+ *  previousversion to return to (usually after probing) 
+ */
+float previous_position_T0[XYZE] = { 0.0 };
+
+
+#if ENABLED(DUAL_X_CARRIAGE)
+  /**
+   * Cartesian Previous Position Tool 0
+   *  previousversion to return to (usually after probing) 
+   */
+  float previous_position_T1[XYZE] = { 0.0 };
+#endif
+
+
+
 /**
  * Cartesian Destination
  *   A temporary position, usually applied to 'current_position'.
@@ -2143,12 +2162,23 @@ static void clean_up_after_endstop_or_probe_move() {
                                            //  (Measured completion time was 0.65 seconds
                                            //   after reset, deploy, and stow sequence)
         if (TEST_BLTOUCH()) {              // If it still claims to be triggered...
-          SERIAL_ERROR_START();
-          SERIAL_ERRORLNPGM(MSG_STOP_BLTOUCH);
 
-          SERIAL_ECHOPAIR("error detected bl touch set_bltouch_deployed", deploy);
-          stop();                          // punt!
-          return true;
+          //Try again
+          bltouch_command(BLTOUCH_RESET);    //  try to reset it.
+          bltouch_command(BLTOUCH_DEPLOY);   // Also needs to deploy and stow to
+          bltouch_command(BLTOUCH_STOW);     //  clear the triggered condition.
+          safe_delay(1500);                  // Wait for internal self-test to complete.
+                                           //  (Measured completion time was 0.65 seconds
+                                           //   after reset, deploy, and stow sequence)
+          if (TEST_BLTOUCH()) {              // If it still claims to be triggered...
+
+            SERIAL_ERROR_START();
+            SERIAL_ERRORLNPGM(MSG_STOP_BLTOUCH);
+
+            SERIAL_ECHOPAIR("error detected bl touch set_bltouch_deployed", deploy);
+            stop();                          // punt!
+            return true;
+          }
         }
       }
 
@@ -3568,6 +3598,7 @@ inline void gcode_G0_G1(
 
   //   soft_endstop_max[Y_AXIS] = 250;
 
+#if CONF_CARRIAGE == 3
   const int bedClipX = 23;
   const int bedClipY = 11;
   const int bedClipProbeX = 30;
@@ -3590,6 +3621,7 @@ inline void gcode_G0_G1(
   // Q1*******************Q2
 
 
+  // }
   const int Q1_X = 0 + bedClipX;
   const int Q1_Y = 0 + bedClipY;
   const int Q2_X = X_BED_SIZE - bedClipX - bedClipProbeX;
@@ -3598,7 +3630,7 @@ inline void gcode_G0_G1(
   const int Q3_Y = Y_BED_SIZE - bedClipY ;
   const int Q4_X = 0 + bedClipX;
   const int Q4_Y = Y_BED_SIZE - bedClipY ;
-
+#endif
 
   #if ENABLED(NO_MOTION_BEFORE_HOMING)
     if (axis_unhomed_error()) return;
@@ -5641,6 +5673,9 @@ inline void gcode_G4() {
  */
 inline void gcode_G28(const bool always_home_all) {
 
+
+
+
   #if ENABLED(DEBUG_LEVELING_FEATURE)
     if (DEBUGGING(LEVELING)) {
       SERIAL_ECHOLNPGM(">>> gcode_G28");
@@ -5673,6 +5708,25 @@ inline void gcode_G28(const bool always_home_all) {
     const uint8_t old_tool_index = active_extruder;
     tool_change(0, 0, true);
   #endif
+
+
+  #if HOMING_Z_WITH_PROBE
+    //store previous position to move back after probing
+    tool_change(0, 0, true); //change to T0
+    previous_position_T0[X_AXIS] = current_position[X_AXIS];
+    previous_position_T0[Y_AXIS] = current_position[Y_AXIS];
+
+    #if ENABLED(DUAL_X_CARRIAGE)
+          tool_change(1, 0, true); //change to T1
+          previous_position_T1[X_AXIS] = current_position[X_AXIS];
+          previous_position_T1[Y_AXIS] = current_position[Y_AXIS];
+
+    #endif
+
+
+  #endif
+
+
 
   #if ENABLED(DUAL_X_CARRIAGE) || ENABLED(DUAL_NOZZLE_DUPLICATION_MODE)
     extruder_duplication_enabled = false;
@@ -5711,6 +5765,7 @@ inline void gcode_G28(const bool always_home_all) {
     #else
 
       if (home_all || homeX || homeY) {
+
         // Raise Z before homing any other axes and z is not already high enough (never lower z)
 
              //SERIAL_ECHOLNPAIR("Home X or Y Z_HOMING_HEIGHT ", Z_HOMING_HEIGHT);
@@ -5838,6 +5893,84 @@ inline void gcode_G28(const bool always_home_all) {
 
   clean_up_after_endstop_or_probe_move();
 
+
+
+  //MG Edit
+
+
+
+  if (!(homeX || homeY || homeZ)) {
+       //gcode_G29();
+     //enqueue_and_echo_commands_P(PSTR("T0")); //added by Josh to manually define post-home-G29 points
+
+
+    //tool_change(0, 0, true); //change to T0
+    //gcode_G29();
+
+     enqueue_and_echo_commands_P(PSTR("T0")); //added by Josh to manually define post-home-G29 points
+
+     enqueue_and_echo_commands_P(PSTR("G29 P3")); //added by Josh to manually define post-home-G29 points
+  }
+
+
+
+
+
+
+  #if HOMING_Z_WITH_PROBE
+
+  if(homeZ || home_all)
+      if (homeX || home_all) {
+                //since we're homing X, set previous positions to homed positions
+
+                previous_position_T0[X_AXIS] = CONF_X_T0_MIN;
+               
+                #if ENABLED(DUAL_X_CARRIAGE)
+                  previous_position_T1[X_AXIS] = CONF_X_T1_MAX;            
+                #endif
+
+      }
+
+      if (homeY || home_all) {
+                //since we're homing Y, set previous positions to homed positions
+
+                previous_position_T0[Y_AXIS] = CONF_Y_MIN;
+
+      }
+
+      tool_change(0, 0, true); //change to T0
+      destination[X_AXIS] = previous_position_T0[X_AXIS];
+      destination[Y_AXIS] = previous_position_T0[Y_AXIS];
+
+
+      if (position_is_reachable_xy(destination[X_AXIS], destination[Y_AXIS])) 
+      {
+        do_blocking_move_to_xy(destination[X_AXIS], destination[Y_AXIS]); //xmax
+      }
+
+     
+      #if ENABLED(DUAL_X_CARRIAGE)
+
+        tool_change(1, 0, true); //change to T1
+        destination[X_AXIS] = previous_position_T1[X_AXIS];
+        destination[Y_AXIS] = previous_position_T0[Y_AXIS];
+
+
+        if (position_is_reachable_xy(destination[X_AXIS], destination[Y_AXIS])) 
+        {
+          do_blocking_move_to_xy( destination[X_AXIS], destination[Y_AXIS]); //xmax
+        }
+        
+      #endif
+
+
+
+
+
+
+  #endif
+
+
   // Restore the active tool after homing
   #if HOTENDS > 1
     #if ENABLED(PARKING_EXTRUDER)
@@ -5852,15 +5985,12 @@ inline void gcode_G28(const bool always_home_all) {
 
   report_current_position();
 
-  //MG Edit
 
 
 
-  if (!(homeX || homeY || homeZ)) {
-       //gcode_G29();
-     enqueue_and_echo_commands_P(PSTR("T0")); //added by Josh to manually define post-home-G29 points
-     enqueue_and_echo_commands_P(PSTR("G29 P3")); //added by Josh to manually define post-home-G29 points
-  }
+
+
+
 
   #if ENABLED(DEBUG_LEVELING_FEATURE)
     if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPGM("<<< gcode_G28");

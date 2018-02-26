@@ -5920,6 +5920,7 @@ inline void gcode_G28(const bool always_home_all) {
   #if HOMING_Z_WITH_PROBE
 
   if(homeZ || home_all)
+  {
       if (homeX || home_all) {
                 //since we're homing X, set previous positions to homed positions
 
@@ -5962,7 +5963,7 @@ inline void gcode_G28(const bool always_home_all) {
         }
         
       #endif
-
+    }
 
 
 

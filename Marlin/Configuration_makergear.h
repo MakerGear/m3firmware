@@ -1,14 +1,7 @@
-#define MAKERGEAR_MODEL_M3_ID_REV_1_000 //"M3 Dual Extruder Rev 1"
+
 /* MakerGear defines*/
 	/*	Model Definitions*/
 
-// #define MAKERGEAR_MODEL_M3_ID_REV1_000 //"M3 Dual Extruder Rev 1"
-// #define MAKERGEAR_MODEL_M2_SE_REV5_000 //"M2 Single Extruder Rev 5/ RevE"
-// #define MAKERGEAR_MODEL_M3_SE_REV0_004 //"M3 Single Extruder Rev 0"
-// #define MAKERGEAR_MODEL_M3_SE_REV0_005 //"M3 Single Extruder Rev 0 with Probe"
-// #define MAKERGEAR_MODEL_M3_SE_REV1_000 //"M3 Single Extruder Rev 1"
-// #define MAKERGEAR_MODEL_M3_ID_REV0_005 //"M3 Dual Extruder Rev 0"
-// #define MAKERGEAR_MODEL_M3_ID_REV1_000 //"M3 Dual Extruder Rev 1"
 
 
 //legacy defines
@@ -20,26 +13,6 @@
 	#define MAKERGEAR_MODEL_M3_ID_REV0_005
 #endif
 
-
-//Debug and Version
-//#define DEBUG_LEVELING_FEATURE 
-
-#define CONF_GRID_MAX_POINTS_X 3
-#define CONF_GRID_MAX_POINTS_Y CONF_GRID_MAX_POINTS_X
-
-
-#define CONF_LEFT_PROBE_BED_POSITION 18
-#define CONF_RIGHT_PROBE_BED_POSITION 190
-#define CONF_FRONT_PROBE_BED_POSITION 20
-#define CONF_BACK_PROBE_BED_POSITION 225
-
-
-#define CONF_X_PROBE_OFFSET_FROM_EXTRUDER 21
-#define CONF_Y_PROBE_OFFSET_FROM_EXTRUDER 0
-#define CONF_Z_PROBE_OFFSET_FROM_EXTRUDER -1
-#define CONF_XY_PROBE_SPEED 6000
-
-//#define PROBE_DOUBLE_TOUCH
 
 
 /******************
@@ -218,6 +191,29 @@
 
 
 #define MAKERGEAR_ERROR_FLAG //error flag used to detect if a model had not been choosen 
+
+
+//Debug and Version
+//#define DEBUG_LEVELING_FEATURE 
+
+#define CONF_GRID_MAX_POINTS_X 3
+#define CONF_GRID_MAX_POINTS_Y CONF_GRID_MAX_POINTS_X
+
+
+#define CONF_LEFT_PROBE_BED_POSITION 18
+#define CONF_RIGHT_PROBE_BED_POSITION 190
+#define CONF_FRONT_PROBE_BED_POSITION 20
+#define CONF_BACK_PROBE_BED_POSITION 225
+
+
+#define CONF_X_PROBE_OFFSET_FROM_EXTRUDER 21
+#define CONF_Y_PROBE_OFFSET_FROM_EXTRUDER 0
+#define CONF_Z_PROBE_OFFSET_FROM_EXTRUDER -1
+#define CONF_XY_PROBE_SPEED 6000
+
+//#define PROBE_DOUBLE_TOUCH
+
+
 
 
 //"M2 Single Extruder Rev 5/ RevE"

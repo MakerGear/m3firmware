@@ -1,3 +1,4 @@
+#define MAKERGEAR_MODEL_M3_ID_REV1_000//AUTOMATICALLY FILLED BY MGSETUP PLUGIN - 18-03-01.19:10
 
 /* MakerGear defines*/
 	/*	Model Definitions*/

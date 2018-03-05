@@ -2175,7 +2175,9 @@ static void clean_up_after_endstop_or_probe_move() {
             SERIAL_ERROR_START();
             SERIAL_ERRORLNPGM(MSG_STOP_BLTOUCH);
 
-            SERIAL_ECHOPAIR("error detected bl touch set_bltouch_deployed", deploy);
+
+            SERIAL_ECHOLNPAIR("error detected bl touch set_bltouch_deployed", deploy);
+            SERIAL_ECHOLNPGM("MGERR[002]-[11] Probe Deployment Error: Please restart your printer.");
             stop();                          // punt!
             return true;
           }
@@ -10385,7 +10387,8 @@ inline void gcode_M502() {
         SERIAL_ECHO(zprobe_zoffset);
       }
       else
-        SERIAL_ECHOPGM(MSG_Z_MIN " " STRINGIFY(Z_PROBE_OFFSET_RANGE_MIN) " " MSG_Z_MAX " " STRINGIFY(Z_PROBE_OFFSET_RANGE_MAX));
+        SERIAL_ECHOLNPGM(MSG_Z_MIN " " STRINGIFY(Z_PROBE_OFFSET_RANGE_MIN) " " MSG_Z_MAX " " STRINGIFY(Z_PROBE_OFFSET_RANGE_MAX));
+        SERIAL_ECHOLNPGM("MGERR[003]-[11] Probe Offset(M851) out of range .");
     }
     else
       SERIAL_ECHOPAIR(": ", zprobe_zoffset);
@@ -13240,12 +13243,18 @@ void prepare_move_to_destination() {
           current_position[E_AXIS] = destination[E_AXIS]; // Behave as if the move really took place, but ignore E part
           SERIAL_ECHO_START();
           SERIAL_ECHOLNPGM(MSG_ERR_COLD_EXTRUDE_STOP);
+          SERIAL_ECHOLNPGM("MGERR[004]-[13] Cold Extrusion Prevented");
+          SERIAL_ECHOLNPAIR("MGERR[004]-[23] Cannot Extrude under C", EXTRUDE_MINTEMP);
+          SERIAL_ECHOLNPGM("MGERR[004]-[33] Heat up extruder or use M302");
+
         }
         #if ENABLED(PREVENT_LENGTHY_EXTRUDE)
           if (destination[E_AXIS] - current_position[E_AXIS] > EXTRUDE_MAXLENGTH) {
             current_position[E_AXIS] = destination[E_AXIS]; // Behave as if the move really took place, but ignore E part
             SERIAL_ECHO_START();
             SERIAL_ECHOLNPGM(MSG_ERR_LONG_EXTRUDE_STOP);
+            SERIAL_ECHOLNPGM("MGERR[005]-[12] Lengthy Extrusion Prevented");
+            SERIAL_ECHOLNPAIR("MGERR[005]-[22] Cannot Extrude nore than mm", EXTRUDE_MAXLENGTH);
           }
         #endif
       }

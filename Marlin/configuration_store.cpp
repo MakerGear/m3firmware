@@ -1385,6 +1385,19 @@ void MarlinSettings::reset() {
      * Announce current units, in case inches are being displayed
      */
     CONFIG_ECHO_START;
+
+
+    SERIAL_ECHOLNPGM("     ");
+    SERIAL_ECHOLNPGM(" MGERR[001]-[00] I am a single line error");
+    SERIAL_ECHOLNPGM(" no error here");
+    SERIAL_ECHOLNPGM(" MGERR[002]-[16] I am a multi line error a");
+    SERIAL_ECHOLNPGM(" MGERR[002]-[26] I am a multi line error b");
+    SERIAL_ECHOLNPGM(" MGERR[002]-[36] I am a multi line error c");
+    SERIAL_ECHOLNPGM(" MGERR[002]-[46] I am a multi line error d");
+    SERIAL_ECHOLNPGM(" MGERR[002]-[56] I am a multi line error e");
+    SERIAL_ECHOLNPGM(" MGERR[002]-[66] I am a multi line error f");
+
+
     #if ENABLED(INCH_MODE_SUPPORT)
       #define LINEAR_UNIT(N) ((N) / parser.linear_unit_factor)
       #define VOLUMETRIC_UNIT(N) ((N) / (volumetric_enabled ? parser.volumetric_unit_factor : parser.linear_unit_factor))

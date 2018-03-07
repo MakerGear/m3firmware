@@ -1539,7 +1539,16 @@ static void set_axis_is_at_home(const AxisEnum axis) {
 
   #if ENABLED(DUAL_X_CARRIAGE)
     if (axis == X_AXIS && (active_extruder == 1 || dual_x_carriage_mode == DXC_DUPLICATION_MODE)) {
+        #if ENABLED(DEBUG_LEVELING_FEATURE)
+        if (DEBUGGING(LEVELING)) {
+          SERIAL_ECHOLN("restting extruder to its home position...why?");
+          SERIAL_CHAR(')');
+          SERIAL_EOL();
+        }
+      #endif
+
       current_position[X_AXIS] = x_home_pos(active_extruder);
+
       return;
     }
   #endif
@@ -4335,6 +4344,18 @@ inline void gcode_G4() {
 
   inline void home_z_safely() {
 
+
+    #if HOMING_Z_WITH_PROBE
+
+      #if ENABLED(DEBUG_LEVELING_FEATURE)
+         if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPGM("Force T0");
+      #endif
+        tool_change(0, 0, true); //move back to T0 to get all the correct setup data for T0
+
+    #endif
+
+
+
     // Disallow Z homing if X or Y are unknown
     if (!axis_known_position[X_AXIS] || !axis_known_position[Y_AXIS]) {
       LCD_MESSAGEPGM(MSG_ERR_Z_HOMING);
@@ -4358,23 +4379,43 @@ inline void gcode_G4() {
 
     #if HOMING_Z_WITH_PROBE
 
+      #if ENABLED(DEBUG_LEVELING_FEATURE)
+         if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPGM("Homing with Z probe, check and move tool1");
+      #endif
+
       // if (axis_homed[Z_AXIS] == true) //if z has not been homed, XY need to be homed first, so we can ignore this movement...might be a btter way of thinking about this.
       // {
-        
-        tool_change(1, 0, true); //change to T1
-        //do an if tool is less than CONF_X_T1_MAX-10
+          
+          //if active extruder is 0, check if T1 is in the way
+         if(active_extruder == 0 && inactive_extruder_x_pos < CONF_X_T1_MAX-10 )
+         {
 
-        //if our T1 position is less than max x position - 10, we'll try to move
-        if(current_position[X_AXIS] < CONF_X_T1_MAX-10)
-        {
+            tool_change(1, 0, true); //change to T1
+            //do an if tool is less than CONF_X_T1_MAX-10
+              if (position_is_reachable_xy(destination[X_AXIS], destination[Y_AXIS])) 
+              {
+                do_blocking_move_to_xy(CONF_X_T1_MAX-10, destination[Y_AXIS]); //move T0 out of the way
+              }
+           
+            tool_change(0, 0, true); //move back to T0 for x/y probe
+           
+         }
 
-          if (position_is_reachable_xy(destination[X_AXIS], destination[Y_AXIS])) 
-          {
-            do_blocking_move_to_xy(CONF_X_T1_MAX-10, destination[Y_AXIS]); //xmax
-          }
-        }
-        
-        tool_change(0, 0, true); //move back to T0 for x/y probe
+          //if active extruder is 1, check if T1 is in the way
+         if(active_extruder == 1 && current_position[X_AXIS] < CONF_X_T1_MAX-10)
+         {  
+            if (position_is_reachable_xy(destination[X_AXIS], destination[Y_AXIS])) 
+              {
+                do_blocking_move_to_xy(CONF_X_T1_MAX-10.0, destination[Y_AXIS]); //move T0 out of the way
+              }
+           
+            tool_change(0, 0, true); //move back to T0 for x/y probe
+
+
+         }
+
+
+
 
       //}
 
@@ -4392,19 +4433,22 @@ inline void gcode_G4() {
     if (position_is_reachable_xy(destination[X_AXIS], destination[Y_AXIS])) {
 
       #if ENABLED(DEBUG_LEVELING_FEATURE)
-        if (DEBUGGING(LEVELING)) DEBUG_POS("Z_SAFE_HOMING", destination);
+        if (DEBUGGING(LEVELING)) DEBUG_POS("Z_SAFE_HOMING:", destination);
       #endif
 
       // This causes the carriage on Dual X to unpark
       #if ENABLED(DUAL_X_CARRIAGE)
-
-
-
-
         active_extruder_parked = false;
       #endif
 
+
+      #if ENABLED(DEBUG_LEVELING_FEATURE)
+        if (DEBUGGING(LEVELING)) DEBUG_POS("block move after unpark", destination);
+      #endif
+
       do_blocking_move_to_xy(destination[X_AXIS], destination[Y_AXIS]);
+
+
       HOMEAXIS(Z);
     }
     else {
@@ -5712,15 +5756,12 @@ inline void gcode_G28(const bool always_home_all) {
 
   #if HOMING_Z_WITH_PROBE
     //store previous position to move back after probing
-    tool_change(0, 0, true); //change to T0
+    //assume we're at tool 0
     previous_position_T0[X_AXIS] = current_position[X_AXIS];
     previous_position_T0[Y_AXIS] = current_position[Y_AXIS];
 
     #if ENABLED(DUAL_X_CARRIAGE)
-          tool_change(1, 0, true); //change to T1
-          previous_position_T1[X_AXIS] = current_position[X_AXIS];
-          previous_position_T1[Y_AXIS] = current_position[Y_AXIS];
-
+          previous_position_T1[X_AXIS] = inactive_extruder_x_pos;
     #endif
 
 
@@ -5832,6 +5873,11 @@ inline void gcode_G28(const bool always_home_all) {
         // Remember this extruder's position for later tool change
         inactive_extruder_x_pos = RAW_X_POSITION(current_position[X_AXIS]);
 
+        #if ENABLED(DEBUG_LEVELING_FEATURE)
+          if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("changeing inactive_extruder_x_pos in homing", inactive_extruder_x_pos);
+        #endif
+
+
         // Home the 1st (left) extruder
         active_extruder = 0;
         HOMEAXIS(X);
@@ -5919,51 +5965,52 @@ inline void gcode_G28(const bool always_home_all) {
 
   #if HOMING_Z_WITH_PROBE
 
-  if(homeZ || home_all)
-      if (homeX || home_all) {
-                //since we're homing X, set previous positions to homed positions
+    if(homeZ || home_all)
+    {
+        if (homeX || home_all) {
+                  //since we're homing X, set previous positions to homed positions
 
-                previous_position_T0[X_AXIS] = CONF_X_T0_MIN;
-               
-                #if ENABLED(DUAL_X_CARRIAGE)
-                  previous_position_T1[X_AXIS] = CONF_X_T1_MAX;            
-                #endif
+                  previous_position_T0[X_AXIS] = CONF_X_T0_MIN;
+                 
+                  #if ENABLED(DUAL_X_CARRIAGE)
+                    previous_position_T1[X_AXIS] = CONF_X_T1_MAX;            
+                  #endif
 
-      }
+        }
 
-      if (homeY || home_all) {
-                //since we're homing Y, set previous positions to homed positions
+        if (homeY || home_all) {
+                  //since we're homing Y, set previous positions to homed positions
 
-                previous_position_T0[Y_AXIS] = CONF_Y_MIN;
+                  previous_position_T0[Y_AXIS] = CONF_Y_MIN;
 
-      }
+        }
 
-      tool_change(0, 0, true); //change to T0
-      destination[X_AXIS] = previous_position_T0[X_AXIS];
-      destination[Y_AXIS] = previous_position_T0[Y_AXIS];
-
-
-      if (position_is_reachable_xy(destination[X_AXIS], destination[Y_AXIS])) 
-      {
-        do_blocking_move_to_xy(destination[X_AXIS], destination[Y_AXIS]); //xmax
-      }
-
-     
-      #if ENABLED(DUAL_X_CARRIAGE)
-
-        tool_change(1, 0, true); //change to T1
-        destination[X_AXIS] = previous_position_T1[X_AXIS];
+        tool_change(0, 0, true); //change to T0
+        destination[X_AXIS] = previous_position_T0[X_AXIS];
         destination[Y_AXIS] = previous_position_T0[Y_AXIS];
 
 
         if (position_is_reachable_xy(destination[X_AXIS], destination[Y_AXIS])) 
         {
-          do_blocking_move_to_xy( destination[X_AXIS], destination[Y_AXIS]); //xmax
+          do_blocking_move_to_xy(destination[X_AXIS], destination[Y_AXIS]); //xmax
         }
-        
-      #endif
+
+       
+        #if ENABLED(DUAL_X_CARRIAGE)
+
+          tool_change(1, 0, true); //change to T1
+          destination[X_AXIS] = previous_position_T1[X_AXIS];
+          destination[Y_AXIS] = previous_position_T0[Y_AXIS];
 
 
+          if (position_is_reachable_xy(destination[X_AXIS], destination[Y_AXIS])) 
+          {
+            do_blocking_move_to_xy( destination[X_AXIS], destination[Y_AXIS]); //xmax
+          }
+          
+        #endif
+
+      }  
 
 
 
@@ -11087,6 +11134,16 @@ inline void invalid_extruder_error(const uint8_t e) {
  * previous tool out of the way and the new tool into place.
  */
 void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool no_move/*=false*/) {
+
+  #if ENABLED(DEBUG_LEVELING_FEATURE)
+    if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("perform tool change to  ", tmp_extruder);
+    if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("active extruder before is:   ", active_extruder);
+
+            if (DEBUGGING(LEVELING)) DEBUG_POS("active extuder is at ", current_position);
+    if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("inactive extruder x is:   ", inactive_extruder_x_pos);
+  #endif
+
+
   #if ENABLED(MIXING_EXTRUDER) && MIXING_VIRTUAL_TOOLS > 1
 
     if (tmp_extruder >= MIXING_VIRTUAL_TOOLS)
@@ -11102,6 +11159,8 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
       return invalid_extruder_error(tmp_extruder);
 
     #if HOTENDS > 1
+            
+
 
       const float old_feedrate_mm_s = fr_mm_s > 0.0 ? fr_mm_s : feedrate_mm_s;
 
@@ -11119,6 +11178,10 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
         set_destination_to_current();
 
         #if ENABLED(DUAL_X_CARRIAGE)
+
+          #if ENABLED(DEBUG_LEVELING_FEATURE)
+            if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPGM("Dual X Carriage  enabled");
+          #endif
 
           #if ENABLED(DEBUG_LEVELING_FEATURE)
             if (DEBUGGING(LEVELING)) {
@@ -11172,6 +11235,15 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
 
           #if ENABLED(DEBUG_LEVELING_FEATURE)
             if (DEBUGGING(LEVELING)) DEBUG_POS("New Extruder", current_position);
+            if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("Mode ", dual_x_carriage_mode);
+            if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("Active extruder parked: ", active_extruder_parked ? "yes" : "no");
+
+            if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("inactive x ", inactive_extruder_x_pos);
+            if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("inactive x logical ", LOGICAL_X_POSITION(inactive_extruder_x_pos));
+            if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("dest x ", destination[X_AXIS]);
+            if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("dest x raw ", RAW_X_POSITION(destination[X_AXIS]));
+            //if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("Mode ", dual_x_carriage_mode);
+            //if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("Mode ", dual_x_carriage_mode);
           #endif
 
           // Only when auto-parking are carriages safe to move
@@ -11183,6 +11255,11 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
               current_position[X_AXIS] = LOGICAL_X_POSITION(inactive_extruder_x_pos);
               // Save the inactive extruder's position (from the old current_position)
               inactive_extruder_x_pos = RAW_X_POSITION(destination[X_AXIS]);
+
+            #if ENABLED(DEBUG_LEVELING_FEATURE)
+              if (DEBUGGING(LEVELING)) DEBUG_POS("switch x carriage", current_position);
+            #endif
+
               break;
             case DXC_AUTO_PARK_MODE:
               // record raised toolhead position for use by unpark
@@ -11193,6 +11270,11 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
               #endif
               active_extruder_parked = true;
               delayed_move_time = 0;
+
+
+             inactive_extruder_x_pos = RAW_X_POSITION(destination[X_AXIS]); //set inactive position incase they abruptly move to DXC_FULL_CONTROL_MODE
+
+
               break;
             case DXC_DUPLICATION_MODE:
               // If the new extruder is the left one, set it "parked"
@@ -11458,6 +11540,11 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
         // Tell the planner the new "current position"
         SYNC_PLAN_POSITION_KINEMATIC();
 
+
+        #if ENABLED(DEBUG_LEVELING_FEATURE)
+          if (DEBUGGING(LEVELING)) SERIAL_ECHOLN("done SYNC_PLAN_POSITION_KINEMATIC");
+        #endif
+
         // Move to the "old position" (move the extruder into place)
         if (!no_move && IsRunning()) {
           #if ENABLED(DEBUG_LEVELING_FEATURE)
@@ -11516,6 +11603,13 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
     SERIAL_ECHOLNPAIR(MSG_ACTIVE_EXTRUDER, (int)active_extruder);
 
   #endif // !MIXING_EXTRUDER || MIXING_VIRTUAL_TOOLS <= 1
+
+
+        #if ENABLED(DEBUG_LEVELING_FEATURE)
+          if (DEBUGGING(LEVELING)) SERIAL_ECHOLN("end tool change");
+        #endif
+
+
 }
 
 /**
@@ -11532,6 +11626,7 @@ inline void gcode_T(uint8_t tmp_extruder) {
       SERIAL_CHAR(')');
       SERIAL_EOL();
       DEBUG_POS("BEFORE", current_position);
+      SERIAL_ECHOLNPAIR("Current Tool ", active_extruder);
     }
   #endif
 

@@ -2184,7 +2184,9 @@ static void clean_up_after_endstop_or_probe_move() {
             SERIAL_ERROR_START();
             SERIAL_ERRORLNPGM(MSG_STOP_BLTOUCH);
 
-            SERIAL_ECHOPAIR("error detected bl touch set_bltouch_deployed", deploy);
+
+            SERIAL_ECHOLNPAIR("error detected bl touch set_bltouch_deployed", deploy);
+            SERIAL_ECHOLNPGM("Error: [002]-[11] Probe Deployment Error: Please restart your printer.");
             stop();                          // punt!
             return true;
           }
@@ -4361,6 +4363,8 @@ inline void gcode_G4() {
       LCD_MESSAGEPGM(MSG_ERR_Z_HOMING);
       SERIAL_ECHO_START();
       SERIAL_ECHOLNPGM(MSG_ERR_Z_HOMING);
+      SERIAL_ECHOLNPGM("Error: [006]-[11] Cannot Home Z with unkonwn X/Y. Please home X/Y first.");
+
       return;
     }
 
@@ -5965,10 +5969,28 @@ inline void gcode_G28(const bool always_home_all) {
 
   #if HOMING_Z_WITH_PROBE
 
+<<<<<<< HEAD
     if(homeZ || home_all)
     {
         if (homeX || home_all) {
                   //since we're homing X, set previous positions to homed positions
+=======
+  if(homeZ || home_all)
+  {
+      if (homeX || home_all) {
+                //since we're homing X, set previous positions to homed positions
+
+                previous_position_T0[X_AXIS] = CONF_X_T0_MIN;
+               
+                #if ENABLED(DUAL_X_CARRIAGE)
+                  previous_position_T1[X_AXIS] = CONF_X_T1_MAX;            
+                #endif
+
+      }
+
+      if (homeY || home_all) {
+                //since we're homing Y, set previous positions to homed positions
+>>>>>>> 1cad90be1b4322de2e04e3c53f391ce52875f9d1
 
                   previous_position_T0[X_AXIS] = CONF_X_T0_MIN;
                  
@@ -5994,9 +6016,15 @@ inline void gcode_G28(const bool always_home_all) {
         {
           do_blocking_move_to_xy(destination[X_AXIS], destination[Y_AXIS]); //xmax
         }
+<<<<<<< HEAD
 
        
         #if ENABLED(DUAL_X_CARRIAGE)
+=======
+        
+      #endif
+    }
+>>>>>>> 1cad90be1b4322de2e04e3c53f391ce52875f9d1
 
           tool_change(1, 0, true); //change to T1
           destination[X_AXIS] = previous_position_T1[X_AXIS];
@@ -10431,7 +10459,10 @@ inline void gcode_M502() {
         SERIAL_ECHO(zprobe_zoffset);
       }
       else
-        SERIAL_ECHOPGM(MSG_Z_MIN " " STRINGIFY(Z_PROBE_OFFSET_RANGE_MIN) " " MSG_Z_MAX " " STRINGIFY(Z_PROBE_OFFSET_RANGE_MAX));
+      {
+        SERIAL_ECHOLNPGM(MSG_Z_MIN " " STRINGIFY(Z_PROBE_OFFSET_RANGE_MIN) " " MSG_Z_MAX " " STRINGIFY(Z_PROBE_OFFSET_RANGE_MAX));
+        SERIAL_ECHOLNPGM("Error: [003]-[11] Probe Offset(M851) out of range .");
+      }
     }
     else
       SERIAL_ECHOPAIR(": ", zprobe_zoffset);
@@ -11079,6 +11110,9 @@ inline void invalid_extruder_error(const uint8_t e) {
   SERIAL_ECHO_F(e, DEC);
   SERIAL_CHAR(' ');
   SERIAL_ECHOLN(MSG_INVALID_EXTRUDER);
+  SERIAL_ECHOLNPGM("Error: [012]-[11] Invalid Extruder");
+
+
 }
 
 #if ENABLED(PARKING_EXTRUDER)
@@ -13334,12 +13368,18 @@ void prepare_move_to_destination() {
           current_position[E_AXIS] = destination[E_AXIS]; // Behave as if the move really took place, but ignore E part
           SERIAL_ECHO_START();
           SERIAL_ECHOLNPGM(MSG_ERR_COLD_EXTRUDE_STOP);
+          SERIAL_ECHOLNPGM("Error: [004]-[13] Cold Extrusion Prevented");
+          SERIAL_ECHOLNPAIR("Error: [004]-[23] Cannot Extrude under C", EXTRUDE_MINTEMP);
+          SERIAL_ECHOLNPGM("Error: [004]-[33] Heat up extruder or use M302");
+
         }
         #if ENABLED(PREVENT_LENGTHY_EXTRUDE)
           if (destination[E_AXIS] - current_position[E_AXIS] > EXTRUDE_MAXLENGTH) {
             current_position[E_AXIS] = destination[E_AXIS]; // Behave as if the move really took place, but ignore E part
             SERIAL_ECHO_START();
             SERIAL_ECHOLNPGM(MSG_ERR_LONG_EXTRUDE_STOP);
+            SERIAL_ECHOLNPGM("Error: [005]-[12] Lengthy Extrusion Prevented");
+            SERIAL_ECHOLNPAIR("Error: [005]-[22] Cannot Extrude nore than mm", EXTRUDE_MAXLENGTH);
           }
         #endif
       }

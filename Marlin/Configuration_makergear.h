@@ -61,6 +61,7 @@
 #define M3_ID_X_T0_MAX 205
 
 
+#define M2_Y_MAX  255
 #define M3_SE_rev_0_004_Y_MAX  255
 #define M3_SE_rev_0_005_Y_MAX  232
 #define M3_SE_rev_1_000_Y_MAX  232
@@ -218,7 +219,7 @@
 
 
 //"M2 Single Extruder Rev 5/ RevE"
-#ifdef MAKERGEAR_MODEL_M2_SE_REV5_000	
+#ifdef MAKERGEAR_MODEL_M2_SE_REV_5_000	
 	#undef MAKERGEAR_ERROR_FLAG
 	#define MAKERGEAR_MACHINE_NAME_STRING "M2 Single Extruder Rev 5/E"
 	
@@ -260,12 +261,12 @@
 	#define CONF_EXTRUDER0_DIRECTION  M2_PRINTED_FILAMENT_DRIVE_DIRECTION
 	#define CONF_EXTRUDER1_DIRECTION  M2_PRINTED_FILAMENT_DRIVE_DIRECTION
 
-	#define CONF_X_T0_MAX 			M3_SE_rev_0_004_X_T0_MAX
-	#define CONF_Y_MAX 				M3_SE_rev_0_005_Y_MAX
-	#define CONF_Z_MAX 				M3_Z_MAX
-	#define CONF_X_T0_MIN 			M3_SE_rev_0_005_X_T0_MIN
-	#define CONF_Y_MIN 				M3_SE_rev_0_005_Y_MIN
-	#define CONF_Z_MIN 				M3_SE_rev_0_005_Z_MIN
+	#define CONF_X_T0_MAX 			M2_X_T0_MAX
+	#define CONF_Y_MAX 				M2_Y_MAX
+	#define CONF_Z_MAX 				M2_Z_MAX
+	#define CONF_X_T0_MIN 			M2_X_T0_MIN
+	#define CONF_Y_MIN 				M2_Y_MIN
+	#define CONF_Z_MIN 				M2_Z_MIN
 
 	// #define CONF_X_T1_MAX M3_X_T1_MAX_rev_1_003
 	// #define CONF_X_T1_MIN M3_X_T1_MIN_rev_1_003
@@ -319,7 +320,7 @@
 
 
 	//#define LIN_ADVANCE
-	//#define SDSUPPORT
+	#define SDSUPPORT
 #endif 
 
 //"M3 Single Extruder Rev 0"

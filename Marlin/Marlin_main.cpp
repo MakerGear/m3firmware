@@ -4390,6 +4390,9 @@ inline void gcode_G4() {
       // if (axis_homed[Z_AXIS] == true) //if z has not been homed, XY need to be homed first, so we can ignore this movement...might be a btter way of thinking about this.
       // {
           
+
+          #if ENABLED(DUAL_X_CARRIAGE)
+
           //if active extruder is 0, check if T1 is in the way
          if(active_extruder == 0 && inactive_extruder_x_pos < CONF_X_T1_MAX-10 )
          {
@@ -4418,7 +4421,7 @@ inline void gcode_G4() {
 
          }
 
-
+         #endif
 
 
       //}

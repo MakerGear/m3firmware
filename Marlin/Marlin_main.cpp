@@ -11147,6 +11147,9 @@ inline void invalid_extruder_error(const uint8_t e) {
  */
 void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool no_move/*=false*/) {
 
+ #if ENABLED(DUAL_X_CARRIAGE)
+
+
   #if ENABLED(DEBUG_LEVELING_FEATURE)
     if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("perform tool change to  ", tmp_extruder);
     if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("active extruder before is:   ", active_extruder);
@@ -11154,7 +11157,7 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
             if (DEBUGGING(LEVELING)) DEBUG_POS("active extuder is at ", current_position);
     if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("inactive extruder x is:   ", inactive_extruder_x_pos);
   #endif
-
+  #endif
 
   #if ENABLED(MIXING_EXTRUDER) && MIXING_VIRTUAL_TOOLS > 1
 

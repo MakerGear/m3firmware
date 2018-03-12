@@ -4391,6 +4391,9 @@ inline void gcode_G4() {
       // if (axis_homed[Z_AXIS] == true) //if z has not been homed, XY need to be homed first, so we can ignore this movement...might be a btter way of thinking about this.
       // {
           
+
+          #if ENABLED(DUAL_X_CARRIAGE)
+
           //if active extruder is 0, check if T1 is in the way
          if(active_extruder == 0 && inactive_extruder_x_pos < CONF_X_T1_MAX-10 )
          {
@@ -4419,7 +4422,7 @@ inline void gcode_G4() {
 
          }
 
-
+         #endif
 
 
       //}
@@ -11145,6 +11148,9 @@ inline void invalid_extruder_error(const uint8_t e) {
  */
 void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool no_move/*=false*/) {
 
+ #if ENABLED(DUAL_X_CARRIAGE)
+
+
   #if ENABLED(DEBUG_LEVELING_FEATURE)
     if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("perform tool change to  ", tmp_extruder);
     if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("active extruder before is:   ", active_extruder);
@@ -11152,7 +11158,7 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
             if (DEBUGGING(LEVELING)) DEBUG_POS("active extuder is at ", current_position);
     if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("inactive extruder x is:   ", inactive_extruder_x_pos);
   #endif
-
+  #endif
 
   #if ENABLED(MIXING_EXTRUDER) && MIXING_VIRTUAL_TOOLS > 1
 

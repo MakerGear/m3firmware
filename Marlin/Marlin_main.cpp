@@ -4364,7 +4364,7 @@ inline void gcode_G4() {
       LCD_MESSAGEPGM(MSG_ERR_Z_HOMING);
       SERIAL_ECHO_START();
       SERIAL_ECHOLNPGM(MSG_ERR_Z_HOMING);
-      SERIAL_ECHOLNPGM("Error: [006]-[11] Cannot Home Z with unkonwn X/Y. Please home X/Y first.");
+      SERIAL_ECHOLNPGM("Warning: [006]-[11] Cannot Home Z with unkonwn X/Y. Please home X/Y first.");
 
       return;
     }
@@ -10440,7 +10440,7 @@ inline void gcode_M502() {
       else
       {
         SERIAL_ECHOLNPGM(MSG_Z_MIN " " STRINGIFY(Z_PROBE_OFFSET_RANGE_MIN) " " MSG_Z_MAX " " STRINGIFY(Z_PROBE_OFFSET_RANGE_MAX));
-        SERIAL_ECHOLNPGM("Error: [003]-[11] Probe Offset(M851) out of range .");
+        SERIAL_ECHOLNPGM("Warning: [003]-[11] Probe Offset(M851) out of range .");
       }
     }
     else
@@ -11089,7 +11089,7 @@ inline void invalid_extruder_error(const uint8_t e) {
   SERIAL_ECHO_F(e, DEC);
   SERIAL_CHAR(' ');
   SERIAL_ECHOLN(MSG_INVALID_EXTRUDER);
-  SERIAL_ECHOLNPGM("Error: [012]-[11] Invalid Extruder");
+  SERIAL_ECHOLNPGM("Warning: [012]-[11] Invalid Extruder");
 
 
 }
@@ -13385,9 +13385,9 @@ void prepare_move_to_destination() {
           current_position[E_AXIS] = destination[E_AXIS]; // Behave as if the move really took place, but ignore E part
           SERIAL_ECHO_START();
           SERIAL_ECHOLNPGM(MSG_ERR_COLD_EXTRUDE_STOP);
-          SERIAL_ECHOLNPGM("Error: [004]-[13] Cold Extrusion Prevented");
-          SERIAL_ECHOLNPAIR("Error: [004]-[23] Cannot Extrude under C", EXTRUDE_MINTEMP);
-          SERIAL_ECHOLNPGM("Error: [004]-[33] Heat up extruder or use M302");
+          SERIAL_ECHOLNPGM("Warning: [004]-[13] Cold Extrusion Prevented");
+          SERIAL_ECHOLNPAIR("Warning: [004]-[23] Cannot Extrude under C", EXTRUDE_MINTEMP);
+          SERIAL_ECHOLNPGM("Warning: [004]-[33] Heat up extruder or use M302");
 
         }
         #if ENABLED(PREVENT_LENGTHY_EXTRUDE)
@@ -13395,8 +13395,8 @@ void prepare_move_to_destination() {
             current_position[E_AXIS] = destination[E_AXIS]; // Behave as if the move really took place, but ignore E part
             SERIAL_ECHO_START();
             SERIAL_ECHOLNPGM(MSG_ERR_LONG_EXTRUDE_STOP);
-            SERIAL_ECHOLNPGM("Error: [005]-[12] Lengthy Extrusion Prevented");
-            SERIAL_ECHOLNPAIR("Error: [005]-[22] Cannot Extrude nore than mm", EXTRUDE_MAXLENGTH);
+            SERIAL_ECHOLNPGM("Warning: [005]-[12] Lengthy Extrusion Prevented");
+            SERIAL_ECHOLNPAIR("Warning: [005]-[22] Cannot Extrude nore than mm", EXTRUDE_MAXLENGTH);
           }
         #endif
       }

@@ -720,8 +720,8 @@
  * These options are most useful for the BLTouch probe, but may also improve
  * readings with inductive probes and piezo sensors.
  */
-//#define PROBING_HEATERS_OFF       // Turn heaters off when probing
-//#define PROBING_FANS_OFF          // Turn fans off when probing
+#define PROBING_HEATERS_OFF       // Turn heaters off when probing
+#define PROBING_FANS_OFF          // Turn fans off when probing
 //#define DELAY_BEFORE_PROBING 200  // (ms) To prevent vibrations from triggering piezo sensors
 
 // A probe that is deployed and stowed with a solenoid pin (SOL1_PIN)
@@ -766,7 +766,7 @@
 #define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
 
 // Speed for the "accurate" probe of each point
-#define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 4)
+#define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 8)
 
 // Use double touch for probing
 //#define PROBE_DOUBLE_TOUCH

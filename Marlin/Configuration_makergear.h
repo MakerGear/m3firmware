@@ -213,7 +213,7 @@
 
 
 //"M2 Single Extruder Rev 5/ RevE"
-#ifdef MAKERGEAR_MODEL_M2_SE_REV_5_000	
+#ifdef MAKERGEAR_MODEL_M2_SE_REV5_000	
 	#undef MAKERGEAR_ERROR_FLAG
 	#define MAKERGEAR_MACHINE_NAME_STRING "M2 Single Extruder Rev 5/E"
 	
@@ -658,7 +658,7 @@
 
 
  //"M3 Dual Extruder Rev 0"
-#ifdef MAKERGEAR_MODEL_M3_ID_REV_0_005	
+#ifdef MAKERGEAR_MODEL_M3_ID_REV0_005	
 	#undef MAKERGEAR_ERROR_FLAG
 	#define MAKERGEAR_MACHINE_NAME_STRING "M3 Dual Extruder Rev 0"
 

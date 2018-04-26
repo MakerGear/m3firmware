@@ -2165,22 +2165,32 @@ static void clean_up_after_endstop_or_probe_move() {
 
     bool set_bltouch_deployed(const bool deploy) {
       if (deploy && TEST_BLTOUCH()) {      // If BL-Touch says it's triggered
+
+            SERIAL_ECHOLNPAIR("Error Detected on BL Touch, retesting probe", deploy);
+
+        bltouch_command(BLTOUCH_DEPLOY);   // Also needs to deploy and stow to
+        bltouch_command(BLTOUCH_STOW);     //  clear the triggered condition.
         bltouch_command(BLTOUCH_RESET);    //  try to reset it.
         bltouch_command(BLTOUCH_DEPLOY);   // Also needs to deploy and stow to
         bltouch_command(BLTOUCH_STOW);     //  clear the triggered condition.
         safe_delay(1500);                  // Wait for internal self-test to complete.
                                            //  (Measured completion time was 0.65 seconds
                                            //   after reset, deploy, and stow sequence)
-        if (TEST_BLTOUCH()) {              // If it still claims to be triggered...
+        if (deploy && TEST_BLTOUCH()) {              // If it still claims to be triggered...
+
+
+            SERIAL_ECHOLNPAIR("Error Detected on BL Touch, retesting probe", deploy);
 
           //Try again
+          bltouch_command(BLTOUCH_DEPLOY);   // Also needs to deploy and stow to
+          bltouch_command(BLTOUCH_STOW);     //  clear the triggered condition.
           bltouch_command(BLTOUCH_RESET);    //  try to reset it.
           bltouch_command(BLTOUCH_DEPLOY);   // Also needs to deploy and stow to
           bltouch_command(BLTOUCH_STOW);     //  clear the triggered condition.
           safe_delay(1500);                  // Wait for internal self-test to complete.
                                            //  (Measured completion time was 0.65 seconds
                                            //   after reset, deploy, and stow sequence)
-          if (TEST_BLTOUCH()) {              // If it still claims to be triggered...
+          if (deploy && TEST_BLTOUCH()) {              // If it still claims to be triggered...
 
             SERIAL_ERROR_START();
             SERIAL_ERRORLNPGM(MSG_STOP_BLTOUCH);
@@ -2188,10 +2198,13 @@ static void clean_up_after_endstop_or_probe_move() {
 
             SERIAL_ECHOLNPAIR("error detected bl touch set_bltouch_deployed", deploy);
             SERIAL_ECHOLNPGM("Error: [002]-[11] Probe Deployment Error: Please restart your printer.");
-            stop();                          // punt!
+            kill(PSTR(MSG_KILLED));                       // punt!
             return true;
           }
+
+
         }
+
       }
 
       bltouch_command(deploy ? BLTOUCH_DEPLOY : BLTOUCH_STOW);
@@ -2500,6 +2513,9 @@ static void clean_up_after_endstop_or_probe_move() {
       LCD_MESSAGEPGM(MSG_ERR_PROBING_FAILED);
       SERIAL_ERROR_START();
       SERIAL_ERRORLNPGM(MSG_ERR_PROBING_FAILED);
+        SERIAL_ECHOLNPGM("Warning: [007]-[11] Probe Failure ");
+         
+
     }
 
     return measured_z;
@@ -11242,38 +11258,38 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
           // Apply Y & Z extruder offset (X offset is used as home pos with Dual X)
           current_position[Y_AXIS] -= hotend_offset[Y_AXIS][active_extruder] - hotend_offset[Y_AXIS][tmp_extruder];
           current_position[Z_AXIS] -= hotend_offset[Z_AXIS][active_extruder] - hotend_offset[Z_AXIS][tmp_extruder];
-          if(leveling_is_active())
-          {
+          #if CONF_HAS_PROBE
+
+            if(leveling_is_active())
+            {
 
 
-            previous_position_generic[X_AXIS] = inactive_extruder_x_pos;
-            
-            previous_position_generic[Y_AXIS] = current_position[Y_AXIS];
+              previous_position_generic[X_AXIS] = inactive_extruder_x_pos;
+              
+              previous_position_generic[Y_AXIS] = current_position[Y_AXIS];
 
-            
-            current_position[Z_AXIS] = current_position[Z_AXIS] + (bilinear_z_offset(current_position) - bilinear_z_offset(previous_position_generic)  ) ;
-
-
-
-          #if ENABLED(DEBUG_LEVELING_FEATURE)
-            if (DEBUGGING(LEVELING)) DEBUG_POS("current", current_position);
-            if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("bilin current ", bilinear_z_offset(previous_position_generic));
-            if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("bilin other ", bilinear_z_offset(current_position));
-            if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("Active extruder parked: ", active_extruder_parked ? "yes" : "no");
-
-            if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("inactive x ", inactive_extruder_x_pos);
-            if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("inactive x logical ", LOGICAL_X_POSITION(inactive_extruder_x_pos));
-            if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("dest x ", destination[X_AXIS]);
-            if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("dest x raw ", RAW_X_POSITION(destination[X_AXIS]));
-            //if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("Mode ", dual_x_carriage_mode);
-            //if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("Mode ", dual_x_carriage_mode);
-          #endif
+              
+              current_position[Z_AXIS] = current_position[Z_AXIS] + (bilinear_z_offset(current_position) - bilinear_z_offset(previous_position_generic)  ) ;
 
 
 
+            #if ENABLED(DEBUG_LEVELING_FEATURE)
+              if (DEBUGGING(LEVELING)) DEBUG_POS("current", current_position);
+              if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("bilin current ", bilinear_z_offset(previous_position_generic));
+              if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("bilin other ", bilinear_z_offset(current_position));
+              if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("Active extruder parked: ", active_extruder_parked ? "yes" : "no");
+
+              if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("inactive x ", inactive_extruder_x_pos);
+              if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("inactive x logical ", LOGICAL_X_POSITION(inactive_extruder_x_pos));
+              if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("dest x ", destination[X_AXIS]);
+              if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("dest x raw ", RAW_X_POSITION(destination[X_AXIS]));
+              //if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("Mode ", dual_x_carriage_mode);
+              //if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPAIR("Mode ", dual_x_carriage_mode);
+            #endif
 
 
           }
+          #endif
 
           // Activate the new extruder ahead of calling set_axis_is_at_home!
           active_extruder = tmp_extruder;

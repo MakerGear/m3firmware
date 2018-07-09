@@ -36,6 +36,7 @@
 
 
 #define M2_X_T0_MIN 0
+#define M3_SE_rev_0_004_X_T0_MIN -4
 #define M3_SE_rev_0_005_X_T0_MIN -4
 #define M3_SE_rev_1_000_X_T0_MIN -20.77
 #define M3_ID_rev_1_000_X_T0_MIN -20.77

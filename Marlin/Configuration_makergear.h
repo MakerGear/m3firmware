@@ -367,7 +367,7 @@
 	#define CONF_Z_MAX 				M3_Z_MAX
 	#define CONF_X_T0_MIN 			M3_SE_rev_0_004_X_T0_MIN
 	#define CONF_Y_MIN 				M3_SE_rev_0_004_Y_MIN
-	#define CONF_Z_MIN 				M3_SE_rev_0_004_Z_MIN
+	#define CONF_Z_MIN 				M3_Z_MIN
 
 	// #define CONF_X_T1_MAX M3_X_T1_MAX_rev_1_003
 	// #define CONF_X_T1_MIN M3_X_T1_MIN_rev_1_003
@@ -708,7 +708,7 @@
 	#define CONF_Z_MAX 				M3_Z_MAX
 	#define CONF_X_T0_MIN 			M3_ID_rev_1_000_X_T0_MIN
 	#define CONF_Y_MIN 				M3_SE_rev_0_004_Y_MIN
-	#define CONF_Z_MIN 				M3_SE_rev_0_004_Z_MIN
+	#define CONF_Z_MIN 				M3_Z_MIN
 
 	#define CONF_X_T1_MAX M3_X_T1_MAX_rev_1_003
 	#define CONF_X_T1_MIN M3_X_T1_MIN_rev_1_003

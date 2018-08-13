@@ -1,142 +1,84 @@
 # Marlin 3D Printer Firmware
+<img align="right" src="../../raw/1.1.x/buildroot/share/pixmaps/logo/marlin-250.png" />
 
-<img align="top" width=175 src="buildroot/share/pixmaps/logo/marlin-250.png" />
-
-Additional documentation can be found at [The Marlin Documentation Project](https://www.marlinfw.org/).
-Please test this firmware and inform us if it misbehaves in any way, volunteers are standing by!
-
-## Release Candidate -- Marlin 1.1.0-RC8 - 6 Dec 2016
-
-__Not for production use – use with caution!__
-
-You can download earlier versions of Marlin on the [Releases page](https://github.com/MarlinFirmware/Marlin/releases). (The latest "stable" release of Marlin is 1.0.2-1.)
-
-The latest Release Candidate lives in the ["RC" branch](https://github.com/MarlinFirmware/Marlin/tree/RC). Bugs that we find in the current Release Candidate are patched in the ["RCBugFix" branch](https://github.com/MarlinFirmware/Marlin/tree/RCBugFix), so during beta testing this is where you can always find the latest code on its way towards release.
-
-## Recent Changes
-- RC8 - 06 Dec 2016
-  - Major performance improvement for Graphical LCDs
-  - Simplified probe configuration
-  - Enable Auto Bed Leveling by type
-  - Reduce serial communication errors
-  - Make Bilinear (Mesh) Grid Leveling available for non-delta
-  - Support for Trinamic TMC2130 SilentStepStick SPI-based drivers
-  - Add `M211` to Enable/Disable Software Endstops
-  - Add `M355` to turn the case light on/off and set brightness
-  - Improved I2C class with full master/slave support
-  - Add `G38.2` `G38.3` command option for CNC style probing
-  - Add `MINIMUM_STEPPER_PULSE` option to adjust step pulse duration
-  - Add `R` parameter support for `G2`/`G3`
-  - Add `M43` optional command (`PINS_DEBUGGING`)
-  - Remove SCARA axis scaling
-  - Improved sanity checking of configuration
-  - Improved support for PlatformIO and command-line build
-  - Usable `DELTA_CALIBRATION_MENU`
-  - Support for Printrbot Rev.F
-  - New and updated languages
-
-- RC7 - 31 Jul 2016
-  - Add Print Job Timer and Print Counter (`PRINTCOUNTER`)
-  - New `M600` Filament Change (`FILAMENT_CHANGE_FEATURE`)
-  - New `G12` Nozzle Clean (`NOZZLE_CLEAN_FEATURE`)
-  - New `G27` Nozzle Park (`NOZZLE_PARK_FEATURE`)
-  - Add support for `COREYZ`
-  - Add a new Advance Extrusion algorithm (`LIN_ADVANCE`)
-  - Add support for inches, Fahrenheit, Kelvin units (`INCH_MODE_SUPPORT`, `TEMPERATURE_UNITS_SUPPORT`)
-  - Better handling of `G92` shifting of the coordinate space
-  - Add Greek and Croatian languages
-  - Improve the Manual (Mesh) Bed Leveling user interface
-  - Add support for more boards, controllers, and probes:
-    - Vellemann K8400 (`BOARD_K8400`)
-    - RigidBot V2 (`BOARD_RIGIDBOARD_V2`)
-    - Cartesio UI (`BOARD_CNCONTROLS_12`)
-    - BLTouch probe sensor (`BLTOUCH`)
-    - Viki 2 with RAMPS and MKS boards
-  - Improve support for `DELTA` and other kinematics
-  - Improve thermal management, add `WATCH_BED_TEMP_PERIOD`
-  - Better handling of toolchange, multiple tools
-  - Add support for two X steppers `X_DUAL_STEPPER_DRIVERS`
-  - Add support for `SINGLENOZZLE`, `MIXING_EXTRUDER`, and `SWITCHING_EXTRUDER`
-  - Simplified probe configuration, allow usage without bed leveling
-  - And much more… See the [1.1.0-RC7 Change Log](https://github.com/MarlinFirmware/Marlin/releases/tag/1.1.0-RC7) for the complete list of changes.
-
-- RC6 - 24 Apr 2016
-  - Marlin now requires Arduino version 1.6.0 or later
-  - Completed support for CoreXY / CoreXZ
-  - See the [1.1.0-RC6 Change Log](https://github.com/MarlinFirmware/Marlin/releases/tag/1.1.0-RC6) for all the changes.
-
-- RC5 - 01 Apr 2016
-  - Warn if compiling with older versions (<1.50) of Arduino
-  - Fix various LCD menu issues
-  - Add formal support for MKSv1.3 and Sainsmart (RAMPS variants)
-  - Fix bugs in M104, M109, and M190
-  - Fix broken M404 command
-  - Fix issues with M23 and "Start SD Print"
-  - More output for M111
-  - Rename FILAMENT_SENSOR to FILAMENT_WIDTH_SENSOR
-  - Fix SD card bugs
-  - and a lot more
-  - See the [1.1.0-RC5 Change Log](https://github.com/MarlinFirmware/Marlin/releases/tag/1.1.0-RC5) for more!
-
-- RC4 - 24 Mar 2016
-  - Many lingering bugs and nagging issues addressed
-  - Improvements to LCD menus, CoreXY/CoreXZ, Delta, Bed Leveling, and more…
-
-- RC3 - 01 Dec 2015
-  - A number of language sensitive strings have been revised
-  - Formatting of the LCD display has been improved to handle negative coordinates better
-  - Various compiler-related issues have been corrected
-
-- RC2 - 29 Sep 2015
-  - File styling reverted
-  - LCD update frequency reduced
-
-- RC1 - 19 Sep 2015
-  - Published for testing
-
-## Submitting Patches
-Proposed patches should be submitted as a Pull Request against the [RCBugFix](https://github.com/MarlinFirmware/Marlin/tree/RCBugFix) branch.
-
-- Don't submit new feature proposals. The RCBugFix branch is for fixing bugs in existing features.
-- Do submit questions and concerns. The "naive" question is often the one we forget to ask.
-- Follow the proper coding style. Pull requests with styling errors will be delayed. See our [Coding Standards](https://github.com/MarlinFirmware/Marlin/wiki/DNE-Coding-Standards) page for more information.
-
-## Current Status: Testing
-
-Please test this firmware and inform us if it misbehaves in any way. Volunteers are standing by!
+Marlin is an optimized firmware for [RepRap 3D printers](http://reprap.org/) based on the [Arduino](https://www.arduino.cc/) platform. First created in 2011 for RepRap and Ultimaker printers, today Marlin drives a majority of the world's most popular 3D printers. Marlin delivers outstanding print quality with unprecedented control over the process.
 
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/2224/badge.svg)](https://scan.coverity.com/projects/2224)
-[![Travis Build Status](https://travis-ci.org/MarlinFirmware/MarlinDev.svg)](https://travis-ci.org/MarlinFirmware/MarlinDev)
+[![Travis Build Status](https://travis-ci.org/MarlinFirmware/Marlin.svg)](https://travis-ci.org/MarlinFirmware/Marlin)
+[![Flattr Us!](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=ErikZalm&url=https://github.com/MarlinFirmware/Marlin&title=Marlin&language=&tags=github&category=software)
 
-##### [RepRap.org Wiki Page](http://reprap.org/wiki/Marlin)
+## Marlin 1.1.x
+
+The 1.1.x branch is home to all tagged releases of Marlin 1.1 (final version 1.1.9 – August 2018).
+
+This branch will receive no further updates. All future development —including all bug fixes— will take place in the [`bugfix-2.0.x`](https://github.com/MarlinFirmware/Marlin/tree/bugfix-2.0.x) branch, which will also serve as the root for all future Marlin development. Be sure to test [`bugfix-2.0.x`](https://github.com/MarlinFirmware/Marlin/tree/bugfix-2.0.x) before reporting any bugs you find in 1.1.9.
+
+Marlin 1.1.9 is the final release of the 8-bit flat version of Marlin Firmware. A monumental amount of talent and effort has gone into its production, and thanks are due to many people around the world. Throughout Marlin 1.1 development we worked closely with the community, contributors, vendors, host developers, library developers, etc. to improve the quality, configurability, and compatibility of Marlin Firmware, all while continuing to support a wide variety of Arduino-based boards.
+
+## Marlin 1.0.x
+
+Previous releases of Marlin include [1.0.2-2](https://github.com/MarlinFirmware/Marlin/tree/1.0.2-2) (December 2016) and [1.0.1](https://github.com/MarlinFirmware/Marlin/tree/1.0.1) (December 2014). Any version of Marlin prior to 1.0.1 (when we started tagging versions) can be collectively referred to as Marlin 1.0.0.
+
+## Contributing to Marlin
+
+If you have coding or writing skills you're encouraged to contribute to Marlin. You may also contribute suggestions, feature requests, and bug reports through the Marlin Issue Queue.
+
+Before contributing, please read our [Contributing Guidelines](https://github.com/MarlinFirmware/Marlin/blob/1.1.x/.github/contributing.md) and [Code of Conduct](https://github.com/MarlinFirmware/Marlin/blob/1.1.x/.github/code_of_conduct.md).
+
+## Marlin Resources
+
+- [Marlin Home Page](http://marlinfw.org/) - The latest Marlin documentation.
+- [Marlin Releases](https://github.com/MarlinFirmware/Marlin/releases) - All Marlin releases with release notes.
+- [RepRap.org Wiki Page](http://reprap.org/wiki/Marlin) - An overview of Marlin and its role in RepRap.
+- [Marlin Firmware Forum](http://forums.reprap.org/list.php?415) - Get help with configuration and troubleshooting.
+- [Marlin Firmware Facebook group](https://www.facebook.com/groups/1049718498464482) - Help from the community. (Maintained by [@thinkyhead](https://github.com/thinkyhead).)
+- [@MarlinFirmware](https://twitter.com/MarlinFirmware) on Twitter - Follow for news, release alerts, and tips. (Maintained by [@thinkyhead](https://github.com/thinkyhead).)
 
 ## Credits
 
-The current Marlin dev team consists of:
+Marlin's administrators are:
+ - Scott Lahteine [[@thinkyhead](https://github.com/thinkyhead)]
+ - Roxanne Neufeld [[@Roxy-3D](https://github.com/Roxy-3D)]
+ - Bob Kuhn [[@Bob-the-Kuhn](https://github.com/Bob-the-Kuhn)]
+ - Erik van der Zalm [[@ErikZalm](https://github.com/ErikZalm)]
 
- - Scott Lahteine [@thinkyhead] - English
- - [@Wurstnase] - Deutsch, English
- - F. Malpartida [@fmalpartida] - English, Spanish
- - Jochen Groppe [@CONSULitAS] - Deutsch, English
- - [@maverikou]
- - Chris Palmer [@nophead]
- - [@paclema]
- - Edward Patel [@epatel] - Swedish, English
- - Erik van der Zalm [@ErikZalm]
- - David Braam [@daid]
- - Bernhard Kubicek [@bkubicek]
- - Roxanne Neufeld [@Roxy-3DPrintBoard] - English
-
-More features have been added by:
-  - Alberto Cotronei [@MagoKimbra]
-  - Lampmaker,
-  - Bradley Feldman,
-  - and others...
+Notable contributors include:
+ - Alexey Shvetsov [[@alexxy](https://github.com/alexxy)]
+ - Andreas Hardtung [[@AnHardt](https://github.com/AnHardt)]
+ - Ben Lye [[@benlye](https://github.com/benlye)]
+ - Bernhard Kubicek [[@bkubicek](https://github.com/bkubicek)]
+ - Bob Cousins [[@bobc](https://github.com/bobc)]
+ - Petr Zahradnik [[@clexpert](https://github.com/clexpert)]
+ - Jochen Groppe [[@CONSULitAS](https://github.com/CONSULitAS)]
+ - David Braam [[@daid](https://github.com/daid)]
+ - Eduardo José Tagle [[@ejtagle](https://github.com/ejtagle)]
+ - Ernesto Martinez [[@emartinez167](https://github.com/emartinez167)]
+ - Edward Patel [[@epatel](https://github.com/epatel)]
+ - F. Malpartida [[@fmalpartida](https://github.com/fmalpartida)]
+ - João Brazio [[@jbrazio](https://github.com/jbrazio)]
+ - Kai [[@Kaibob2](https://github.com/Kaibob2)]
+ - Luc Van Daele [[@LVD-AC](https://github.com/LVD-AC)]
+ - Alberto Cotronei [[@MagoKimbra](https://github.com/MagoKimbra)]
+ - Marcio Teixeira [[@marcio-ao](https://github.com/marcio-ao)]
+ - Chris Palmer [[@nophead](https://github.com/nophead)]
+ - Chris Pepper [[@p3p](https://github.com/p3p)]
+ - Steeve Spaggi [[@studiodyne](https://github.com/studiodyne)]
+ - Thomas Moore [[@tcm0116](https://github.com/tcm0116)]
+ - Teemu Mäntykallio [[@teemuatlut](https://github.com/teemuatlut)]
+ - Nico Tonnhofer [[@Wurstnase](https://github.com/Wurstnase)]
+ - [[@android444](https://github.com/android444)]
+ - [[@bgort](https://github.com/bgort)]
+ - [[@GMagician](https://github.com/GMagician)]
+ - [[@Grogyan](https://github.com/Grogyan)]
+ - [[@maverikou](https://github.com/maverikou)]
+ - [[@oysteinkrog](https://github.com/oysteinkrog)]
+ - [[@paclema](https://github.com/paclema)]
+ - [[@paulusjacobus](https://github.com/paulusjacobus)]
+ - [[@psavva](https://github.com/psavva)]
+ - [[@Tannoo](https://github.com/Tannoo)]
+ - [[@TheSFReader](https://github.com/TheSFReader)]
+ - ...and many others
 
 ## License
 
-Marlin is published under the [GPL license](/LICENSE) because we believe in open development. The GPL comes with both rights and obligations. Whether you use Marlin firmware as the driver for your open or closed-source product, you must keep Marlin open, and you must provide your compatible Marlin source code to end users upon request. The most straightforward way to comply with the Marlin license is to make a fork of Marlin on Github, perform your modifications, and direct users to your modified fork.
-
-While we can't prevent the use of this code in products (3D printers, CNC, etc.) that are closed source or crippled by a patent, we would prefer that you choose another firmware or, better yet, make your own.
-
-[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=ErikZalm&url=https://github.com/MarlinFirmware/Marlin&title=Marlin&language=&tags=github&category=software)
+Marlin is published under the [GPLv3 license](https://github.com/MarlinFirmware/Marlin/blob/1.0.x/COPYING.md) because we believe in open development. The GPL comes with both rights and obligations. Whether you use Marlin firmware as the driver for your open or closed-source product, you must keep Marlin open, and you must provide your compatible Marlin source code to end users upon request. The most straightforward way to comply with the Marlin license is to make a fork of Marlin on Github, perform your modifications, and direct users to your modified fork.

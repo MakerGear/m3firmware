@@ -46,22 +46,13 @@
 
 #define BOARD_NAME "Rambo"
 
-#define LARGE_FLASH true
-
 //
 // Servos
 //
-#define SERVO0_PIN         22 // Motor header MX1
-#define SERVO1_PIN         4 // Motor header MX2
-#define SERVO2_PIN         24 // Motor header MX3
-#define SERVO3_PIN         -1 // PWM header pin 5 //was set to 5, which I think was wrong anyway... - Josh, 11/21/2017
-
-//
-// Z Probe (when not Z_MIN_PIN)
-//
-#ifndef Z_MIN_PROBE_PIN
-  #define Z_MIN_PROBE_PIN  30
-#endif
+#define SERVO0_PIN         22   // Motor header MX1
+#define SERVO1_PIN         23   // Motor header MX2
+#define SERVO2_PIN         24   // Motor header MX3
+#define SERVO3_PIN          5   // PWM header pin 5
 
 //
 // Limit Switches
@@ -70,8 +61,15 @@
 #define X_MAX_PIN          24
 #define Y_MIN_PIN          11
 #define Y_MAX_PIN          23
-#define Z_MIN_PIN           5 //was 10, set to 5 to try to use the PG5 pin on PWM header for BLTouch.  11/21/2017 Josh.
+#define Z_MIN_PIN          10
 #define Z_MAX_PIN          30
+
+//
+// Z Probe (when not Z_MIN_PIN)
+//
+#ifndef Z_MIN_PROBE_PIN
+  #define Z_MIN_PROBE_PIN  30
+#endif
 
 //
 // Steppers
@@ -108,66 +106,11 @@
 #define E1_MS1_PIN         63
 #define E1_MS2_PIN         64
 
-
-#if CONF_SHIELD == RAMBO_SHIELD_11
-  
-  #define E2_STEP_PIN         32  //second x axis Step
-  #define E2_DIR_PIN          44  //second x axis dir
-  #define E2_ENABLE_PIN       22  //second x axis enable
-  #define E2_MS1_PIN         23  //ms1 pin for second X axis
-  #define E2_MS2_PIN         31   //ms2 pin for second X axis
-  #define E2_MS3_PIN         45   //ms2 pin for second X axis
-
-
-#endif
-
-#if CONF_SHIELD == RAMBO_SHIELD_12
-  
-  #define E2_STEP_PIN         45  //second x axis Step
-  #define E2_DIR_PIN          23  //second x axis dir
-  #define E2_ENABLE_PIN       22  //second x axis enable
-  #define E2_CURRENT_PIN      31  //second x axis enable
-  #define E2_MS1_PIN         23  //ms1 pin for second X axis
-  #define E2_MS2_PIN         44   //ms2 pin for second X axis
-
-#endif
-
-#if CONF_SHIELD == RAMBO_SHIELD_13
-  
-  #define E2_STEP_PIN         31  //second x axis Step
-  #define E2_DIR_PIN          23  //second x axis dir
-  #define E2_ENABLE_PIN       22  //second x axis enable
-  #define E2_CURRENT_PIN      45  //second x axis enable
-  #define E2_MS1_PIN         32  //ms1 pin for second X axis
-  #define E2_MS2_PIN         44   //ms2 pin for second X axis
-
-#endif
-#if CONF_SHIELD == RAMBO_SHIELD_14
-  
-  #define E2_STEP_PIN         31  //second x axis Step
-  #define E2_DIR_PIN          23  //second x axis dir
-  #define E2_ENABLE_PIN       22  //second x axis enable
-  #define E2_CURRENT_PIN      45  //second x axis enable
-  #define E2_MS1_PIN         32  //ms1 pin for second X axis
-  #define E2_MS2_PIN         44   //ms2 pin for second X axis
-
-#endif
-
-#if CONF_SHIELD == RAMBO_SHIELD_15
-  
-  #define E2_STEP_PIN         31  //second x axis Step
-  #define E2_DIR_PIN          23  //second x axis dir
-  #define E2_ENABLE_PIN       22  //second x axis enable
-  #define E2_CURRENT_PIN      45  //second x axis enable
-  #define E2_MS1_PIN         32  //ms1 pin for second X axis
-  #define E2_MS2_PIN         44   //ms2 pin for second X axis
-
-#endif
-
-
-
 #define DIGIPOTSS_PIN      38
-#define DIGIPOT_CHANNELS {4,5,3,0,1} // X Y Z E0 E1 digipot channels to stepper driver mapping
+#define DIGIPOT_CHANNELS  { 4,5,3,0,1 }   // X Y Z E0 E1 digipot channels to stepper driver mapping
+#ifndef DIGIPOT_MOTOR_CURRENT
+  #define DIGIPOT_MOTOR_CURRENT { 135,135,135,135,135 }   // Values 0-255 (RAMBO 135 = ~0.75A, 185 = ~1A)
+#endif
 
 //
 // Temperature Sensors
@@ -181,10 +124,12 @@
 //
 #define HEATER_0_PIN        9
 #define HEATER_1_PIN        7
-#define HEATER_2_PIN        -1
+#define HEATER_2_PIN        6
 #define HEATER_BED_PIN      3
 
-#define FAN_PIN             8
+#ifndef FAN_PIN
+  #define FAN_PIN           8
+#endif
 #define FAN1_PIN            6
 #define FAN2_PIN            2
 
@@ -195,7 +140,6 @@
 #define LED_PIN            13
 #define PS_ON_PIN           4
 #define CASE_LIGHT_PIN     46
-#define BEEPER_PIN         19
 
 #ifndef FILWIDTH_PIN
   #define FILWIDTH_PIN      3   // Analog Input
@@ -204,8 +148,8 @@
 //
 // M3/M4/M5 - Spindle/Laser Control
 //
-#define SPINDLE_LASER_PWM_PIN    45  // MUST BE HARDWARE PWM
-#define SPINDLE_LASER_ENABLE_PIN 31  // Pin should have a pullup!
+#define SPINDLE_LASER_PWM_PIN    45   // MUST BE HARDWARE PWM
+#define SPINDLE_LASER_ENABLE_PIN 31   // Pin should have a pullup!
 #define SPINDLE_DIR_PIN          32
 
 //
@@ -213,14 +157,14 @@
 //
 #define E_MUX0_PIN         17
 #define E_MUX1_PIN         16
-#define E_MUX2_PIN         84 // 84 in MK2 Firmware
+#define E_MUX2_PIN         84   // 84 in MK2 Firmware
 
 //
 // LCD / Controller
 //
 #if ENABLED(ULTRA_LCD)
 
-  #define KILL_PIN 80
+  #define KILL_PIN         80
 
   #if ENABLED(NEWPANEL)
 
@@ -232,41 +176,41 @@
     #define LCD_PINS_D7     75
 
     #if ENABLED(VIKI2) || ENABLED(miniVIKI)
-      #define BEEPER_PIN 44
+      #define BEEPER_PIN   44
       // NB: Panucatt's Viki 2.0 wiring diagram (v1.2) indicates that the
       //     beeper/buzzer is connected to pin 33; however, the pin used in the
       //     diagram is actually pin 44, so this is correct.
 
-      #define DOGLCD_A0  70
-      #define DOGLCD_CS  71
+      #define DOGLCD_A0    70
+      #define DOGLCD_CS    71
       #define LCD_SCREEN_ROT_180
 
-      #define BTN_EN1 85
-      #define BTN_EN2 84
-      #define BTN_ENC 83
+      #define BTN_EN1      85
+      #define BTN_EN2      84
+      #define BTN_ENC      83
 
-      #define SD_DETECT_PIN -1 // Pin 72 if using easy adapter board
+      #define SD_DETECT_PIN -1   // Pin 72 if using easy adapter board
 
       #define STAT_LED_RED_PIN 22
       #define STAT_LED_BLUE_PIN 32
 
-    #else
+    #else // !VIKI2 && !miniVIKI
 
-      #define BEEPER_PIN 79 // AUX-4
+      #define BEEPER_PIN   79   // AUX-4
 
       // AUX-2
-      #define BTN_EN1 76
-      #define BTN_EN2 77
-      #define BTN_ENC 78
+      #define BTN_EN1      76
+      #define BTN_EN2      77
+      #define BTN_ENC      78
 
       #define SD_DETECT_PIN 81
 
-    #endif // VIKI2/miniVIKI
+    #endif // !VIKI2 && !miniVIKI
 
   #else // !NEWPANEL - old style panel with shift register
 
     // No Beeper added
-    #define BEEPER_PIN 33
+    #define BEEPER_PIN     33
 
     // buttons are attached to a shift register
     // Not wired yet

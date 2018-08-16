@@ -50,7 +50,7 @@
 // Servos
 //
 #define SERVO0_PIN         22   // Motor header MX1
-#define SERVO1_PIN         23   // Motor header MX2
+#define SERVO1_PIN         4   // Motor header MX2
 #define SERVO2_PIN         24   // Motor header MX3
 #define SERVO3_PIN          5   // PWM header pin 5
 
@@ -61,7 +61,7 @@
 #define X_MAX_PIN          24
 #define Y_MIN_PIN          11
 #define Y_MAX_PIN          23
-#define Z_MIN_PIN          10
+#define Z_MIN_PIN           5 //was 10, set to 5 to try to use the PG5 pin on PWM header for BLTouch.  11/21/2017 Josh.
 #define Z_MAX_PIN          30
 
 //
@@ -106,6 +106,64 @@
 #define E1_MS1_PIN         63
 #define E1_MS2_PIN         64
 
+#if CONF_SHIELD == RAMBO_SHIELD_11
+  
+  #define E2_STEP_PIN         32  //second x axis Step
+  #define E2_DIR_PIN          44  //second x axis dir
+  #define E2_ENABLE_PIN       22  //second x axis enable
+  #define E2_MS1_PIN         23  //ms1 pin for second X axis
+  #define E2_MS2_PIN         31   //ms2 pin for second X axis
+  #define E2_MS3_PIN         45   //ms2 pin for second X axis
+
+
+#endif
+
+#if CONF_SHIELD == RAMBO_SHIELD_12
+  
+  #define E2_STEP_PIN         45  //second x axis Step
+  #define E2_DIR_PIN          23  //second x axis dir
+  #define E2_ENABLE_PIN       22  //second x axis enable
+  #define E2_CURRENT_PIN      31  //second x axis enable
+  #define E2_MS1_PIN         23  //ms1 pin for second X axis
+  #define E2_MS2_PIN         44   //ms2 pin for second X axis
+
+#endif
+
+#if CONF_SHIELD == RAMBO_SHIELD_13
+  
+  #define E2_STEP_PIN         31  //second x axis Step
+  #define E2_DIR_PIN          23  //second x axis dir
+  #define E2_ENABLE_PIN       22  //second x axis enable
+  #define E2_CURRENT_PIN      45  //second x axis enable
+  #define E2_MS1_PIN         32  //ms1 pin for second X axis
+  #define E2_MS2_PIN         44   //ms2 pin for second X axis
+
+#endif
+#if CONF_SHIELD == RAMBO_SHIELD_14
+  
+  #define E2_STEP_PIN         31  //second x axis Step
+  #define E2_DIR_PIN          23  //second x axis dir
+  #define E2_ENABLE_PIN       22  //second x axis enable
+  #define E2_CURRENT_PIN      45  //second x axis enable
+  #define E2_MS1_PIN         32  //ms1 pin for second X axis
+  #define E2_MS2_PIN         44   //ms2 pin for second X axis
+
+#endif
+
+#if CONF_SHIELD == RAMBO_SHIELD_15
+  
+  #define E2_STEP_PIN         31  //second x axis Step
+  #define E2_DIR_PIN          23  //second x axis dir
+  #define E2_ENABLE_PIN       22  //second x axis enable
+  #define E2_CURRENT_PIN      45  //second x axis enable
+  #define E2_MS1_PIN         32  //ms1 pin for second X axis
+  #define E2_MS2_PIN         44   //ms2 pin for second X axis
+
+#endif
+
+
+
+
 #define DIGIPOTSS_PIN      38
 #define DIGIPOT_CHANNELS  { 4,5,3,0,1 }   // X Y Z E0 E1 digipot channels to stepper driver mapping
 #ifndef DIGIPOT_MOTOR_CURRENT
@@ -124,7 +182,7 @@
 //
 #define HEATER_0_PIN        9
 #define HEATER_1_PIN        7
-#define HEATER_2_PIN        6
+#define HEATER_2_PIN        -1
 #define HEATER_BED_PIN      3
 
 #ifndef FAN_PIN
@@ -140,6 +198,7 @@
 #define LED_PIN            13
 #define PS_ON_PIN           4
 #define CASE_LIGHT_PIN     46
+#define BEEPER_PIN         19
 
 #ifndef FILWIDTH_PIN
   #define FILWIDTH_PIN      3   // Analog Input

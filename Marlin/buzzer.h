@@ -104,7 +104,7 @@ class Buzzer {
      * @param duration Duration of the tone in milliseconds
      * @param frequency Frequency of the tone in hertz
      */
-    void tone(const uint16_t &duration, const uint16_t &frequency=0) {
+    void tone(const uint16_t &duration, const uint16_t &frequency=1000) {
       while (buffer.isFull()) {
         this->tick();
         thermalManager.manage_heater();
@@ -133,7 +133,9 @@ class Buzzer {
             ::tone(BEEPER_PIN, this->state.tone.frequency, this->state.tone.duration);
             CRITICAL_SECTION_END;
           #else
-            this->on();
+            CRITICAL_SECTION_START;
+            ::tone(BEEPER_PIN, this->state.tone.frequency, this->state.tone.duration);
+            CRITICAL_SECTION_END;
           #endif
         }
       }

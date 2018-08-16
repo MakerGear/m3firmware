@@ -26,6 +26,8 @@
 #include "boards.h"
 #include "macros.h"
 #include "Version.h"
+#include "Configuration_makergear.h"
+
 #include "Configuration.h"
 #include "Conditionals_LCD.h"
 #include "drivers.h"

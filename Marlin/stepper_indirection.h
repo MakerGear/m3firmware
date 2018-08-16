@@ -181,7 +181,7 @@ void reset_stepper_drivers();    // Called by settings.load / settings.reset
     #define X2_ENABLE_WRITE(STATE) do{ if (STATE) stepperX2.Step_Clock(stepperX2.getStatus() & STATUS_HIZ); else stepperX2.softFree(); }while(0)
     #define X2_ENABLE_READ (stepperX2.getStatus() & STATUS_HIZ)
     #define X2_DIR_INIT NOOP
-    #define X2_DIR_WRITE(STATE) stepperX2.Step_Clock(STATE)
+    #define X2_DIR_WRITE(STATE) stepperX2.Step_Clock(!STATE)
     #define X2_DIR_READ (stepperX2.getStatus() & STATUS_DIR)
   #else
     #if AXIS_DRIVER_TYPE(X2, TMC26X)
@@ -200,7 +200,7 @@ void reset_stepper_drivers();    // Called by settings.load / settings.reset
       #define X2_ENABLE_READ READ(X2_ENABLE_PIN)
     #endif
     #define X2_DIR_INIT SET_OUTPUT(X2_DIR_PIN)
-    #define X2_DIR_WRITE(STATE) WRITE(X2_DIR_PIN,STATE)
+    #define X2_DIR_WRITE(STATE) WRITE(X2_DIR_PIN,!STATE)
     #define X2_DIR_READ READ(X2_DIR_PIN)
   #endif
   #define X2_STEP_INIT SET_OUTPUT(X2_STEP_PIN)

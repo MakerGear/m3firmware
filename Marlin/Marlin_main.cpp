@@ -371,6 +371,25 @@
 bool Running = true;
 
 uint8_t marlin_debug_flags = DEBUG_NONE;
+float previous_position_generic[XYZE] = { 0.0 };
+
+
+
+/**
+ * Cartesian Previous Position Tool 0
+ *  previousversion to return to (usually after probing) 
+ */
+float previous_position_T0[XYZE] = { 0.0 };
+
+
+#if ENABLED(DUAL_X_CARRIAGE)
+  /**
+   * Cartesian Previous Position Tool 0
+   *  previousversion to return to (usually after probing) 
+   */
+  float previous_position_T1[XYZE] = { 0.0 };
+#endif
+
 
 /**
  * Cartesian Current Position
@@ -2506,6 +2525,8 @@ void clean_up_after_endstop_or_probe_move() {
     ;
   }
 
+  
+
   /**
    * Turn bed leveling on or off, fixing the current
    * position as-needed.
@@ -4195,7 +4216,7 @@ inline void gcode_G4() {
 
             tool_change(1, 0, true); //change to T1
             //do an if tool is less than CONF_X_T1_MAX-10
-              if (position_is_reachable_xy(destination[X_AXIS], destination[Y_AXIS])) 
+              if (position_is_reachable(destination[X_AXIS], destination[Y_AXIS])) 
               {
                 do_blocking_move_to_xy(CONF_X_T1_MAX-10, destination[Y_AXIS]); //move T0 out of the way
               }
@@ -4207,7 +4228,7 @@ inline void gcode_G4() {
           //if active extruder is 1, check if T1 is in the way
          if(active_extruder == 1 && current_position[X_AXIS] < CONF_X_T1_MAX-10)
          {  
-            if (position_is_reachable_xy(destination[X_AXIS], destination[Y_AXIS])) 
+            if (position_is_reachable(destination[X_AXIS], destination[Y_AXIS])) 
               {
                 do_blocking_move_to_xy(CONF_X_T1_MAX-10.0, destination[Y_AXIS]); //move T0 out of the way
               }
@@ -4278,7 +4299,6 @@ inline void gcode_G4() {
 
 
 
-void home_all_axes() { gcode_G28(true); }
 
 #if ENABLED(MESH_BED_LEVELING) || ENABLED(PROBE_MANUALLY)
 
@@ -5765,7 +5785,7 @@ inline void gcode_G28(const bool always_home_all) {
         destination[Y_AXIS] = previous_position_T0[Y_AXIS];
 
 
-        if (position_is_reachable_xy(destination[X_AXIS], destination[Y_AXIS])) 
+        if (position_is_reachable(destination[X_AXIS], destination[Y_AXIS])) 
         {
           do_blocking_move_to_xy(destination[X_AXIS], destination[Y_AXIS]); //xmax
         }
@@ -5781,7 +5801,7 @@ inline void gcode_G28(const bool always_home_all) {
           destination[Y_AXIS] = previous_position_T0[Y_AXIS];
 
 
-          if (position_is_reachable_xy(destination[X_AXIS], destination[Y_AXIS])) 
+          if (position_is_reachable(destination[X_AXIS], destination[Y_AXIS])) 
           {
             do_blocking_move_to_xy( destination[X_AXIS], destination[Y_AXIS]); //xmax
           }
@@ -5826,6 +5846,9 @@ inline void gcode_G28(const bool always_home_all) {
     if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPGM("<<< G28");
   #endif
 } // G28
+
+void home_all_axes() { gcode_G28(true); }
+
 
 
 
@@ -12203,7 +12226,7 @@ inline void invalid_extruder_error(const uint8_t e) {
 
 	  #if CONF_HAS_PROBE
 
-	    if(leveling_is_active())
+	    if(planner.leveling_active)
 	    {
 
 

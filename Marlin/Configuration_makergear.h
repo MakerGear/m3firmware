@@ -1,3 +1,4 @@
+#define MAKERGEAR_MODEL_M3_ID_REV1_000	
 
 /* MakerGear defines*/
 	/*	Model Definitions*/

@@ -149,7 +149,7 @@
 
 // Generally expected filament diameter (1.75, 2.85, 3.0, ...). Used for Volumetric, Filament Width Sensor, etc.
 #define DEFAULT_NOMINAL_FILAMENT_DIA 1.75   // (mm) Diameter of the filament generally used (3.0 or 1.75mm), also used in the slicer. Used to validate sensor reading.
-7
+
 // For Cyclops or any "multi-extruder" that shares a single nozzle.
 //#define SINGLENOZZLE
 
@@ -741,7 +741,7 @@
  * Z Servo Probe, such as an endstop switch on a rotating arm.
  */
 #if CONF_HAS_PROBE == true
-  #define Z_ENDSTOP_SERVO_NR 1   // Defaults to SERVO 0 connector.  
+  #define Z_PROBE_SERVO_NR 1   // Defaults to SERVO 0 connector.  
   #define Z_SERVO_ANGLES {10,90}  // Z Servo Deploy and Stow angles
 #endif
 
@@ -813,7 +813,7 @@
 //#define Z_PROBE_OFFSET_FROM_EXTRUDER -.2   // Z offset: -below +above  [the nozzle]
 
 // Certain types of probes need to stay away from edges
-#define MIN_PROBE_EDGE 5
+#define MIN_PROBE_EDGE 0
 
 // X and Y axis travel speed (mm/m) between probes
 #if CONF_HAS_PROBE == true

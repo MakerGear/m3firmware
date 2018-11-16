@@ -70,7 +70,7 @@
 #define X_MAX_PIN          24
 #define Y_MIN_PIN          11
 #define Y_MAX_PIN          23
-#define Z_MIN_PIN           5 //was 10, set to 5 to try to use the PG5 pin on PWM header for BLTouch.  11/21/2017 Josh.
+#define Z_MIN_PIN          10 //was 10, set to 5 to try to use the PG5 pin on PWM header for BLTouch.  11/21/2017 Josh.
 #define Z_MAX_PIN          30
 
 //

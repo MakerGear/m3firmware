@@ -556,7 +556,7 @@
 //"M3 Single Extruder Rev 1"
 #ifdef MAKERGEAR_MODEL_M3_SE_REV1_000	
 	#undef MAKERGEAR_ERROR_FLAG
-	#define MAKERGEAR_MACHINE_NAME_STRING "M3 Single Extruder Rev 1_000"
+	#define MAKERGEAR_MACHINE_NAME_STRING "M3 Single Extruder Rev 1_000 alternative probe pin"
 
 	//probe
  	#define CONF_X_HOME_DIR M3_X_HOME_DIRECTION
@@ -895,7 +895,7 @@
 //"M3 Dual Extruder Rev 1"
 #ifdef MAKERGEAR_MODEL_M3_ID_REV1_000	
 	#undef MAKERGEAR_ERROR_FLAG
-	#define MAKERGEAR_MACHINE_NAME_STRING "M3 Dual Extruder Rev 1_000"
+	#define MAKERGEAR_MACHINE_NAME_STRING "M3 Dual Extruder Rev 1_000 alternative probe pin"
 
 	//probe
  	#define CONF_X_HOME_DIR M3_X_HOME_DIRECTION

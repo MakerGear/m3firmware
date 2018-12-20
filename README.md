@@ -11,10 +11,12 @@ Marlin/Configuration_makergear.h
 Uncomment one of the #define statements depending on your printer
 
 
+
+
 ## Standard M3 SE Rev1 With Probe
  #define MAKERGEAR_MODEL_M3_SE_REV1_000
 
-##Standard M3 ID Rev1 with Probe
+## Standard M3 ID Rev1 with Probe
  #define MAKERGEAR_MODEL_M3_ID_REV1_000
 
 

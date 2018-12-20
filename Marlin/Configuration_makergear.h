@@ -3,6 +3,32 @@
 	/*	Model Definitions*/
 
 
+
+//Uncomment one line  MAKERGEAR_MODEL_M3_**_***_*** that corresponds to your printer model
+
+//Standard M3 SE Rev0 No Probe
+// #define MAKERGEAR_MODEL_M3_SE_REV0_004
+
+// PROTOTYPE - M3 SE Rev0 with probe prototype
+// #define MAKERGEAR_MODEL_M3_SE_REV0_005
+
+
+// Standard M3 SE Rev1 With Probe
+// #define MAKERGEAR_MODEL_M3_SE_REV1_000
+
+
+//Standard M3 ID Rev0 No Probe
+// #define MAKERGEAR_MODEL_M3_ID_REV0_005
+
+
+//PROTOTYPE - M3 ID Rev0 With Probe prototype
+// #define MAKERGEAR_MODEL_M3_ID_REV0_006
+
+
+//Standard M3 ID Rev1 with Probe
+// #define MAKERGEAR_MODEL_M3_ID_REV1_000
+
+
 //legacy defines
 #ifdef MAKERGEAR_MODEL_M3_SINGLE_X_CARRIAGE
 	#define MAKERGEAR_MODEL_M3_SE_REV0_004
@@ -11,9 +37,6 @@
 #ifdef MAKERGEAR_MODEL_M3_INDEPENDENT_DUAL
 	#define MAKERGEAR_MODEL_M3_ID_REV0_005
 #endif
-
-
-
 
 /******************
  Options
@@ -318,6 +341,8 @@
 	//#define LIN_ADVANCE
 	#define SDSUPPORT
 #endif 
+
+
 
 //"M3 Single Extruder Rev 0"
 #ifdef MAKERGEAR_MODEL_M3_SE_REV0_004	

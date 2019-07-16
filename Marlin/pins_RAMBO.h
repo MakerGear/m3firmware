@@ -74,10 +74,10 @@
 #define Z_MAX_PIN          30
 
 
-
+//Using the Z_MIN_PIN, 10 on the RAMBo
 #ifndef FIL_RUNOUT_PIN
-    #define FIL_RUNOUT_PIN   24
-  #endif
+    #define FIL_RUNOUT_PIN   10
+#endif
 
 //
 // Steppers

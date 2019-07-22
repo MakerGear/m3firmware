@@ -4,7 +4,7 @@
  Options
 *********************/
 
-#define MAKERGEAR_MODEL "M3 Single Extruder"
+#define MAKERGEAR_MODEL "M3 Single Extruder Rev 0 with Filament Out Sensor"
 #define MAKERGEAR_AUTHOR "MG |Scott, Josh, Kyle, David"
 
 #define M2_X_PULLEY_STEPS 88.8 

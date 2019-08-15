@@ -8051,7 +8051,12 @@ inline void gcode_M75() { print_job_timer.start(); }
 /**
  * M76: Pause print timer
  */
-inline void gcode_M76() { print_job_timer.pause(); }
+inline void gcode_M77() { 
+  print_job_timer.stop(); 
+  //allow M77 to reset filament ran out flag fo reloading of filament
+  #if ENABLED(FILAMENT_RUNOUT_SENSOR)
+    filament_ran_out = false;
+   #endif
 
 /**
  * M77: Stop print timer

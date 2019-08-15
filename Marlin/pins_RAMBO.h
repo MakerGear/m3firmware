@@ -73,6 +73,11 @@
 #define Z_MIN_PIN           5 //was 10, set to 5 to try to use the PG5 pin on PWM header for BLTouch.  11/21/2017 Josh.
 #define Z_MAX_PIN          30
 
+//Using the Z_MIN_PIN, 10 on the RAMBo
+#ifndef FIL_RUNOUT_PIN
+    #define FIL_RUNOUT_PIN   10
+#endif
+
 //
 // Steppers
 //

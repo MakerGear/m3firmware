@@ -8057,6 +8057,7 @@ inline void gcode_M77() {
   #if ENABLED(FILAMENT_RUNOUT_SENSOR)
     filament_ran_out = false;
    #endif
+  }
 
 /**
  * M77: Stop print timer

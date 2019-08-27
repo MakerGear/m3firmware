@@ -14,7 +14,7 @@
 
 
 // Standard M3 SE Rev1 With Probe
-// #define MAKERGEAR_MODEL_M3_SE_REV1_000
+ #define MAKERGEAR_MODEL_M3_SE_REV1_000
 
 
 //Standard M3 ID Rev0 No Probe

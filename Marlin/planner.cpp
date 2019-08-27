@@ -202,6 +202,14 @@ void Planner::calculate_trapezoid_for_block(block_t* const block, const float &e
     plateau_steps = 0;
   }
 
+
+  SERIAL_ECHOPAIR("  accelerate_steps", accelerate_steps);
+  SERIAL_ECHOPAIR("  decelerate_steps", decelerate_steps);
+  SERIAL_ECHOPAIR("  plateau_steps", plateau_steps);
+
+  SERIAL_EOL();
+
+
   // block->accelerate_until = accelerate_steps;
   // block->decelerate_after = accelerate_steps+plateau_steps;
 

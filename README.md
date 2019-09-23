@@ -14,12 +14,12 @@ https://github.com/MakerGear/m3firmware/tree/1.1.6
 
 
 
-##Firmware Configuration
+## Firmware Configuration
 
 
 Before you can compile, you must select your 3D printer configruation by renaming the correct configuration file.
 
-## For The M3SE rename
+### For The M3SE rename
 
 
 *Configuration_makergear.h.m3SE*

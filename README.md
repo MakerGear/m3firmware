@@ -23,11 +23,13 @@ Uncomment one of the #define statements depending on your printer. For example i
 
 
 `//Standard M3 ID Rev1 with Probe`
+
 `// #define MAKERGEAR_MODEL_M3_ID_REV1_000`
 
 and replace it with
 
 `//Standard M3 ID Rev1 with Probe`
+
 `#define MAKERGEAR_MODEL_M3_ID_REV1_000`
 
 

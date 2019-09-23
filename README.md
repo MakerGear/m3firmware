@@ -12,7 +12,7 @@ For M3SE Rev1 and M3IS REV1 see branch (master)
 https://github.com/MakerGear/m3firmware/tree/master
 
 
-##Firmware Configuration
+## Firmware Configuration
 
 
 Before you can compile, you must select your 3D printer configruation by editing the file
